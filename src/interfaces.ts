@@ -1,8 +1,9 @@
 
 export interface App {
-    'rssUrl': string
-    'slackUrl': string
-    'updateIn': number
+    appName: string
+    rssUrl: string
+    slackUrl: string
+    updateIn: number
 }
 
 export interface RssItem {
@@ -10,4 +11,9 @@ export interface RssItem {
     description: Text
     link: string
     pubDate: Date
+}
+
+export interface PostItem extends RssItem {
+    appName: string
+    id?: Number
 }

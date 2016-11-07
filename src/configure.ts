@@ -1,2 +1,4 @@
-import sequelize = require('./helpers/db');
-sequelize.sync();
+import sequelize = require('./configs/db/db');
+import {Posts} from "./models";
+
+Posts.sync();

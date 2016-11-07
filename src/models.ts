@@ -1,7 +1,11 @@
 import Sequelize = require('sequelize');
-import sequelize = require('./helpers/db');
+import sequelize = require('./configs/db/db');
 
 export var Posts = sequelize.define('posts', {
+    appName: {
+        type: Sequelize.STRING,
+        field: 'app_name'
+    },
     title: {
         type: Sequelize.STRING
     },
