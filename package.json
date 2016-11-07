@@ -1,0 +1,17 @@
+{
+  "name": "rss-reader",
+  "version": "0.0.1",
+  "description": "Rss reader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "serioga",
+  "license": "ISC",
+  "dependencies": {
+    "@types/request": "0.0.32",
+    "feedparser": "^1.1.5",
+    "request": "^2.78.0",
+    "ts-node": "^1.6.1"
+  }
+}
