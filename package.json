@@ -9,9 +9,15 @@
   "author": "serioga",
   "license": "ISC",
   "dependencies": {
+    "@types/lodash": "^4.14.38",
     "@types/request": "0.0.32",
+    "@types/sequelize": "^4.0.39",
+    "@types/sqlite3": "^2.2.31",
     "feedparser": "^1.1.5",
+    "lodash": "^4.16.6",
     "request": "^2.78.0",
+    "sequelize": "^3.24.8",
+    "sqlite3": "^3.1.8",
     "ts-node": "^1.6.1"
   }
 }

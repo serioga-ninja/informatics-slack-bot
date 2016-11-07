@@ -1,30 +1,13 @@
-import request = require('request');
-var FeedParser = require('feedparser');
+import RssToSlackController = require('./controllers/RssToSlackController');
+import {App} from "./interfaces";
+import _ = require('lodash');
 
-export = function(url:string[]) {
-    if(!url) {
+export = function (apps: App[]) {
+    if (!apps.length) {
         throw new Error('There is no url to work with');
     }
 
-    var req = request(url[0]);
-    var feedparser = new FeedParser();
-
-    req.on('response', function (res) {
-        var stream = this;
-
-        if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
-
-        stream.pipe(feedparser);
-    });
-
-
-    feedparser.on('readable', function() {
-        var stream = this
-            , meta = this.meta
-            , item;
-
-        while (item = stream.read()) {
-            console.log(item.title);
-        }
+    var RTSApps = _.map(apps, (app) => {
+        return new RssToSlackController(app).start();
     });
 }
