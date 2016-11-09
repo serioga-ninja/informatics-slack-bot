@@ -1,4 +1,4 @@
-import RssToSlackController = require('./controllers/RssToSlackController');
+import RssToSlackService = require('./services/RssToSlackService');
 import {App} from "./interfaces";
 import _ = require('lodash');
 
@@ -8,6 +8,6 @@ export = function (apps: App[]) {
     }
 
     var RTSApps = _.map(apps, (app) => {
-        return new RssToSlackController(app).start();
+        return new RssToSlackService(app).start();
     });
 }

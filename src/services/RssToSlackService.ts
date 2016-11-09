@@ -7,7 +7,7 @@ import https = require('https');
 
 var FeedParser = require('feedparser');
 
-export = class RssToSlackController {
+export = class RssToSlackService {
     worker
 
     constructor(public app: App) {
