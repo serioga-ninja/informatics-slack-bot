@@ -1,13 +1,8 @@
-import RssToSlackService = require('./services/RssToSlackService');
-import {App} from "./interfaces";
-import _ = require('lodash');
+import express = require('express');
+import {WebApi} from './server/api';
 
-export = function (apps: App[]) {
-    if (!apps.length) {
-        throw new Error('There is no url to work with');
-    }
-
-    var RTSApps = _.map(apps, (app) => {
-        return new RssToSlackService(app).start();
-    });
+export = function () {
+    let port = process.env.PORT || 5000;
+    let api = new WebApi(express(), port);
+    api.run();
 }
