@@ -2,7 +2,7 @@ import _ = require('lodash');
 import Promise = require('bluebird');
 import request = require('request');
 import { Posts } from "../models";
-import { RssItem, App, PostItem } from "../interfaces";
+import * as core from "../core";
 import https = require('https');
 
 var FeedParser = require('feedparser');
@@ -10,11 +10,11 @@ var FeedParser = require('feedparser');
 export = class RssToSlackService {
     worker
 
-    constructor(public app: App) {
+    constructor(public app: core.Interfaces.App) {
     }
 
     private filters = {
-        oblyNew: (function (row: RssItem): Promise<boolean> {
+        oblyNew: (function (row: core.Interfaces.RssItem): Promise<boolean> {
             return Posts.findOne({ where: { app_name: this.app.appName, title: row.title } }).then(post => {
                 return post ? false : true;
             })
@@ -29,7 +29,7 @@ export = class RssToSlackService {
             .then(this.sendToSlack);
     }
 
-    private saveToDB(data: RssItem[]): Promise<RssItem[]> {
+    private saveToDB(data: core.Interfaces.RssItem[]): Promise<core.Interfaces.RssItem[]> {
         return Promise.all(_.map(data, (row) => {
             return Posts.create(_.extend({
                 appName: this.app.appName
@@ -44,7 +44,7 @@ export = class RssToSlackService {
         return new Promise((resolve) => {
             var req = request(url);
             var feedparser = new FeedParser();
-            var items: Array<RssItem> = [];
+            var items: Array<core.Interfaces.RssItem> = [];
 
             req.on('response', function (res) {
                 var stream = this;
@@ -57,7 +57,7 @@ export = class RssToSlackService {
 
             feedparser.on('readable', function () {
                 var stream = this
-                    , item: RssItem;
+                    , item: core.Interfaces.RssItem;
 
                 while (item = stream.read()) {
                     items.push(item);
@@ -76,7 +76,7 @@ export = class RssToSlackService {
         });
     }
 
-    private sendToSlack(data: Array<RssItem>) {
+    private sendToSlack(data: Array<core.Interfaces.RssItem>) {
         data.forEach((row) => {
             var http_options = {
                 host: 'hooks.slack.com',

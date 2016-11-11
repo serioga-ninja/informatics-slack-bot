@@ -7,6 +7,6 @@ let requestLogger: express.RequestHandler = (
 ) => {
     console.info(`${(new Date()).toUTCString()}|${request.method}|${request.url}|${request.ip}`);
     next();
-}
+};
 
 export = requestLogger;
