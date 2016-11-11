@@ -28,13 +28,12 @@ export module Interfaces {
 
 export module Controlles {
     export abstract class MiddlewareController {
+        abstract path: string;
+        abstract router: express.Router;
 
-        constructor(private app: express.Express) {
-            this.configureMiddleware(app);
-            this.configureRoutes(app);
-        }
-
-        abstract configureRoutes(app: express.Express): void;
-        abstract configureMiddleware(app: express.Express): void;
+        register(app: express.Express){
+            console.info(`Registering app ${this.path}`);
+            app.use(this.path, this.router);
+        };
     }
 }
