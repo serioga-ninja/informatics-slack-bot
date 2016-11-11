@@ -13,7 +13,7 @@ export class WebApi {
     }
 
     private configureRoutes(app: express.Express) {
-        app.use("/api", customerRouter );
+        app.use('/', customerRouter);
     }
 
     public run() {

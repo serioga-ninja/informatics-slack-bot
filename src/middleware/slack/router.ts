@@ -1,22 +1,20 @@
 import express = require("express");
 import request = require('request');
+import configs = require('../../configs/variables');
 
 let app = express.Router();
 
-let clientId = '8944041909.103347899379';
-let clientSecret = '505e0c8d400fa56c15187a263a6b9a23';
-console.log('qq');
+let clientId = configs.slack.CLIENT_ID;
+let clientSecret = configs.slack.CLIENT_SECRET;
 
 app.get('/oauth', function (req, res) {
     // When a user authorizes an app, a code query parameter is passed on the oAuth endpoint. If that code is not there, we respond with an error message
-    console.log('req.query.code', req.query.code);
     if (!req.query.code) {
         res.status(500);
         res.send({ "Error": "Looks like we're not getting code." });
         console.log("Looks like we're not getting code.");
     } else {
         // If it's there...
-        console.log('req.query.code', req.query.code);
         // We'll do a GET call to Slack's `oauth.access` endpoint, passing our app's client ID, client secret, and the code we just got as query parameters.
         request({
             url: 'https://slack.com/api/oauth.access', //URL to hit
