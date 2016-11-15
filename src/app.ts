@@ -1,13 +1,30 @@
-import RssToSlackService = require('./services/RssToSlackService');
-import {App} from "./interfaces";
+import express = require('express');
 import _ = require('lodash');
+import path = require('path');
+import fs = require('fs');
+import requestLogger = require('./libs/logger');
+import bodyParser = require('body-parser');
 
-export = function (apps: App[]) {
-    if (!apps.length) {
-        throw new Error('There is no url to work with');
-    }
+let apps = [
+    './apps/slack/controller'
+];
 
-    var RTSApps = _.map(apps, (app) => {
-        return new RssToSlackService(app).start();
+export = function () {
+    let port = process.env.PORT || 4390;
+    let router = express();
+    router.use(requestLogger);
+    // parse application/x-www-form-urlencoded
+    router.use(bodyParser.urlencoded({ extended: false }))
+
+    // parse application/json
+    router.use(bodyParser.json())
+
+    apps.forEach((app) => {
+        let Controller = require(app);
+        return new Controller().register(router);
+    });
+
+    router.listen(port, function () {
+        console.info(`Listening port ${port}`);
     });
 }
