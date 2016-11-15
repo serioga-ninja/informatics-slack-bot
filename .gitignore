@@ -42,4 +42,4 @@ jspm_packages
 
 .env
 .idea/
-/db/
+/db/*.*
