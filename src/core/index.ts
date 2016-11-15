@@ -1,16 +1,26 @@
 import express = require('express');
 
 export module Interfaces {
+    export interface SlackRequestBody {
+        token: string
+        team_id: string
+        team_domain: string
+        channel_id: string
+        channel_name: string
+        user_id: string
+        user_name: string
+        command: string
+        text: string
+        response_url: string
+    }
+
     export interface App {
-        appName: string
         rssUrl: string
-        slackUrl: string
-        updateIn: number
     }
 
     export interface RssItem {
         title: string
-        description: Text
+        description: string
         link: string
         pubDate: Date
     }
@@ -31,9 +41,23 @@ export module Controlles {
         abstract path: string;
         abstract router: express.Router;
 
-        register(app: express.Express){
+        register(app: express.Express) {
             console.info(`Registering app ${this.path}`);
             app.use(this.path, this.router);
+        };
+    }
+}
+
+export module Helpers {
+
+    export function successResponse(item: Interfaces.RssItem) {
+        return {
+            text: item.title,
+            "attachments": [
+                {
+                    "html": item.description
+                }
+            ]
         };
     }
 }

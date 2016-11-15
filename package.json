@@ -13,11 +13,13 @@
   "author": "serioga",
   "license": "ISC",
   "dependencies": {
+    "@types/body-parser": "0.0.33",
     "@types/express": "^4.0.33",
     "@types/lodash": "^4.14.38",
     "@types/request": "0.0.32",
     "@types/sequelize": "^4.0.39",
     "@types/sqlite3": "^2.2.31",
+    "body-parser": "^1.15.2",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "feedparser": "^1.1.5",

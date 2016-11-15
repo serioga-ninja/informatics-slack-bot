@@ -1,42 +1,41 @@
 import _ = require('lodash');
 import Promise = require('bluebird');
 import request = require('request');
-import { Posts } from "../models";
-import * as core from "../core";
+import { Posts } from "../../models";
+import * as core from "../../core";
 import https = require('https');
+import { Interfaces } from "../../core";
 
 var FeedParser = require('feedparser');
 
-export = class RssToSlackService {
+export = class RssService {
     worker
 
-    constructor(public app: core.Interfaces.App) {
+    constructor(private appName: string, private app: core.Interfaces.App, private body: Interfaces.SlackRequestBody) {
     }
 
     private filters = {
         oblyNew: (function (row: core.Interfaces.RssItem): Promise<boolean> {
-            return Posts.findOne({ where: { app_name: this.app.appName, title: row.title } }).then(post => {
+            return Posts.findOne({ where: { app_name: this.appName, title: row.title } }).then(post => {
                 return post ? false : true;
             })
         }).bind(this)
     }
 
-    private parse() {
+    public parse() {
         return Promise.bind(this)
             .then(() => this.getRssData(this.app.rssUrl))
             .then(data => this.filterData(data, this.filters.oblyNew))
-            .then(this.saveToDB)
-            .then(this.sendToSlack);
+            .then(this.saveToDB);
     }
 
     private saveToDB(data: core.Interfaces.RssItem[]): Promise<core.Interfaces.RssItem[]> {
         return Promise.all(_.map(data, (row) => {
             return Posts.create(_.extend({
-                appName: this.app.appName
+                appName: this.appName,
+                user_id: this.body.user_id
             }, row));
-        })).then(() => {
-            return data;
-        })
+        })).then(() => data)
     }
 
     private getRssData(url: string): Promise<any> {
@@ -73,42 +72,8 @@ export = class RssToSlackService {
     private filterData<RssItem>(data: Array<RssItem>, filter: Function): Promise<RssItem[]> {
         return Promise.filter(data, (row: RssItem) => {
             return filter(row);
+        }).then((data) => {
+            return data.slice(0, 1);
         });
-    }
-
-    private sendToSlack(data: Array<core.Interfaces.RssItem>) {
-        data.forEach((row) => {
-            var http_options = {
-                host: 'hooks.slack.com',
-                method: 'post',
-                path: this.app.slackUrl,
-                headers: {}
-            };
-            var request_data = {
-                text: row.title,
-                attachments: [
-                    {
-                        text: row.link
-                    }
-                ]
-            };
-
-            http_options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(request_data), 'utf-8');
-            http_options.headers['Content-type'] = 'application/json';
-
-            var req = https.request(http_options);
-            req.write(JSON.stringify(request_data));
-            req.end();
-        });
-    }
-
-    public start() {
-        this.worker = setInterval(() => {
-            this.parse();
-        }, this.app.updateIn);
-    }
-
-    public stop() {
-        clearInterval(this.worker);
     }
 }
