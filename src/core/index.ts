@@ -36,7 +36,7 @@ export module Interfaces {
     }
 }
 
-export module Controlles {
+export module Controllers {
     export abstract class MiddlewareController {
         abstract path: string;
         abstract router: express.Router;

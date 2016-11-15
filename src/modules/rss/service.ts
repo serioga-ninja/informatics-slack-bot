@@ -1,12 +1,12 @@
 import _ = require('lodash');
 import Promise = require('bluebird');
 import request = require('request');
-import { Posts } from "../../models";
+import {Posts} from "../../models";
 import * as core from "../../core";
 import https = require('https');
-import { Interfaces } from "../../core";
+import {Interfaces} from "../../core";
 
-var FeedParser = require('feedparser');
+let FeedParser = require('feedparser');
 
 export = class RssService {
     worker
@@ -15,17 +15,21 @@ export = class RssService {
     }
 
     private filters = {
-        oblyNew: (function (row: core.Interfaces.RssItem): Promise<boolean> {
-            return Posts.findOne({ where: { app_name: this.appName, title: row.title } }).then(post => {
-                return post ? false : true;
-            })
+        onlyNew: (function (row: core.Interfaces.RssItem): Promise<boolean> {
+            return Posts.findOne({
+                where: {
+                    app_name: this.appName,
+                    title: row.title,
+                    user_id: this.body.user_id
+                }
+            }).then(post => !post)
         }).bind(this)
-    }
+    };
 
     public parse() {
         return Promise.bind(this)
             .then(() => this.getRssData(this.app.rssUrl))
-            .then(data => this.filterData(data, this.filters.oblyNew))
+            .then(data => this.filterData(data, this.filters.onlyNew))
             .then(this.saveToDB);
     }
 
@@ -39,11 +43,10 @@ export = class RssService {
     }
 
     private getRssData(url: string): Promise<any> {
-        var self = this;
         return new Promise((resolve) => {
-            var req = request(url);
-            var feedparser = new FeedParser();
-            var items: Array<core.Interfaces.RssItem> = [];
+            let req = request(url);
+            let feedparser = new FeedParser({});
+            let items: Array<core.Interfaces.RssItem> = [];
 
             req.on('response', function (res) {
                 var stream = this;
