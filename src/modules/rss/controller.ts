@@ -1,13 +1,14 @@
 import RssService = require('./service');
 import appList = require('../../app-list');
-import {Interfaces} from "../../core";
 import Promise = require('bluebird');
+import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
+import {App} from '../../interfaces/i-app';
 
-export = class RssController {
+export default class RssController {
     private method: Function;
     private args: Array<string>;
 
-    constructor(private body: Interfaces.SlackRequestBody) {
+    constructor(private body: ISlackRequestBody) {
         let attrs = body.text.split(' ');
         let method = this.methods[attrs[0]];
         if (!method) {
@@ -20,7 +21,7 @@ export = class RssController {
     private methods = {
         readrss: Promise.method(() => {
             let appName = this.args[0];
-            let app: Interfaces.App = appList[appName];
+            let app: App = appList[appName];
             if (!app) {
                 throw new Error('Unknown app');
             }

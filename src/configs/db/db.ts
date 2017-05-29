@@ -1,15 +1,15 @@
 import Sequelize = require('sequelize');
 
-export = new Sequelize('database', 'username', 'password', {
-  host: 'localhost',
-  dialect:'sqlite',
+export default new Sequelize('database', 'username', 'password', {
+    host: 'localhost',
+    dialect: 'sqlite',
 
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  },
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    },
 
-  // SQLite only
-  storage: 'db/database.sqlite'
+    // SQLite only
+    storage: 'db/database.sqlite'
 });

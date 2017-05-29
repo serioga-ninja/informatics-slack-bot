@@ -1,7 +1,7 @@
-import Sequelize = require('sequelize');
-import sequelize = require('./configs/db/db');
+import * as Sequelize from 'sequelize';
+import sequelize from '../configs/db/db';
 
-export var Posts = sequelize.define('posts', {
+export const Post = sequelize.define('posts', {
     user_id: {
         type: Sequelize.STRING
     },
@@ -23,3 +23,5 @@ export var Posts = sequelize.define('posts', {
         field: 'pub_date'
     }
 });
+
+export default Post;

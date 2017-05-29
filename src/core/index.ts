@@ -1,34 +1,9 @@
 import express = require('express');
+import {IRssItem} from '../interfaces/i-rss-item';
 
 export module Interfaces {
-    export interface SlackRequestBody {
-        token: string
-        team_id: string
-        team_domain: string
-        channel_id: string
-        channel_name: string
-        user_id: string
-        user_name: string
-        command: string
-        text: string
-        response_url: string
-    }
 
-    export interface App {
-        rssUrl: string
-    }
 
-    export interface RssItem {
-        title: string
-        description: string
-        link: string
-        pubDate: Date
-    }
-
-    export interface PostItem extends RssItem {
-        appName: string
-        id?: Number
-    }
 
     export interface MiddlewareController {
         configureMiddleware(app: express.Express): void
@@ -50,7 +25,7 @@ export module Controllers {
 
 export module Helpers {
 
-    export function successResponse(item: Interfaces.RssItem) {
+    export function successResponse(item: IRssItem) {
         return {
             text: item.title,
             "attachments": [

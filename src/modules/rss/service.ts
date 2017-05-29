@@ -1,21 +1,22 @@
 import _ = require('lodash');
 import Promise = require('bluebird');
 import request = require('request');
-import {Posts} from "../../models";
-import * as core from "../../core";
+import Posts from '../../models/post';
 import https = require('https');
-import {Interfaces} from "../../core";
+import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
+import {IRssItem} from '../../interfaces/i-rss-item';
+import {App} from '../../interfaces/i-app';
 
 let FeedParser = require('feedparser');
 
 export = class RssService {
     worker
 
-    constructor(private appName: string, private app: core.Interfaces.App, private body: Interfaces.SlackRequestBody) {
+    constructor(private appName: string, private app: App, private body: ISlackRequestBody) {
     }
 
     private filters = {
-        onlyNew: (function (row: core.Interfaces.RssItem): Promise<boolean> {
+        onlyNew: (function (row: IRssItem): Promise<boolean> {
             return Posts.findOne({
                 where: {
                     app_name: this.appName,
@@ -33,7 +34,7 @@ export = class RssService {
             .then(this.saveToDB);
     }
 
-    private saveToDB(data: core.Interfaces.RssItem[]): Promise<core.Interfaces.RssItem[]> {
+    private saveToDB(data: IRssItem[]): Promise<IRssItem[]> {
         return Promise.all(_.map(data, (row) => {
             return Posts.create(_.extend({
                 appName: this.appName,
@@ -46,7 +47,7 @@ export = class RssService {
         return new Promise((resolve) => {
             let req = request(url);
             let feedparser = new FeedParser({});
-            let items: Array<core.Interfaces.RssItem> = [];
+            let items: Array<IRssItem> = [];
 
             req.on('response', function (res) {
                 var stream = this;
@@ -59,7 +60,7 @@ export = class RssService {
 
             feedparser.on('readable', function () {
                 var stream = this
-                    , item: core.Interfaces.RssItem;
+                    , item: IRssItem;
 
                 while (item = stream.read()) {
                     items.push(item);
