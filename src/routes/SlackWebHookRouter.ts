@@ -19,15 +19,15 @@ export class SlackWebHookRouter {
     init() {
         let rssService: RssService<IRssItem> = new RssService();
 
-        return rssService.getRssData('http://breakingmad.me/ru/rss').then(items => {
-            console.log(items);
-        });
+        // return rssService.getRssData('http://breakingmad.me/ru/rss').then(items => {
+        //     console.log(items);
+        // });
     }
 
 }
 
 // Create the SlackRouter, and export its configured Express.Router
-const slackRoutes = new SlackWebHookRouter();
-slackRoutes.init();
+const slackWebHookRouter = new SlackWebHookRouter();
+slackWebHookRouter.init();
 
-export default slackRoutes.router;
+export default slackWebHookRouter.router;

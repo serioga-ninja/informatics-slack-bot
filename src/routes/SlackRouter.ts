@@ -41,7 +41,13 @@ export class SlackRouter {
     }
 
     public doCommand(req: Request, res: Response, next: NextFunction) {
-        res.send({});
+        let data = {
+            response_type: 'in_channel', // public to the channel
+            text: '302: Found',
+            attachments:[ {
+                image_url: 'https://http.cat/302.jpg'
+            } ]};
+        res.json(data);
     }
 
     /**

@@ -3,7 +3,7 @@ import * as FeedParser from 'feedparser';
 
 export class RssService<T> {
 
-    getRssData(url: string): Promise<any> {
+    getRssData(url: string): Promise<T[]> {
         return new Promise((resolve) => {
             let req = request(url);
             let feedparser = new FeedParser({});

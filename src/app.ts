@@ -19,6 +19,7 @@ class App {
     constructor() {
         this.express = express();
         this.middleware();
+        this.configure();
         this.routes();
     }
 
