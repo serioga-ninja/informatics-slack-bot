@@ -1,9 +1,6 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import * as request from 'request';
 import configs from '../configs/variables';
-import {Helpers} from '../core';
-import RssController from '../modules/rss/controller';
-import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 
 let clientId = configs.slack.CLIENT_ID;
 let clientSecret = configs.slack.CLIENT_SECRET;
@@ -44,14 +41,7 @@ export class SlackRouter {
     }
 
     public doCommand(req: Request, res: Response, next: NextFunction) {
-        let body: ISlackRequestBody = req.body;
-
-        return new RssController(body).run().then((result) => {
-            res.json(Helpers.successResponse(result));
-        }).catch((error) => {
-            console.dir(error.stack, {colours: true});
-            res.send(error.message);
-        });
+        res.send({});
     }
 
     /**
@@ -67,6 +57,5 @@ export class SlackRouter {
 
 // Create the SlackRouter, and export its configured Express.Router
 const slackRoutes = new SlackRouter();
-slackRoutes.init();
 
 export default slackRoutes.router;

@@ -7,6 +7,7 @@ import sequelize from './configs/db/db';
 import Posts from './models/post';
 
 import SlackRouter from './routes/SlackRouter';
+import SlackWebHookRouter from './routes/SlackWebHookRouter';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -46,6 +47,7 @@ class App {
         });
         this.express.use('/', router);
         this.express.use('/api/v1/slack', SlackRouter)
+        this.express.use('/api/v1/slack', SlackWebHookRouter)
     }
 
 }
