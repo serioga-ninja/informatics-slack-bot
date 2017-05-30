@@ -1,13 +1,15 @@
 import * as mongoose from 'mongoose';
-import * as validators from 'mongoose-validators';
 
-export interface IPost extends mongoose.Document {
-    id: string;
+export interface IPost {
+    id?: string;
     title: string;
     description: string;
     link: string;
     pubDate: Date;
-    createdAt: Date;
+    createdAt?: Date;
+}
+
+export interface IPostDocument extends IPost, mongoose.Document {
 }
 
 
@@ -19,16 +21,13 @@ export const PostSchema: mongoose.Schema = new mongoose.Schema({
     title: {
         type: String,
         require: true,
-        unique: true,
-        validate: validators.isAlpha()
+        unique: true
     },
     description: {
-        type: Text,
-        validate: validators.isAlpha()
+        type: String
     },
     link: {
-        type: String,
-        validate: validators.isAlpha()
+        type: String
     },
     pubDate: {
         type: Date,
@@ -38,6 +37,6 @@ export const PostSchema: mongoose.Schema = new mongoose.Schema({
     timestamps: {createdAt: 'created_at'}
 });
 
-export const PostModel = mongoose.model<IPost>('Post', PostSchema);
+export const PostModel = mongoose.model<IPostDocument>('Post', PostSchema);
 
 export default PostModel;

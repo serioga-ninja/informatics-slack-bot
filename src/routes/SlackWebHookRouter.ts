@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import {IRssItem} from '../interfaces/i-rss-item';
 import {RssService} from '../services/rss-service';
+import {IPost, PostModel} from '../models/post';
 
 export class SlackWebHookRouter {
     router: Router;
@@ -19,9 +20,18 @@ export class SlackWebHookRouter {
     init() {
         let rssService: RssService<IRssItem> = new RssService();
 
-        return rssService.getRssData('http://breakingmad.me/ru/rss').then(items => {
-            console.log(items);
-        });
+        return rssService
+            .getRssData('http://breakingmad.me/ru/rss')
+            .then(items => {
+                return new PostModel().set(<IPost>{
+                    title: items[1].title,
+                    description: items[1].description,
+                    link: items[1].link,
+                    pubDate: items[1].pubDate
+                }).save().then(post => {
+                    console.log(post.title);
+                });
+            });
     }
 
 }

@@ -1,6 +1,8 @@
 import * as mongoose from 'mongoose';
 import variables from './variables';
 
+(<any>mongoose).Promise = global.Promise;
+
 mongoose.connect('mongodb://' + [variables.DB_HOST, variables.DB_NAME].join('/'));
 
 let db = mongoose.connection;
