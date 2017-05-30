@@ -1,23 +1,43 @@
-import * as Sequelize from 'sequelize';
-import sequelize from '../configs/db/db';
+import * as mongoose from 'mongoose';
+import * as validators from 'mongoose-validators';
 
-export const Post = sequelize.define('posts', {
-    user_id: {
-        type: Sequelize.STRING
+export interface IPost extends mongoose.Document {
+    id: string;
+    title: string;
+    description: string;
+    link: string;
+    pubDate: Date;
+    createdAt: Date;
+}
+
+
+export const PostSchema: mongoose.Schema = new mongoose.Schema({
+    id: {
+        type: String,
+        require: true
     },
     title: {
-        type: Sequelize.STRING
+        type: String,
+        require: true,
+        unique: true,
+        validate: validators.isAlpha()
     },
     description: {
-        type: Sequelize.TEXT
+        type: Text,
+        validate: validators.isAlpha()
     },
     link: {
-        type: Sequelize.STRING
+        type: String,
+        validate: validators.isAlpha()
     },
     pubDate: {
-        type: Sequelize.DATE,
-        field: 'pub_date'
+        type: Date,
+        require: true
     }
+}, {
+    timestamps: {createdAt: 'created_at'}
 });
 
-export default Post;
+export const PostModel = mongoose.model<IPost>('Post', PostSchema);
+
+export default PostModel;

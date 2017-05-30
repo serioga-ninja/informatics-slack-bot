@@ -19,9 +19,9 @@ export class SlackWebHookRouter {
     init() {
         let rssService: RssService<IRssItem> = new RssService();
 
-        // return rssService.getRssData('http://breakingmad.me/ru/rss').then(items => {
-        //     console.log(items);
-        // });
+        return rssService.getRssData('http://breakingmad.me/ru/rss').then(items => {
+            console.log(items);
+        });
     }
 
 }

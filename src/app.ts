@@ -1,10 +1,8 @@
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import _ = require('lodash');
 import fs = require('fs');
-import sequelize from './configs/db/db';
-import Posts from './models/post';
+import './configs/database';
 
 import SlackRouter from './routes/SlackRouter';
 import SlackWebHookRouter from './routes/SlackWebHookRouter';
@@ -24,7 +22,6 @@ class App {
     }
 
     private configure() {
-        Posts.sync();
     }
 
     // Configure Express middleware.
