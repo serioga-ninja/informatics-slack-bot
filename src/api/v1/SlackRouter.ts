@@ -1,6 +1,6 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import * as request from 'request';
-import configs from '../configs/variables';
+import configs from '../../configs/variables';
 
 let clientId = configs.slack.CLIENT_ID;
 let clientSecret = configs.slack.CLIENT_SECRET;

@@ -1,13 +1,18 @@
 import * as request from 'request';
 import * as FeedParser from 'feedparser';
+import {Observable} from 'rxjs/Rx';
 
 export class RssService<T> {
 
-    getRssData(url: string): Promise<T[]> {
-        return new Promise((resolve) => {
-            let req = request(url);
+    constructor(private url: string) {
+    }
+
+    loadRss(): Observable<T[]> {
+
+        return Observable.create(observer => {
+            let req = request(this.url);
             let feedparser = new FeedParser({});
-            let items: Array<T> = [];
+            let items: T[] = [];
 
             req.on('response', function (res) {
                 let stream = this;
@@ -27,8 +32,12 @@ export class RssService<T> {
             });
 
             feedparser.on('end', () => {
-                resolve(items);
-            })
-        })
+                observer.next(items);
+            });
+        });
+    }
+
+    onlyUnique(items: T[]) {
+        return Observable.of(items);
     }
 }

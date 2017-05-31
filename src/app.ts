@@ -4,8 +4,8 @@ import * as bodyParser from 'body-parser';
 import fs = require('fs');
 import './configs/database';
 
-import SlackRouter from './routes/SlackRouter';
-import SlackWebHookRouter from './routes/SlackWebHookRouter';
+import SlackRouter from './api/v1/SlackRouter';
+import SlackWebHookRouter from './api/v1/SlackWebHookRouter';
 
 // Creates and configures an ExpressJS web server.
 class App {
