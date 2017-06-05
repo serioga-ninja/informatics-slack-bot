@@ -6,6 +6,7 @@ import './configs/database';
 
 import SlackRouter from './api/v1/SlackRouter';
 import SlackWebHookRouter from './api/v1/SlackWebHookRouter';
+import SlackEventRouter from './api/v1/SlackEventRouter';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -44,8 +45,9 @@ class App {
             });
         });
         this.express.use('/', router);
-        this.express.use('/api/v1/slack', SlackRouter)
-        this.express.use('/api/v1/slack', SlackWebHookRouter)
+        this.express.use('/api/v1/slack', SlackRouter);
+        this.express.use('/api/v1/slack', SlackWebHookRouter);
+        this.express.use('/api/v1/events', SlackEventRouter);
     }
 
 }

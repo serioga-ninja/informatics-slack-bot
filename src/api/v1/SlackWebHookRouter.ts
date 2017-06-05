@@ -24,13 +24,13 @@ export class SlackWebHookRouter {
     init() {
         let rssService: RssService<IBreakingMadRssItem> = new RssService('http://breakingmad.me/ru/rss');
 
-        Observable
-            .interval(HOUR)
-            .flatMap(() => rssService.loadRss())
-            .flatMap(items => rssService.onlyUnique(items))
-            .subscribe(data => {
-                console.log(`interval`, data);
-            });
+        // Observable
+        //     .interval(HOUR)
+        //     .flatMap(() => rssService.loadRss())
+        //     .flatMap(items => rssService.onlyUnique(items))
+        //     .subscribe(data => {
+        //         console.log(`interval`, data);
+        //     });
 
         // return rssService
         //     .getRssData('http://breakingmad.me/ru/rss')
