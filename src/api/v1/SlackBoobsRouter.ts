@@ -9,6 +9,7 @@ export class SlackBoobsRouter extends RouterClass {
         let body: ISlackEventRequestBody = req.body;
 
         request.get('https://www.instagram.com/explore/tags/cats/', (err, result) => {
+            console.log((<any>result).body);
             let results: string[] = (<any>result).body.match(/(https:\/\/instagram.fiev3-1.fna.fbcdn.net\/[\w\.-]+\/[\w\.-]+\/\w+\.jpg)/g);
 
             let data = {

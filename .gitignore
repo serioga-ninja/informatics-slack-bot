@@ -35,11 +35,9 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-<<<<<<< HEAD
-.vscode
-=======
->>>>>>> ca06b8b04938b9c96b5b9390a4a258dd63aa3db2
 
+.vscode
 .env
 .idea/
 /db/*.*
+./build/
