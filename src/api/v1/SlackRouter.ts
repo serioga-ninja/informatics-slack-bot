@@ -1,20 +1,12 @@
-import {Router, Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import * as request from 'request';
 import configs from '../../configs/variables';
+import {RouterClass} from '../../classes/router.class';
 
 let clientId = configs.slack.CLIENT_ID;
 let clientSecret = configs.slack.CLIENT_SECRET;
 
-export class SlackRouter {
-    router: Router;
-
-    /**
-     * Initialize the SlackRouter
-     */
-    constructor() {
-        this.router = Router();
-        this.init();
-    }
+export class SlackRouter extends RouterClass {
 
     public auth(req: Request, res: Response, next: NextFunction) {
         // When a user authorizes an app, a code query parameter is passed on the oAuth endpoint. If that code is not there, we respond with an error message
@@ -44,9 +36,10 @@ export class SlackRouter {
         let data = {
             response_type: 'in_channel', // public to the channel
             text: '302: Found',
-            attachments:[ {
+            attachments: [{
                 image_url: 'https://http.cat/302.jpg'
-            } ]};
+            }]
+        };
         res.json(data);
     }
 

@@ -1,16 +1,8 @@
-import {Router, Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
+import {RouterClass} from '../../classes/router.class';
 
-export class SlackEventRouter {
-    router: Router;
-
-    /**
-     * Initialize the SlackRouter
-     */
-    constructor() {
-        this.router = Router();
-        this.init();
-    }
+export class SlackEventRouter extends RouterClass {
 
     public handleEventRequest(req: Request, res: Response, next: NextFunction) {
         let body: ISlackEventRequestBody = req.body;

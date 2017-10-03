@@ -1,21 +1,13 @@
 import {Router} from 'express';
 import {IBreakingMadRssItem} from '../../interfaces/i-breaking-mad-rss-item';
 import {RssService} from '../../services/rss-service';
-import {IPost, PostModel} from '../../models/post';
-import {Observable} from 'rxjs/Rx';
+import {RouterClass} from '../../classes/router.class';
 
 const HOUR = 1000 * 2;
+
 // const HOUR = 1000 * 60 * 60;
 
-export class SlackWebHookRouter {
-    router: Router;
-
-    /**
-     * Initialize the SlackWebHookRouter
-     */
-    constructor() {
-        this.router = Router();
-    }
+export class SlackWebHookRouter extends RouterClass {
 
     /**
      * Take each handler, and attach to one of the Express.Router's
