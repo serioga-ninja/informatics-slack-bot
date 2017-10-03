@@ -20,7 +20,7 @@ export class SlackBoobsRouter extends RouterClass {
     public getSomeBoobs(req: Request, res: Response, next: NextFunction) {
         let body: ISlackEventRequestBody = req.body;
 
-        request.get('https://www.instagram.com/explore/tags/cats/', (err, result) => {
+        request.get('https://www.instagram.com/explore/tags/boobs/', (err, result) => {
             let results: string[] = getMatches((<any>result).body, thumbnailReg, 1);
 
             let data = {
