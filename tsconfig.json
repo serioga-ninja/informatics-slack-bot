@@ -1,17 +1,19 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "outDir": "build",
-        "sourceMap": true
-    },
-    "filesGlob": [
-        "./**/*.ts",
-        "!./node_modules/**/*.ts"
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "build",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
     ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "build"
+    "lib": [
+      "es2016",
+      "dom"
     ]
+  }
 }

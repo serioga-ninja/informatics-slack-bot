@@ -1,30 +1,57 @@
-import express = require('express');
-import _ = require('lodash');
-import path = require('path');
+import * as express from 'express';
+import * as logger from 'morgan';
+import * as bodyParser from 'body-parser';
 import fs = require('fs');
-import requestLogger = require('./libs/logger');
-import bodyParser = require('body-parser');
+import './configs/database';
 
-let apps = [
-    './apps/slack/controller'
-];
+import SlackRouter from './api/v1/SlackRouter';
+import SlackWebHookRouter from './api/v1/SlackWebHookRouter';
+import SlackEventRouter from './api/v1/SlackEventRouter';
+import SlackBoobsRouter from './api/v1/SlackBoobsRouter';
 
-export = function () {
-    let port = process.env.PORT || 4390;
-    let router = express();
-    router.use(requestLogger);
-    // parse application/x-www-form-urlencoded
-    router.use(bodyParser.urlencoded({ extended: false }))
+// Creates and configures an ExpressJS web server.
+class App {
 
-    // parse application/json
-    router.use(bodyParser.json())
+    // ref to Express instance
+    public express: express.Application;
 
-    apps.forEach((app) => {
-        let Controller = require(app);
-        return new Controller().register(router);
-    });
+    //Run configuration methods on the Express instance.
+    constructor() {
+        this.express = express();
+        this.middleware();
+        this.configure();
+        this.routes();
+    }
 
-    router.listen(port, function () {
-        console.info(`Listening port ${port}`);
-    });
+    private configure() {
+    }
+
+    // Configure Express middleware.
+    private middleware(): void {
+        this.express.use(logger('dev'));
+        this.express.use(bodyParser.json());
+        this.express.use(bodyParser.urlencoded({extended: false}));
+    }
+
+    // Configure API endpoints.
+    private routes(): void {
+        /* This is just to get up and running, and to make sure what we've got is
+         * working so far. This function will change when we start to add more
+         * API endpoints */
+        let router = express.Router();
+        // placeholder route handler
+        router.get('/', (req, res, next) => {
+            res.json({
+                message: 'Hello World!'
+            });
+        });
+        this.express.use('/', router);
+        this.express.use('/api/v1/slack', SlackRouter);
+        this.express.use('/api/v1/slack', SlackWebHookRouter);
+        this.express.use('/api/v1/events', SlackEventRouter);
+        this.express.use('/api/v1/boobs', SlackBoobsRouter);
+    }
+
 }
+
+export default new App().express;
