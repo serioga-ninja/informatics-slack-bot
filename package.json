@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "start:db": "mongod --dbpath ./data/db/",
-    "prestart": "./node_modules/.bin/tsc"
+    "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views"
   },
   "engines": {
     "node": "6.10.3"
