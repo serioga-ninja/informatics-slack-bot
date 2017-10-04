@@ -49,6 +49,15 @@ export class InstagramRouter extends RouterClass {
         });
     }
 
+    public search(req: Request, res: Response) {
+        let search = req.query.q;
+
+        request
+            .get(`https://api.instagram.com/v1/users/search?q=${search}&access_token=${variables.social.instagram.accessToken}`, (error, result: any) => {
+                res.json(result.body);
+            });
+    }
+
     /**
      * Take each handler, and attach to one of the Express.Router's
      * endpoints.
@@ -56,6 +65,7 @@ export class InstagramRouter extends RouterClass {
      */
     init() {
         this.router.get('/auth-callback', this.authCallback);
+        this.router.get('/search', this.search);
     }
 
 }

@@ -1,0 +1,97 @@
+import variables from '../configs/variables';
+import * as qs from 'querystring';
+import * as crypto from 'crypto';
+
+const ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
+
+function toPercentEncoding(str: string): string {
+    return str
+        .split('')
+        .map(ch => {
+            if (!/([\w\d\-\.\_\~])/g.test(ch)) {
+                return '%' + new Buffer(ch).toString('hex').toUpperCase();
+            }
+            return ch;
+        })
+        .join('');
+}
+
+interface IOAuthData {
+    oauth_consumer_key: string;
+    oauth_nonce: string;
+    oauth_signature_method: string;
+    oauth_timestamp: string;
+    oauth_token: string;
+    oauth_version: string;
+    oauth_signature?: string;
+}
+
+export class TwitterHelper {
+
+    static get accessTokenUrl(): string {
+        return ACCESS_TOKEN_URL;
+    }
+
+    static get bearer(): string {
+        return new Buffer(`${variables.social.twitter.API_KEY}:${variables.social.twitter.API_SECRET}`).toString('base64');
+    }
+
+    static toPercentEncoding(str: string): string {
+        return toPercentEncoding(str);
+    }
+
+    static generateSignatureBaseString(method: string, url: string, data: object): string {
+        let requestBodyString: string = toPercentEncoding(
+            Object
+                .keys(data)
+                .sort()
+                .reduce((res: string[], value: string) => {
+                    res.push(
+                        toPercentEncoding(`${value}=${data[value]}`)
+                    );
+                    return res;
+                }, <string[]>[])
+                .join('&')
+        );
+
+        return `${method.toUpperCase()}&${toPercentEncoding(url)}&${requestBodyString}`
+    }
+
+    static getOAuthAuthorizationString(method: string, url: string, requestBOdy: object = {}, time: string = new Date().getTime().toString()): string {
+        console.log(new Date().getTime(), time);
+
+        let authData: IOAuthData = {
+            oauth_consumer_key: variables.social.twitter.API_KEY,
+            oauth_nonce: new Buffer(Math.random().toString()).toString('hex'),
+            oauth_signature_method: 'HMAC-SHA1',
+            oauth_timestamp: time,
+            oauth_token: variables.social.twitter.ACCESS_TOKEN,
+            oauth_version: '1.0'
+        };
+        let data = {
+            ...requestBOdy,
+            ...authData
+        };
+
+        let signatureBaseSting = TwitterHelper.generateSignatureBaseString(method, url, data);
+
+        // generate a sign key
+        let signKey = `${variables.social.twitter.API_SECRET}&${variables.social.twitter.TOKEN_SECRET}`;
+        authData.oauth_signature = crypto
+            .createHmac('SHA1', signKey)
+            .update(signatureBaseSting)
+            .digest('base64');
+
+
+        return Object
+            .keys(authData)
+            .reduce((res: string[], key: string) => {
+                res.push(
+                    `${toPercentEncoding(key)}="${toPercentEncoding(authData[key])}"`
+                );
+                return res;
+            }, [])
+            .join(', ');
+    }
+
+}

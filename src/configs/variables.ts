@@ -12,6 +12,14 @@ export const variables = {
             CLIENT_ID: process.env.INSTAGRAM_CLIENT_ID,
             CLIENT_SECRET: process.env.INSTAGRAM_CLIENT_SECRET,
             accessToken: ''
+        },
+
+        twitter: {
+            API_KEY: process.env.TWITTER_API_KEY,
+            API_SECRET: process.env.TWITTER_API_SECRET,
+            ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN,
+            TOKEN_SECRET: process.env.TWITTER_TOKEN_SECRET,
+            accessToken: ''
         }
     },
 

@@ -12,6 +12,7 @@ import SlackEventRouter from './api/v1/SlackEventRouter';
 import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
 import IndexRouter from './view-routers/index.router';
 import InstagramRouter from './api/v1/InstagramRouter';
+import TwitterRouter from './api/v1/TwitterRouter';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -54,6 +55,7 @@ class App {
         this.express.use('/api/v1/events', SlackEventRouter);
         this.express.use('/api/v1/commands', SlackCommandsRouter);
         this.express.use('/api/v1/social/instagram', InstagramRouter);
+        this.express.use('/api/v1/social/twitter', TwitterRouter);
     }
 }
 
