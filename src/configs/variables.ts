@@ -5,7 +5,17 @@ export const variables = {
     },
     VERSION: '1',
     DB_HOST: process.env.DB_HOST,
-    DB_NAME: process.env.DB_NAME
+    DB_NAME: process.env.DB_NAME,
+
+    social: {
+        instagram: {
+            CLIENT_ID: process.env.INSTAGRAM_CLIENT_ID,
+            CLIENT_SECRET: process.env.INSTAGRAM_CLIENT_SECRET,
+            accessToken: ''
+        }
+    },
+
+    domainUrl: process.env.DOMAIN_URL
 };
 
 export default variables;

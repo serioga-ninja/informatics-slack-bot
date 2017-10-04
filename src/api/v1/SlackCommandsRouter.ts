@@ -15,7 +15,7 @@ function getMatches(string, regex, index): string[] {
     return matches;
 }
 
-export class SlackBoobsRouter extends RouterClass {
+export class SlackCommandsRouter extends RouterClass {
 
     public getSomeBoobs(req: Request, res: Response, next: NextFunction) {
         let body: ISlackEventRequestBody = req.body;
@@ -42,12 +42,12 @@ export class SlackBoobsRouter extends RouterClass {
      * endpoints.
      */
     init() {
-        this.router.post('/', this.getSomeBoobs);
+        this.router.post('/boobs', this.getSomeBoobs);
     }
 
 }
 
 // Create the SlackRouter, and export its configured Express.Router
-const slackBoobsRouter = new SlackBoobsRouter();
+const slackBoobsRouter = new SlackCommandsRouter();
 
 export default slackBoobsRouter.router;

@@ -1,13 +1,17 @@
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import fs = require('fs');
-import './configs/database';
+import * as ejs from 'ejs';
+import * as path from 'path';
+
+// import './configs/database';
 
 import SlackRouter from './api/v1/SlackRouter';
 import SlackWebHookRouter from './api/v1/SlackWebHookRouter';
 import SlackEventRouter from './api/v1/SlackEventRouter';
-import SlackBoobsRouter from './api/v1/SlackBoobsRouter';
+import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
+import IndexRouter from './view-routers/index.router';
+import InstagramRouter from './api/v1/InstagramRouter';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -31,6 +35,10 @@ class App {
         this.express.use(logger('dev'));
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({extended: false}));
+
+        this.express.set('views', path.join(__dirname, 'views/'));
+        this.express.use(express.static(__dirname + './views'));
+        this.express.set('view engine', 'ejs');
     }
 
     // Configure API endpoints.
@@ -38,20 +46,15 @@ class App {
         /* This is just to get up and running, and to make sure what we've got is
          * working so far. This function will change when we start to add more
          * API endpoints */
-        let router = express.Router();
+
         // placeholder route handler
-        router.get('/', (req, res, next) => {
-            res.json({
-                message: 'Hello World!'
-            });
-        });
-        this.express.use('/', router);
+        this.express.use('/', IndexRouter);
         this.express.use('/api/v1/slack', SlackRouter);
         this.express.use('/api/v1/slack', SlackWebHookRouter);
         this.express.use('/api/v1/events', SlackEventRouter);
-        this.express.use('/api/v1/boobs', SlackBoobsRouter);
+        this.express.use('/api/v1/commands', SlackCommandsRouter);
+        this.express.use('/api/v1/social/instagram', InstagramRouter);
     }
-
 }
 
 export default new App().express;
