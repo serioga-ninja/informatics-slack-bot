@@ -10,7 +10,8 @@
     "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views"
   },
   "engines": {
-    "node": "6.10.3"
+    "node": "6.10.3",
+    "npm": "3.10.10"
   },
   "author": "serioga",
   "license": "ISC",
