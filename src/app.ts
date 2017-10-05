@@ -4,7 +4,7 @@ import * as bodyParser from 'body-parser';
 import * as ejs from 'ejs';
 import * as path from 'path';
 
-// import './configs/database';
+import './configs/database';
 
 import SlackRouter from './api/v1/SlackRouter';
 import SlackWebHookRouter from './api/v1/SlackWebHookRouter';
@@ -13,6 +13,8 @@ import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
 import IndexRouter from './view-routers/index.router';
 import InstagramRouter from './api/v1/InstagramRouter';
 import TwitterRouter from './api/v1/TwitterRouter';
+
+import boobsService from './services/boobs.service';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -56,6 +58,8 @@ class App {
         this.express.use('/api/v1/commands', SlackCommandsRouter);
         this.express.use('/api/v1/social/instagram', InstagramRouter);
         this.express.use('/api/v1/social/twitter', TwitterRouter);
+
+        boobsService.init();
     }
 }
 

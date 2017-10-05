@@ -1,11 +1,17 @@
 export const variables = {
     slack: {
         CLIENT_ID: process.env.SLACK_CLIENT_ID,
-        CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET
+        CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
+        XXX_CHANEL_URL: process.env.SLACK_XXX_CHANEL_LINK,
     },
     VERSION: '1',
-    DB_HOST: process.env.DB_HOST,
-    DB_NAME: process.env.DB_NAME,
+
+    database: {
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
+        name: process.env.DB_NAME
+    },
 
     social: {
         instagram: {

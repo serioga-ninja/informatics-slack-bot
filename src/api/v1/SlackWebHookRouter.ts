@@ -27,7 +27,7 @@ export class SlackWebHookRouter extends RouterClass {
         // return rssService
         //     .getRssData('http://breakingmad.me/ru/rss')
         //     .then(items => {
-        //         return new PostModel().set(<IPost>{
+        //         return new ImageModel().set(<IImageModel>{
         //             title: items[1].title,
         //             description: items[1].description,
         //             link: items[1].link,
