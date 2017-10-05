@@ -6,7 +6,7 @@ export class SlackCommandsRouter extends RouterClass {
 
     public getSomeBoobs(req: Request, res: Response, next: NextFunction) {
         return new InstagramPhotoParser()
-            .grabTheData()
+            .grabTheData(false)
             .then(data => {
 
                 res.json({

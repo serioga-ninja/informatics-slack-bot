@@ -29,7 +29,7 @@ abstract class PhotoParser implements IPhotoParser {
     urls: string[];
     thumbnailReg: RegExp;
 
-    grabTheData(): Promise<any> {
+    grabTheData(filter: boolean = true): Promise<any> {
         return Promise.all(this.urls.map(url => {
             return new Promise(resolve => {
                 request.get(url, (err, result) => {
@@ -45,6 +45,10 @@ abstract class PhotoParser implements IPhotoParser {
                     return result;
                 }, []);
         }).then((data: string[]) => {
+            if (!filter) {
+                return data;
+            }
+
             return new Promise(resolve => {
                 return ImageModel
                     .aggregate({$match: {link: {$in: data}}})
