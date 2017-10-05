@@ -70,7 +70,7 @@ abstract class PhotoParser implements IPhotoParser {
 
 }
 
-class InstagramPhotoParser extends PhotoParser {
+export class InstagramPhotoParser extends PhotoParser {
 
     public urls: string[] = [
         'http://instagram.com/art_of_ck',
@@ -96,6 +96,11 @@ export class BoobsService {
             .findOne({isPosted: false})
             .select('link')
             .exec((err, imageModelDocument: IImageModelDocument) => {
+                if (!imageModelDocument) {
+                    // there is no more boobs in the database! we need more!
+                    return;
+                }
+
                 request({
                     method: 'POST',
                     url: variables.slack.XXX_CHANEL_URL,
@@ -123,11 +128,6 @@ export class BoobsService {
             .subscribe(data => {
                 BoobsService.postDataToSlack();
             });
-
-
-        BoobsService
-            .grabAllData()
-            .then(() => BoobsService.postDataToSlack());
     }
 
 }
