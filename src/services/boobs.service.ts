@@ -73,7 +73,10 @@ abstract class PhotoParser implements IPhotoParser {
 class InstagramPhotoParser extends PhotoParser {
 
     public urls: string[] = [
-        'https://www.instagram.com/explore/tags/boobs/'
+        'http://instagram.com/art_of_ck',
+        'http://instagram.com/sensual_models',
+        'http://instagram.com/sensuality_bnw',
+        'http://instagram.com/classybabesxo'
     ];
     public thumbnailReg: RegExp = new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g);
 }
@@ -120,6 +123,11 @@ export class BoobsService {
             .subscribe(data => {
                 BoobsService.postDataToSlack();
             });
+
+
+        BoobsService
+            .grabAllData()
+            .then(() => BoobsService.postDataToSlack());
     }
 
 }

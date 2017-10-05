@@ -14,7 +14,7 @@ import IndexRouter from './view-routers/index.router';
 import InstagramRouter from './api/v1/InstagramRouter';
 import TwitterRouter from './api/v1/TwitterRouter';
 
-import boobsService from './services/boobs.service';
+import boobsService, {BoobsService} from './services/boobs.service';
 
 // Creates and configures an ExpressJS web server.
 class App {
