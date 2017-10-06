@@ -1,12 +1,12 @@
 import {Request, Response, NextFunction} from 'express';
 import {RouterClass} from '../../classes/router.class';
-import {InstagramPhotoParser} from '../../services/boobs.service';
+import boobsService from '../../services/boobs.service';
 
 export class SlackCommandsRouter extends RouterClass {
 
     public getSomeBoobs(req: Request, res: Response, next: NextFunction) {
-        return new InstagramPhotoParser()
-            .grabTheData(false)
+        return boobsService
+            .getAllImages()
             .then(data => {
 
                 res.json({

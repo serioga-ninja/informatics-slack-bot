@@ -4,7 +4,7 @@ import ImageModel, {IImageModel, IImageModelDocument} from '../models/image.mode
 import variables from '../configs/variables';
 
 const HOUR = 1000 * 60 * 60;
-const POST_DATA_INTERVAL = 1000 * 60 * 10; // 10 minutes
+const POST_DATA_INTERVAL = 1000 * 60 * 20; // 10 minutes
 
 function getMatches(string, regex, index): string[] {
     index || (index = 1); // default to the first capturing group
@@ -80,6 +80,14 @@ export class InstagramPhotoParser extends PhotoParser {
         'http://instagram.com/art_of_ck',
         'http://instagram.com/sensual_models',
         'http://instagram.com/sensuality_bnw',
+        'http://instagram.com/man_talk_about_this',
+        'http://instagram.com/mens_top_girls',
+        'http://instagram.com/beautiful_shapes777',
+        'http://instagram.com/top_girl_russia_',
+        'http://instagram.com/playboy_moscow',
+        'http://instagram.com/exclusive_grls',
+        'http://instagram.com/top_hotestgirls_',
+        'http://instagram.com/prideallamen',
         'http://instagram.com/classybabesxo'
     ];
     public thumbnailReg: RegExp = new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g);
@@ -120,6 +128,9 @@ export class BoobsService {
             });
     }
 
+    constructor() {
+    }
+
     init() {
         Observable
             .interval(HOUR)
@@ -131,6 +142,22 @@ export class BoobsService {
             .interval(POST_DATA_INTERVAL)
             .subscribe(data => {
                 BoobsService.postDataToSlack();
+            });
+
+        BoobsService.grabAllData();
+    }
+
+    public getAllImageDocuments(): Promise<IImageModelDocument[]> {
+        return ImageModel
+            .find({link: /^http/})
+            .then((data: IImageModelDocument[]) => data);
+    }
+
+    public getAllImages(): Promise<string[]> {
+        return this
+            .getAllImageDocuments()
+            .then(data => {
+                return data.map((row: IImageModelDocument) => row.link)
             });
     }
 
