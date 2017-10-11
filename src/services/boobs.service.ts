@@ -108,22 +108,21 @@ export class BoobsService {
             .findOne({isPosted: false})
             .select('link')
             .exec((err, imageModelDocument: IImageModelDocument) => {
-                if (!imageModelDocument) {
-                    // there is no more boobs in the database! we need more!
-                    return;
-                }
+                let link = imageModelDocument ? imageModelDocument.link : 'No more boobs for today!';
 
                 request({
                     method: 'POST',
                     url: variables.slack.XXX_CHANEL_URL,
                     json: true,
                     body: {
-                        text: imageModelDocument.link
+                        text: link
                     }
                 }, (error, result: any) => {
-                    return imageModelDocument.set({
-                        isPosted: true
-                    }).save();
+                    if (imageModelDocument) {
+                        return imageModelDocument.set({
+                            isPosted: true
+                        }).save();
+                    }
                 })
             });
     }
