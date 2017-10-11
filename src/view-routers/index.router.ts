@@ -3,6 +3,7 @@ import {RouterClass} from '../classes/router.class';
 import {InstagramHelper} from '../helpers/instagram.helper';
 import variables from '../configs/variables';
 import {TwitterHelper} from '../helpers/twitter.helper';
+import {SlackHelper} from '../helpers/slack.helper';
 
 
 class IndexRouter extends RouterClass {
@@ -11,10 +12,11 @@ class IndexRouter extends RouterClass {
         res.render('index', {
             apisData: {
                 instaGramToken: !!variables.social.instagram.accessToken,
-                twitterToken: !!variables.social.twitter.accessToken
+                twitterToken: !!variables.social.twitter.accessToken,
+                slackToken: !!variables.slack.access_token,
             },
             instagramUrl: InstagramHelper.authUrl,
-            someRow: new Buffer(Math.random().toString()).toString('hex')
+            slackUrl: SlackHelper.authUrl
         });
     }
 

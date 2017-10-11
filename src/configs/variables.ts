@@ -4,6 +4,8 @@ export const variables = {
         CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
         XXX_CHANEL_URL: process.env.SLACK_XXX_CHANEL_LINK,
         SLACK_NEWS_CHANEL_LINK: process.env.SLACK_NEWS_CHANEL_LINK,
+        access_token: '',
+        authorization_code: ''
     },
     VERSION: '1',
 
