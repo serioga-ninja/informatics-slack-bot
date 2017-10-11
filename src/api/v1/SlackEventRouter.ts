@@ -1,6 +1,9 @@
 import {Request, Response, NextFunction} from 'express';
 import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
 import {RouterClass} from '../../classes/router.class';
+import variables from '../../configs/variables';
+import * as request from 'request';
+import * as qs from 'querystring';
 
 export class SlackEventRouter extends RouterClass {
 
@@ -9,7 +12,43 @@ export class SlackEventRouter extends RouterClass {
         res.setHeader('Content-type', 'text/plain');
         res.end(req.body.challenge);
         console.log(req.body);
-        // TODO: https://api.slack.com/methods/chat.postMessage
+    }
+
+    public handleAuthoriseRequest(req: Request, res: Response) {
+        let {code} = req.query;
+
+        variables.slack.authorization_code = code;
+
+        request({
+            method: 'POST',
+            url: 'https://slack.com/api/oauth.access',
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+            },
+            body: qs.stringify({
+                client_id: variables.slack.CLIENT_ID,
+                client_secret: variables.slack.CLIENT_SECRET,
+                code: code
+            })
+        }, (err, result: any) => {
+            console.log(result.body);
+            variables.slack.access_token = result.body.access_token;
+
+            request({
+                method: 'POST',
+                url: 'https://slack.com/api/rtm.connect',
+                headers: {
+                    'Content-type': 'application/x-www-form-urlencoded'
+                },
+                body: qs.stringify({
+                    token: variables.slack.access_token
+                })
+            }, (err, result: any) => {
+
+                res.send('OK');
+            });
+        });
+
     }
 
     /**
@@ -18,6 +57,7 @@ export class SlackEventRouter extends RouterClass {
      */
     init() {
         this.router.post('/oauth', this.handleEventRequest);
+        this.router.get('/oauth-callback', this.handleAuthoriseRequest);
     }
 
 }
