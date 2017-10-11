@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "slack-bot",
+      "script": "./index.js",
+      "error_file": "./log/errors.log",
+      "out_file": "./log/out.log",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}

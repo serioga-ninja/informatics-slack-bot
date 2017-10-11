@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
+    "start:prod": "./node_modules/.bin/pm2 start process.json",
     "start:db": "mongod --dbpath ./data/db/",
     "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views"
   },
@@ -25,6 +26,7 @@
     "jsdom": "^11.3.0",
     "mongoose": "^4.12.0",
     "morgan": "^1.8.2",
+    "pm2": "^2.7.1",
     "request": "^2.81.0",
     "rxjs": "^5.4.0",
     "ts-node": "^3.3.0",
