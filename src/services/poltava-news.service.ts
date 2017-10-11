@@ -26,7 +26,7 @@ class PoltavaNewsService extends ParserService<IPoltavaNewsModel> implements IPa
                     .then(data => this.postToSlack(data));
             });
 
-        this
+        return this
             .grabTheData()
             .then(data => this.filterData(data))
             .then(data => this.saveToDB(data))

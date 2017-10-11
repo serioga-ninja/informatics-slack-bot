@@ -2,6 +2,7 @@ import * as request from 'request';
 import {Observable} from 'rxjs/Rx';
 import ImageModel, {IImageModel, IImageModelDocument} from '../models/image.model';
 import variables from '../configs/variables';
+import {HandleErrorsDecorator} from '../decorators/handle-errors.decorator';
 
 const HOUR = 1000 * 60 * 60;
 const POST_DATA_INTERVAL = 1000 * 60 * 20; // 10 minutes
@@ -95,7 +96,8 @@ export class InstagramPhotoParser extends PhotoParser {
 
 export class BoobsService {
 
-    static grabAllData() {
+    @HandleErrorsDecorator
+    static grabAllData(): Promise<any> {
         let instagramPhotoParser = new InstagramPhotoParser();
 
         return instagramPhotoParser
@@ -103,27 +105,31 @@ export class BoobsService {
             .then(data => instagramPhotoParser.saveToDB(data));
     }
 
-    static postDataToSlack() {
-        ImageModel
+    @HandleErrorsDecorator
+    static postDataToSlack(): Promise<any> {
+        return ImageModel
             .findOne({isPosted: false})
             .select('link')
-            .exec((err, imageModelDocument: IImageModelDocument) => {
+            .then((imageModelDocument: IImageModelDocument) => {
                 let link = imageModelDocument ? imageModelDocument.link : 'No more boobs for today!';
-
-                request({
-                    method: 'POST',
-                    url: variables.slack.XXX_CHANEL_URL,
-                    json: true,
-                    body: {
-                        text: link
-                    }
-                }, (error, result: any) => {
-                    if (imageModelDocument) {
-                        return imageModelDocument.set({
-                            isPosted: true
-                        }).save();
-                    }
-                })
+                return new Promise(resolve => {
+                    request({
+                        method: 'POST',
+                        url: variables.slack.XXX_CHANEL_URL,
+                        json: true,
+                        body: {
+                            text: link
+                        }
+                    }, (error, result: any) => {
+                        if (imageModelDocument) {
+                            return imageModelDocument.set({
+                                isPosted: true
+                            }).save().then(() => resolve());
+                        } else {
+                            resolve();
+                        }
+                    })
+                });
             });
     }
 
