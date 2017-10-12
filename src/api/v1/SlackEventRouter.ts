@@ -33,7 +33,6 @@ export class SlackEventRouter extends RouterClass {
         }, (err, result: any) => {
             console.log(result.body);
             variables.slack.access_token = result.body.access_token;
-//{"ok":true,"access_token":"xoxp-184994293155-185116495316-189516933925-c048325d377ebd0dd553ac4f93da1011","scope":"identify,commands,incoming-webhook,channels:history,groups:history,im:history","user_id":"U5F3EEK9A","team_name":"Informatics","team_id":"T5EV88M4K","incoming_webhook":{"channel":"@serioga","channel_id":"D5EEQ0SC9","configuration_url":"https:\/\/informatics-2.slack.com\/services\/B7GQC2L2Z","url":"https:\/\/hooks.slack.com\/services\/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"}}
 
             request({
                 method: 'POST',

@@ -14,8 +14,9 @@ import IndexRouter from './view-routers/index.router';
 import InstagramRouter from './api/v1/InstagramRouter';
 import TwitterRouter from './api/v1/TwitterRouter';
 
-import boobsService, {BoobsService} from './services/boobs.service';
+import boobsService from './services/boobs.service';
 import poltavaNewsService from './services/poltava-news.service';
+import weatherService from './services/weather.service';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -62,6 +63,7 @@ class App {
 
         boobsService.init();
         poltavaNewsService.init();
+        weatherService.init();
     }
 }
 

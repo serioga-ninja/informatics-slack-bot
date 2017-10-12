@@ -4,6 +4,7 @@ export const variables = {
         CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
         XXX_CHANEL_URL: process.env.SLACK_XXX_CHANEL_LINK,
         SLACK_NEWS_CHANEL_LINK: process.env.SLACK_NEWS_CHANEL_LINK,
+        SLACK_TEST_CHANEL_LINK: process.env.SLACK_TEST_CHANEL_LINK,
         access_token: '',
         authorization_code: ''
     },
@@ -31,6 +32,12 @@ export const variables = {
             accessToken: ''
         }
     },
+
+    weather: {
+        openWeatherApiKey: process.env.OPEN_WEATHER_API_KEY,
+        poltavaCityId: 696643
+    },
+
 
     domainUrl: process.env.DOMAIN_URL
 };

@@ -155,7 +155,6 @@ export class BoobsService {
             });
 
         BoobsService.grabAllData();
-        BoobsService.postDataToSlack();
     }
 
     public getAllImageDocuments(): Promise<IImageModelDocument[]> {
