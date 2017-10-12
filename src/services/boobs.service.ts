@@ -5,7 +5,7 @@ import variables from '../configs/variables';
 import {HandleErrorsDecorator} from '../decorators/handle-errors.decorator';
 
 const HOUR = 1000 * 60 * 60;
-const POST_DATA_INTERVAL = 1000 * 60 * 20; // 10 minutes
+const POST_DATA_INTERVAL = 1000 * 60 * 30; // 30 minutes
 
 function getMatches(string, regex, index): string[] {
     index || (index = 1); // default to the first capturing group
@@ -108,10 +108,14 @@ export class BoobsService {
     @HandleErrorsDecorator
     static postDataToSlack(): Promise<any> {
         return ImageModel
-            .findOne({isPosted: false})
-            .select('link')
-            .then((imageModelDocument: IImageModelDocument) => {
-                let link = imageModelDocument ? imageModelDocument.link : 'No more boobs for today!';
+            .aggregate(
+                {
+                    $match: {isPosted: false}
+                }
+            )
+            .sample(1)
+            .then((imageModelDocuments: IImageModelDocument[]) => {
+                let link = imageModelDocuments.length > 0 ? imageModelDocuments[0].link : 'No more boobs for today!';
                 return new Promise(resolve => {
                     request({
                         method: 'POST',
@@ -121,10 +125,11 @@ export class BoobsService {
                             text: link
                         }
                     }, (error, result: any) => {
-                        if (imageModelDocument) {
-                            return imageModelDocument.set({
+                        if (imageModelDocuments.length > 0) {
+
+                            return ImageModel.findOneAndUpdate({_id: imageModelDocuments[0]._id}, {
                                 isPosted: true
-                            }).save().then(() => resolve());
+                            }).then(() => resolve());
                         } else {
                             resolve();
                         }
@@ -150,6 +155,7 @@ export class BoobsService {
             });
 
         BoobsService.grabAllData();
+        BoobsService.postDataToSlack();
     }
 
     public getAllImageDocuments(): Promise<IImageModelDocument[]> {
