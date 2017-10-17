@@ -1,12 +1,12 @@
-import {Request, Response, NextFunction} from 'express';
+import {Request, Response} from 'express';
 import {RouterClass} from '../../classes/router.class';
-import boobsService from '../../services/boobs.service';
-import weatherService, {WeatherService} from '../../services/weather.service';
+import weatherService, {OpenWeatherService} from '../../services/open-weather.service';
+import {InstagramService} from '../../services/instagram.service';
 
 export class SlackCommandsRouter extends RouterClass {
 
-    public getSomeBoobs(req: Request, res: Response, next: NextFunction) {
-        return boobsService
+    public getSomeBoobs(req: Request, res: Response) {
+        return InstagramService
             .getAllImages()
             .then(data => {
 
@@ -34,7 +34,7 @@ export class SlackCommandsRouter extends RouterClass {
                 res.json({
                     response_type: 'in_channel',
                     text: '',
-                    attachments: WeatherService.weatherItemToSlackAttachment(data.list.slice(0, itemsToShow))
+                    attachments: OpenWeatherService.weatherItemToSlackAttachment(data.list.slice(0, itemsToShow))
                 });
             });
     }

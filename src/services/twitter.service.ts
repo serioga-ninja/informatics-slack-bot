@@ -26,7 +26,7 @@ interface IOAuthData {
     oauth_signature?: string;
 }
 
-export class TwitterHelper {
+export class TwitterService {
 
     static get accessTokenUrl(): string {
         return ACCESS_TOKEN_URL;
@@ -73,7 +73,7 @@ export class TwitterHelper {
             ...authData
         };
 
-        let signatureBaseSting = TwitterHelper.generateSignatureBaseString(method, url, data);
+        let signatureBaseSting = TwitterService.generateSignatureBaseString(method, url, data);
 
         // generate a sign key
         let signKey = `${variables.social.twitter.API_SECRET}&${variables.social.twitter.TOKEN_SECRET}`;

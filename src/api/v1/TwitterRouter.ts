@@ -1,9 +1,9 @@
 import {Request, Response, NextFunction} from 'express';
 import {RouterClass} from '../../classes/router.class';
 import * as request from 'request';
-import {TwitterHelper} from '../../helpers/twitter.helper';
 import variables from '../../configs/variables';
 import * as qs from 'querystring';
+import {TwitterService} from '../../services/twitter.service';
 
 
 export class TwitterRouter extends RouterClass {
@@ -18,7 +18,7 @@ export class TwitterRouter extends RouterClass {
             method: 'POST',
             url: `https://api.twitter.com/oauth2/token`,
             headers: {
-                Authorization: `Basic ${TwitterHelper.bearer}`,
+                Authorization: `Basic ${TwitterService.bearer}`,
                 'Content-type': 'application/x-www-form-urlencoded'
             },
             body: qs.stringify({
@@ -33,15 +33,12 @@ export class TwitterRouter extends RouterClass {
     }
 
     public invalidate(req: Request, res: Response, next: NextFunction) {
-        console.log(qs.stringify({
-            access_token: variables.social.twitter.accessToken
-        }));
 
         request({
             method: 'POST',
             url: `https://api.twitter.com/oauth2/invalidate_token`,
             headers: {
-                Authorization: `Basic ${TwitterHelper.bearer}`,
+                Authorization: `Basic ${TwitterService.bearer}`,
                 'Content-type': 'application/x-www-form-urlencoded'
             },
             body: qs.stringify({
@@ -58,12 +55,6 @@ export class TwitterRouter extends RouterClass {
 
     public search(req: Request, res: Response) {
         let searchQ: string = req.query.q;
-
-        console.log({
-            headers: {
-                Authorization: `Bearer ${variables.social.twitter.accessToken}`
-            }
-        });
 
         request({
             method: 'GET',
@@ -88,7 +79,7 @@ export class TwitterRouter extends RouterClass {
                 q: searchQ
             })}`,
             headers: {
-                Authorization: `OAuth ${TwitterHelper.getOAuthAuthorizationString(
+                Authorization: `OAuth ${TwitterService.getOAuthAuthorizationString(
                     'GET',
                     'https://api.twitter.com/1.1/users/search.json',
                     {
@@ -104,7 +95,7 @@ export class TwitterRouter extends RouterClass {
                 })}`,
                 headers: {
                     Authorization: `OAuth ${
-                        TwitterHelper.getOAuthAuthorizationString(
+                        TwitterService.getOAuthAuthorizationString(
                             'GET',
                             'https://api.twitter.com/1.1/users/search.json',
                             {

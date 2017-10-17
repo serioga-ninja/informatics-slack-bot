@@ -1,20 +1,23 @@
 import * as request from 'request';
 
-function getMatches(string: string, regex: RegExp, parseFn: (a: any[]) => any): any[] {
-    let matches = [];
-    let match;
-    while (match = regex.exec(string)) {
-        matches.push(parseFn(match));
-    }
-    return matches;
-}
-
 export abstract class ParserService<T> {
-    urls: string[];
-    thumbnailReg: RegExp;
 
-    getTheDom(): Promise<string[]> {
-        return <Promise<string[]>>Promise.all(this.urls.map(url => {
+    static getMatches<T>(string: string, regex: RegExp, parseFn: (a: any[]) => T): T[] {
+        let matches: T[] = [];
+        let match: string[];
+
+        while (match = regex.exec(string)) {
+            matches.push(parseFn(match));
+        }
+
+        return matches;
+    }
+
+    public urls: string[];
+    public thumbnailReg: RegExp;
+
+    getTheDom(urls: string[] = this.urls): Promise<string[]> {
+        return <Promise<string[]>>Promise.all(urls.map(url => {
             return new Promise(resolve => {
                 request.get(url, (err, result) => {
                     resolve((<any>result).body);
@@ -23,11 +26,11 @@ export abstract class ParserService<T> {
         }));
     }
 
-    grabTheData(parseFn: (a: any[]) => T[]): Promise<any> {
+    grabTheData(parseFn: (a: any[]) => any, urls: string[] = this.urls): Promise<any> {
         return Promise.all(this.urls.map(url => {
             return new Promise(resolve => {
                 request.get(url, (err, result) => {
-                    let results: T[] = getMatches((<any>result).body, this.thumbnailReg, parseFn);
+                    let results: T[] = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
 
                     resolve(results);
                 });

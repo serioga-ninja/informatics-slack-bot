@@ -2,14 +2,10 @@ import variables from '../configs/variables';
 
 import * as request from 'request';
 import * as qs from 'querystring';
-import {SlackService} from './slack.service';
 import {ISlackWebhookRequestBodyAttachment} from '../interfaces/i-slack-webhook-request-body-attachment';
-import {BoobsService} from './boobs.service';
-import {Observable} from 'rxjs/Observable';
 
-const COLLECT_WEATHER_INTERVAL = 1000 * 60 * 60 * 6;
 
-interface IWeatherItem {
+export interface IWeatherItem {
     dt: number;
     main: {
         temp: number;
@@ -39,7 +35,7 @@ interface ISuccessResponse {
     list: IWeatherItem[];
 }
 
-export class WeatherService {
+export class OpenWeatherService {
 
     static get PoltavaRequestUrl(): string {
         return `http://api.openweathermap.org/data/2.5/forecast?${qs.stringify({
@@ -65,8 +61,8 @@ export class WeatherService {
                     ts: row.dt,
                     footer: 'openweathermap',
                     footer_icon: 'https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/favicon.ico',
-                    title_link: WeatherService.PoltavaHtmlViewLink,
-                    image_url: WeatherService.getWeatherIcon(row.weather[0].icon),
+                    title_link: OpenWeatherService.PoltavaHtmlViewLink,
+                    image_url: OpenWeatherService.getWeatherIcon(row.weather[0].icon),
                     color: '#36a64f',
                     title: `${Math.ceil(row.main.temp)}C, ${row.weather[0].description}`
                 };
@@ -91,35 +87,14 @@ export class WeatherService {
     grabOpenWeatherData(): Promise<ISuccessResponse> {
         return new Promise(resolve => {
             request
-                .get(WeatherService.PoltavaRequestUrl, (err, result: any) => {
+                .get(OpenWeatherService.PoltavaRequestUrl, (err, result: any) => {
                     resolve(JSON.parse(result.body));
                 });
         });
     }
 
-    postWeatherToTheChanel(data: IWeatherItem[]): Promise<any> {
-        let attachments: ISlackWebhookRequestBodyAttachment[] = WeatherService.weatherItemToSlackAttachment(data);
-
-        return SlackService.postToChanel(variables.slack.SLACK_TEST_CHANEL_LINK, {
-            text: '',
-            attachments: attachments
-        });
-    }
-
-    init(): void {
-        Observable
-            .interval(COLLECT_WEATHER_INTERVAL)
-            .subscribe(data => {
-                this.grabOpenWeatherData()
-                    .then(data => this.lastWeather = data);
-            });
-
-        this.grabOpenWeatherData()
-            .then(data => this.lastWeather = data);
-    }
-
 }
 
-let weatherService = new WeatherService();
+let weatherService = new OpenWeatherService();
 
 export default weatherService;

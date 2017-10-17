@@ -2,8 +2,17 @@ import * as request from 'request';
 import * as qs from 'querystring';
 import * as http from 'http';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
+import variables from '../configs/variables';
 
 export class SlackService {
+
+    static get authUrl(): string {
+        return `https://slack.com/oauth/authorize?${qs.stringify({
+            client_id: variables.slack.CLIENT_ID,
+            scope: 'incoming-webhook,channels:history,im:history,commands',
+            redirect_uri: `${variables.domainUrl}/api/v1/events/oauth-callback`
+        })}`;
+    }
 
     static generateOauthAccessToken(): Promise<any> {
         return new Promise(resolve => {

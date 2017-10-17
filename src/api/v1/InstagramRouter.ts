@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 import {RouterClass} from '../../classes/router.class';
 import * as request from 'request';
 import {variables} from '../../configs/variables';
-import {InstagramHelper} from '../../helpers/instagram.helper';
+import {InstagramService} from '../../services/instagram.service';
 
 export interface IAuthCallbackQuery {
     code: string;
@@ -38,7 +38,7 @@ export class InstagramRouter extends RouterClass {
                 code: code,
                 client_secret: variables.social.instagram.CLIENT_SECRET,
                 grant_type: 'authorization_code',
-                redirect_uri: InstagramHelper.authRedirectUri,
+                redirect_uri: InstagramService.authRedirectUri,
                 client_id: variables.social.instagram.CLIENT_ID
             }
         }, (error, result: any) => {
