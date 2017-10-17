@@ -1,13 +1,16 @@
 import {Observable} from 'rxjs/Observable';
 import {PoltavaNewsService} from '../../services/poltava-news.service';
-import * as data from './data.json';
 
 const POST_FREQUENCY = 1000 * 60 * 10;
+
+const URLS = [
+    'https://poltava.to/news/'
+];
 
 class NewsModule {
 
     init() {
-        let poltavaNewsService = new PoltavaNewsService((<any>data).urls.poltava);
+        let poltavaNewsService = new PoltavaNewsService(URLS);
 
         Observable
             .interval(POST_FREQUENCY)

@@ -1,4 +1,3 @@
-import * as data from './data.json';
 import {InstagramService} from '../../services/instagram.service';
 import {HandleErrorsDecorator} from '../../decorators/handle-errors.decorator';
 import {IImageModelDocument, default as ImageModel} from '../../models/image.model';
@@ -10,17 +9,26 @@ import {Observable} from 'rxjs/Observable';
 const HOUR = 1000 * 60 * 60 * 2; // 2 hours
 const POST_DATA_INTERVAL = 1000 * 60 * 60; // 60 minutes
 
-interface IData {
-    urls: {
-        instagram: string[]
-    };
-}
+const URLS = [
+    'http://instagram.com/art_of_ck',
+    'http://instagram.com/sensual_models',
+    'http://instagram.com/sensuality_bnw',
+    'http://instagram.com/man_talk_about_this',
+    'http://instagram.com/mens_top_girls',
+    'http://instagram.com/beautiful_shapes777',
+    'http://instagram.com/top_girl_russia_',
+    'http://instagram.com/playboy_moscow',
+    'http://instagram.com/exclusive_grls',
+    'http://instagram.com/top_hotestgirls_',
+    'http://instagram.com/prideallamen',
+    'http://instagram.com/classybabesxo'
+];
 
 class BoobsModule {
 
     @HandleErrorsDecorator
     static grabAllData(): Promise<any> {
-        let instagramPhotoParser = new InstagramService((<any>data).urls.instagram, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
+        let instagramPhotoParser = new InstagramService(URLS, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
 
         return instagramPhotoParser
             .collectData()
