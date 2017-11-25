@@ -30,7 +30,12 @@ export abstract class ParserService<T> {
         return Promise.all(this.urls.map(url => {
             return new Promise(resolve => {
                 request.get(url, (err, result) => {
-                    let results: T[] = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
+                    let results: T[];
+                    if(result) {
+                        results = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
+                    } else {
+                        console.info(`${url} - undefined`);
+                    }
 
                     resolve(results);
                 });

@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 </head>
 <body>
-
+<div id="app"><%- content%></div>
+<script>
+    // WARNING: See the following for security issues around embedding JSON in HTML:
+    // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
+    window.__PRELOADED_STATE__ = JSON.parse(JSON.stringify(<%- JSON.stringify(preloadedState) %>).replace(/</g, '\\u003c'));
+</script>
+<script src="/bundle.js"></script>
 </body>
 </html>

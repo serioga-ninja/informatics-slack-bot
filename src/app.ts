@@ -13,6 +13,7 @@ import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
 import IndexRouter from './view-routers/index.router';
 import InstagramRouter from './api/v1/InstagramRouter';
 import TwitterRouter from './api/v1/TwitterRouter';
+import LinkRouter from './api/v1/LinksRouter';
 
 import boobsModule from './modules/boobs/boobs.module';
 import newsModule from './modules/news/news.module';
@@ -40,7 +41,7 @@ class App {
         this.express.use(logger('dev'));
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({extended: false}));
-
+        this.express.use(express.static('public'));
         this.express.set('views', path.join(__dirname, 'views/'));
         this.express.use(express.static(__dirname + './views'));
         this.express.set('view engine', 'ejs');
@@ -53,13 +54,15 @@ class App {
          * API endpoints */
 
         // placeholder route handler
-        this.express.use('/', IndexRouter);
         this.express.use('/api/v1/slack', SlackRouter);
         this.express.use('/api/v1/slack', SlackWebHookRouter);
         this.express.use('/api/v1/events', SlackEventRouter);
         this.express.use('/api/v1/commands', SlackCommandsRouter);
         this.express.use('/api/v1/social/instagram', InstagramRouter);
         this.express.use('/api/v1/social/twitter', TwitterRouter);
+        this.express.use('/api/v1/social/links', LinkRouter);
+
+        this.express.use('/', IndexRouter);
 
         boobsModule.init();
         newsModule.init();

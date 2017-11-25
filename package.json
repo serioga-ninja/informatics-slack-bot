@@ -1,14 +1,15 @@
 {
   "name": "rss-reader",
   "version": "1.0.0",
-  "description": "Rss reader",
+  "description": "Informatics slack bot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "start:prod": "./node_modules/.bin/pm2 start process.json",
     "start:db": "mongod --dbpath ./data/db/",
-    "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views"
+    "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views",
+    "webpack": "webpack -wd"
   },
   "engines": {
     "node": "6.10.3",
@@ -17,6 +18,7 @@
   "author": "serioga",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.17.0",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "dotenv": "^2.0.0",
@@ -27,13 +29,22 @@
     "mongoose": "^4.12.0",
     "morgan": "^1.8.2",
     "pm2": "^2.7.1",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.7.2",
     "request": "^2.81.0",
     "rxjs": "^5.4.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.3",
-    "websocket": "^1.0.24"
+    "webpack": "^3.8.1"
   },
   "devDependencies": {
+    "@types/prop-types": "^15.5.2",
+    "@types/axios": "^0.14.0",
     "@types/bluebird": "^3.5.12",
     "@types/body-parser": "0.0.33",
     "@types/express": "^4.0.35",
@@ -41,8 +52,16 @@
     "@types/lodash": "^4.14.64",
     "@types/mongoose": "^4.7.13",
     "@types/node": "^8.0.31",
+    "@types/react": "^16.0.22",
+    "@types/react-redux": "^5.0.13",
+    "@types/react-router": "^4.0.17",
+    "@types/react-router-redux": "^5.0.10",
+    "@types/redux": "^3.6.0",
     "@types/request": "0.0.32",
     "@types/sequelize": "^4.0.55",
-    "@types/sqlite3": "^2.2.33"
+    "@types/sqlite3": "^2.2.33",
+    "awesome-typescript-loader": "^3.3.0",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.6.1"
   }
 }
