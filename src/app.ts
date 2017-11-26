@@ -18,6 +18,8 @@ import LinkRouter from './api/v1/LinksRouter';
 import boobsModule from './modules/boobs/boobs.module';
 import newsModule from './modules/news/news.module';
 import weatherModule from './modules/weather/weather.module';
+import * as fs from 'fs';
+import variables from './configs/variables';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -63,11 +65,18 @@ class App {
         this.express.use('/api/v1/social/links', LinkRouter);
 
         this.express.use('/', IndexRouter);
-
-        boobsModule.init();
-        newsModule.init();
-        weatherModule.init();
+        //
+        // boobsModule.init();
+        // newsModule.init();
+        // weatherModule.init();
     }
 }
+
+
+let clientVariablesFilePath = path.join(__dirname, 'client-app', 'variables.json');
+if(fs.existsSync(clientVariablesFilePath)) {
+    fs.unlinkSync(clientVariablesFilePath);
+}
+fs.appendFileSync(clientVariablesFilePath, JSON.stringify(variables));
 
 export default new App().express;
