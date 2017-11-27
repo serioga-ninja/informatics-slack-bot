@@ -32,24 +32,8 @@ export class SlackRouter extends RouterClass {
         }
     }
 
-    public doCommand(req: Request, res: Response, next: NextFunction) {
-        let data = {
-            response_type: 'in_channel', // public to the channel
-            text: '302: Found',
-            attachments: [{
-                image_url: 'https://http.cat/302.jpg'
-            }]
-        };
-        res.json(data);
-    }
-
-    /**
-     * Take each handler, and attach to one of the Express.Router's
-     * endpoints.
-     */
     init() {
         this.router.get('/oauth', this.auth);
-        this.router.post('/command', this.doCommand);
     }
 
 }

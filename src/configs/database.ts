@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import variables from './variables';
 
 (<any>mongoose).Promise = global.Promise;
-mongoose.connect(`mongodb://${variables.database.user}:${variables.database.password}@${variables.database.host}/${variables.database.name}`, {
+mongoose.connect(`mongodb://${variables.database.user}:${variables.database.password}@${variables.database.host}/${variables.database.name}?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`, {
     useMongoClient: true,
     /* other options */
 });

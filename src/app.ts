@@ -36,6 +36,13 @@ class App {
     }
 
     private configure() {
+
+        let clientVariablesFilePath = path.join(__dirname, 'client-app', 'variables.json');
+        if (fs.existsSync(clientVariablesFilePath)) {
+            fs.unlinkSync(clientVariablesFilePath);
+        }
+        fs.appendFileSync(clientVariablesFilePath, JSON.stringify(variables));
+
     }
 
     // Configure Express middleware.
@@ -65,18 +72,13 @@ class App {
         this.express.use('/api/v1/social/links', LinkRouter);
 
         this.express.use('/', IndexRouter);
-        //
-        // boobsModule.init();
-        // newsModule.init();
-        // weatherModule.init();
+
+        if (process.env.NODE_ENV === 'production') {
+            boobsModule.init();
+            newsModule.init();
+            weatherModule.init();
+        }
     }
 }
-
-
-let clientVariablesFilePath = path.join(__dirname, 'client-app', 'variables.json');
-if(fs.existsSync(clientVariablesFilePath)) {
-    fs.unlinkSync(clientVariablesFilePath);
-}
-fs.appendFileSync(clientVariablesFilePath, JSON.stringify(variables));
 
 export default new App().express;

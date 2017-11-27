@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {RouterClass} from '../../classes/router.class';
 import weatherService, {OpenWeatherService} from '../../services/open-weather.service';
 import {InstagramService} from '../../services/instagram.service';
+import SlackAppsModule from '../../modules/slack-apps/slack-apps.module';
 
 export class SlackCommandsRouter extends RouterClass {
 
@@ -39,6 +40,14 @@ export class SlackCommandsRouter extends RouterClass {
             });
     }
 
+    public informaticsBot(req: Request, res: Response) {
+        return new SlackAppsModule(req.body.text)
+            .execute(req.body)
+            .then(result => {
+                res.json(result);
+            })
+    }
+
     /**
      * Take each handler, and attach to one of the Express.Router's
      * endpoints.
@@ -46,6 +55,7 @@ export class SlackCommandsRouter extends RouterClass {
     init() {
         this.router.post('/boobs', this.getSomeBoobs);
         this.router.post('/weather', this.getSomeWeather);
+        this.router.post('/informatics-bot', this.informaticsBot);
     }
 
 }

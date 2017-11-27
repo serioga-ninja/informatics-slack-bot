@@ -4,6 +4,7 @@ import {RouterClass} from '../../classes/router.class';
 import variables from '../../configs/variables';
 import * as request from 'request';
 import * as qs from 'querystring';
+import {SlackService} from '../../services/slack.service';
 
 export class SlackEventRouter extends RouterClass {
 
@@ -31,22 +32,41 @@ export class SlackEventRouter extends RouterClass {
                 code: code
             })
         }, (err, result: any) => {
-            console.log(result.body);
-            variables.slack.access_token = result.body.access_token;
 
-            request({
-                method: 'POST',
-                url: 'https://slack.com/api/rtm.connect',
-                headers: {
-                    'Content-type': 'application/x-www-form-urlencoded'
-                },
-                body: qs.stringify({
-                    token: variables.slack.access_token
+            if (err) {
+                return res.send('Error');
+            }
+            let body = JSON.parse(result.body);
+            if (!body.ok) {
+                return res.send(body.error);
+            }
+
+            return SlackService
+                .chanelAlreadyRegistered(body.incoming_webhook.channel_id)
+                .then(isRegistered => {
+                    if (isRegistered) {
+                        res.send('Chanel already registered.')
+                    } else {
+                        return SlackService.registerNewChanel(body);
+                    }
                 })
-            }, (err, result: any) => {
-                // TODO: implement this example https://github.com/theturtle32/WebSocket-Node#client-example
-                res.send('OK');
-            });
+                .then(() => {
+                    res.send('OK');
+                });
+
+            // request({
+            //     method: 'POST',
+            //     url: 'https://slack.com/api/rtm.connect',
+            //     headers: {
+            //         'Content-type': 'application/x-www-form-urlencoded'
+            //     },
+            //     body: qs.stringify({
+            //         token: variables.slack.access_token
+            //     })
+            // }, (err, result: any) => {
+            //     // TODO: implement this example https://github.com/theturtle32/WebSocket-Node#client-example
+            //     res.send('OK');
+            // });
         });
 
     }
