@@ -15,22 +15,11 @@ export const RegisteredAppModelSchema: mongoose.Schema = new mongoose.Schema({
         channel_id: String,
         configuration_url: String
     },
-    modules: [{
-        module_type: {
-            type: Number,
-            required: true
-        },
-        configuration: {
-            frequency: {
-                type: Number,
-                default: 30 // seconds
-            }
-        }
-    }]
+    modules: [String]
 }, {
     timestamps: {createdAt: 'created_at'}
 });
 
-export const RegisteredAppModel = mongoose.model<IRegisteredAppModelDocument>('RegisteredApps', RegisteredAppModelSchema);
+export const RegisteredAppModel = mongoose.model<IRegisteredAppModelDocument>('registered_apps', RegisteredAppModelSchema);
 
 export default RegisteredAppModel;

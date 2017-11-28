@@ -1,4 +1,4 @@
-import {BaseCommand, ICommandSuccess} from './base-command.class';
+import {BaseCommand, ICommandSuccess} from '../../BaseCommand.class';
 import RegisteredAppModel from '../../../models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import variables from '../../../configs/variables';
@@ -12,11 +12,7 @@ export class ChanelAlreadyRegisteredError extends Error {
 }
 
 
-export class RegistrationCommand extends BaseCommand {
-
-    constructor(public name: string, public args: string[]) {
-        super();
-    }
+class RegistrationCommand extends BaseCommand {
 
     validate(requestBody: ISlackRequestBody) {
         return RegisteredAppModel
@@ -28,7 +24,7 @@ export class RegistrationCommand extends BaseCommand {
             })
     }
 
-    execute(requestBody: ISlackRequestBody) {
+    execute(requestBody: ISlackRequestBody, args: string[]) {
         return this
             .validate(requestBody)
             .then(() => {
@@ -53,3 +49,7 @@ export class RegistrationCommand extends BaseCommand {
             });
     }
 }
+
+let slackBotRegistrationCommand = new RegistrationCommand();
+
+export default slackBotRegistrationCommand;

@@ -1,10 +1,15 @@
 import * as request from 'request';
-import {ParserService} from '../classes/parser.service';
+import {ParserService} from '../../classes/parser.service';
 import {JSDOM} from 'jsdom';
-import PoltavaNewsModel, {IPoltavaNewsModel, IPoltavaNewsModelDocument} from '../models/poltava-news.model';
-import variables from '../configs/variables';
+import PoltavaNewsModel, {IPoltavaNewsModel, IPoltavaNewsModelDocument} from '../../models/poltava-news.model';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {IRegisteredModule} from '../../interfaces/i-registered-module';
+import {ModuleTypes} from '../../enums/module-types';
+import {RegisteredModuleModel} from '../../models/registered-module.model';
 
 export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
+
+    public static activeModules: BehaviorSubject<IRegisteredModule[]> = new BehaviorSubject([]);
 
     public static filterData(data: IPoltavaNewsModel[]): Promise<IPoltavaNewsModel[]> {
         return PoltavaNewsModel
@@ -23,14 +28,14 @@ export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
         return Promise.all(data.map(row => {
             return new PoltavaNewsModel().set(<IPoltavaNewsModel>{
                 link: row.link,
-                isPosted: true,
+                postedChannels: [],
                 title: row.title,
                 imageUrl: row.imageUrl
             }).save();
         }))
     }
 
-    public static postToSlack(data: IPoltavaNewsModelDocument[] = []): Promise<void> {
+    public static postToSlack(data: IPoltavaNewsModelDocument[] = [], chanelLink: string): Promise<void> {
         return new Promise(resolve => {
             if (data.length === 0) {
                 return resolve();
@@ -38,7 +43,7 @@ export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
 
             request({
                 method: 'POST',
-                url: variables.slack.SLACK_NEWS_CHANEL_LINK,
+                url: chanelLink,
                 json: true,
                 body: {
                     text: '',
@@ -53,6 +58,22 @@ export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
             }, (error, result: any) => {
                 resolve();
             });
+        })
+    }
+
+    public static registerNewChannel(chanelId: string, chanelLink: string) {
+        return new RegisteredModuleModel().set(<IRegisteredModule>{
+            module_type: ModuleTypes.poltavaNews,
+            configuration: {
+                frequency: 10
+            },
+            chanel_id: chanelId,
+            chanel_link: chanelLink,
+        }).save().then((model) => {
+            let allCollection = PoltavaNewsService.activeModules.getValue();
+            allCollection.push(model);
+            PoltavaNewsService.activeModules.next(allCollection);
+            return model;
         })
     }
 

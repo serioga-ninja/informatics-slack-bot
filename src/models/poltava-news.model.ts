@@ -5,7 +5,7 @@ export interface IPoltavaNewsModel {
     link: string;
     title: string;
     imageUrl: string;
-    isPosted?: boolean;
+    postedChannels: string[];
     createdAt?: Date;
 }
 
@@ -31,14 +31,11 @@ export const PoltavaNewsModelSchema: mongoose.Schema = new mongoose.Schema({
         type: String,
         require: true
     },
-    isPosted: {
-        type: Boolean,
-        default: false
-    }
+    postedChannels: [String]
 }, {
     timestamps: {createdAt: 'created_at'}
 });
 
-export const PoltavaNewsModel = mongoose.model<IPoltavaNewsModelDocument>('PoltavaNews', PoltavaNewsModelSchema);
+export const PoltavaNewsModel = mongoose.model<IPoltavaNewsModelDocument>('poltava_news', PoltavaNewsModelSchema);
 
 export default PoltavaNewsModel;

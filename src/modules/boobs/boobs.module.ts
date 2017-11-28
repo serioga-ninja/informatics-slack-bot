@@ -5,6 +5,8 @@ import * as request from 'request';
 import variables from '../../configs/variables';
 import {Observable} from 'rxjs/Observable';
 
+import 'rxjs/add/observable/interval';
+
 
 const HOUR = 1000 * 60 * 60 * 2; // 2 hours
 const POST_DATA_INTERVAL = 1000 * 60 * 60; // 60 minutes

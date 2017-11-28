@@ -1,9 +1,3 @@
-import {ModuleTypes} from '../enums/module-types';
-
-export interface IRegisteredAppModuleConfiguration {
-    frequency: number;
-}
-
 export interface IRegisteredApp {
     _id: any;
     incoming_webhook: {
@@ -12,9 +6,6 @@ export interface IRegisteredApp {
         channel_id: string;
         configuration_url: string
     };
-    modules: {
-        module_type: ModuleTypes;
-        configuration: IRegisteredAppModuleConfiguration;
-    }[];
+    modules: string[];
     createdAt?: Date;
 }
