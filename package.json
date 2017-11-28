@@ -10,7 +10,8 @@
     "start:prod": "./node_modules/.bin/pm2 start process.json",
     "start:db": "mongod --dbpath ./data/db/",
     "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views",
-    "webpack": "webpack -wd"
+    "webpack": "webpack -wd",
+    "ngrok": "./node_modules/.bin/ngrok http 3000"
   },
   "engines": {
     "node": "6.10.3",

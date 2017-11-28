@@ -14,7 +14,7 @@
 - setup the DB_* and SLACK_* variables in there. If you don't have slack keys ask the admin
 - `node index.js` - to start in development mode
 - `npm start` - to start in prod mode, NOTE: You should export all environment variables before start
-- For dev environment it will start ngrok tunnel to localhost. Search for the ngrok url in console output
+- `npm run ngrok` - to start tunnel for dev environment
 
 ## Usage
 
