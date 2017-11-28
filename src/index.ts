@@ -2,6 +2,8 @@ import * as http from 'http';
 import * as debug from 'debug';
 
 import App from './app';
+import startNgrok from './ngrok';
+
 debug('ts-express:server');
 
 const port = normalizePort(process.env.PORT || 3000);
@@ -40,4 +42,8 @@ function onListening(): void {
     let addr = server.address();
     let bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
     console.log(`Listening on ${bind}`);
+
+    if (process.env.NODE_ENV !== 'production') {
+        startNgrok(addr.port);
+    }
 }

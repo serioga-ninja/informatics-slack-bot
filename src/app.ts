@@ -18,8 +18,10 @@ import LinkRouter from './api/v1/LinksRouter';
 import boobsModule from './modules/boobs/boobs.module';
 import newsModule from './modules/news/news.module';
 import weatherModule from './modules/weather/weather.module';
-import * as fs from 'fs';
 import variables from './configs/variables';
+import {NextFunction, Request, Response} from 'express';
+
+import 'rxjs/add/observable/interval';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -36,13 +38,6 @@ class App {
     }
 
     private configure() {
-
-        let clientVariablesFilePath = path.join(__dirname, 'client-app', 'variables.json');
-        if (fs.existsSync(clientVariablesFilePath)) {
-            fs.unlinkSync(clientVariablesFilePath);
-        }
-        fs.appendFileSync(clientVariablesFilePath, JSON.stringify(variables));
-
     }
 
     // Configure Express middleware.
@@ -54,6 +49,22 @@ class App {
         this.express.set('views', path.join(__dirname, 'views/'));
         this.express.use(express.static(__dirname + './views'));
         this.express.set('view engine', 'ejs');
+
+        this.express.use(function (req: Request, res: Response, next: NextFunction) {
+            let render = res.render;
+            res.render = function (...args) {
+
+                args[1] = Object.assign(args[1] || {}, {
+                    variables: {
+                        version: variables.VERSION,
+                        domainUrl: variables.domainUrl
+                    }
+                });
+
+                render.apply(res, args);
+            };
+            next();
+        });
     }
 
     // Configure API endpoints.

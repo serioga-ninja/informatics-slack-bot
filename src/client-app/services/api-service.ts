@@ -1,13 +1,10 @@
-import * as data from '../variables.json';
-
-let domainUrl: string = (<any>data).domainUrl;
-let apiVersion: string = (<any>data).VERSION;
+import configurationService from './configuration.service';
 
 export abstract class ApiService {
 
     abstract resourceName: string;
 
     get baseApiUrl() {
-        return `http://${domainUrl}/api/v${apiVersion}/${this.resourceName}`;
+        return `http://${configurationService.domainUrl}/api/v${configurationService.version}/${this.resourceName}`;
     }
 }
