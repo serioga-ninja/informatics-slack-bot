@@ -6,10 +6,6 @@ export interface IPoltavaNewsModelDocument extends IPoltavaNewsModel, mongoose.D
 
 
 export const PoltavaNewsModelSchema: mongoose.Schema = new mongoose.Schema({
-    id: {
-        type: String,
-        require: true
-    },
     link: {
         type: String,
         require: true,

@@ -1,9 +1,9 @@
-import {IRegisteredModule} from '../interfaces/i-registered-module';
+import {IRegisteredModule} from '../../interfaces/i-registered-module';
 import Timer = NodeJS.Timer;
 import * as mongoose from 'mongoose';
-import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
+import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import request = require('request');
-import {LogService} from '../services/log.service';
+import {LogService} from '../../services/log.service';
 
 let logService = new LogService('Registered Modules');
 
@@ -17,7 +17,7 @@ export class RegisteredModuleInstance {
 
     private _interval: Timer;
 
-    constructor(public model: IRegisteredModule,
+    constructor(public model: IRegisteredModule<any>,
                 private modelInstance: mongoose.Model<ISomething>,
                 private agregateFunction: (collection: ISomething[]) => Promise<ISlackWebhookRequestBody | null>) {
         this._interval = setInterval(() => this.onAction(), MINUTE * model.configuration.frequency);

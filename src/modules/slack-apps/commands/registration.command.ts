@@ -1,5 +1,5 @@
-import {BaseCommand, ICommandSuccess} from '../../BaseCommand.class';
-import RegisteredAppModel from '../../../models/registered-app.model';
+import {BaseCommand, ICommandSuccess} from '../../core/BaseCommand.class';
+import RegisteredAppModel from '../models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import variables from '../../../configs/variables';
 

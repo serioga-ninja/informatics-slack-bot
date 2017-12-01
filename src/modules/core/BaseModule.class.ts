@@ -1,7 +1,11 @@
 import {BaseCommand, ICommandSuccess} from './BaseCommand.class';
 import {Router} from 'express';
-import {RouterClass} from '../classes/router.class';
-import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
+import {RouterClass} from '../../classes/router.class';
+import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/interval';
+
+const PRELOAD_DATA_FREQUENCY = 1000 * 60 * 10;
 
 export abstract class BaseModuleClass {
 
@@ -19,7 +23,19 @@ export abstract class BaseModuleClass {
         this.router = Router();
     }
 
-    abstract init(): void;
+    init(): void {
+
+        Observable
+            .interval(PRELOAD_DATA_FREQUENCY)
+            .subscribe(() => {
+                this.collectData();
+            });
+
+        this.collectData()
+            .then(() => this.preloadActiveModules());
+    }
+
+    abstract collectData(): Promise<any>;
 
     abstract preloadActiveModules(): Promise<any>
 

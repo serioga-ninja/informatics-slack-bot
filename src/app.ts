@@ -10,7 +10,6 @@ import SlackRouter from './api/v1/SlackRouter';
 import SlackEventRouter from './api/v1/SlackEventRouter';
 import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
 import IndexRouter from './view-routers/index.router';
-import InstagramRouter from './api/v1/InstagramRouter';
 import TwitterRouter from './api/v1/TwitterRouter';
 import LinkRouter from './api/v1/LinksRouter';
 
@@ -70,7 +69,6 @@ class App {
         this.express.use('/api/v1/slack', SlackRouter);
         this.express.use('/api/v1/events', SlackEventRouter);
         this.express.use('/api/v1/commands', SlackCommandsRouter);
-        this.express.use('/api/v1/social/instagram', InstagramRouter);
         this.express.use('/api/v1/social/twitter', TwitterRouter);
         this.express.use('/api/v1/social/links', LinkRouter);
 

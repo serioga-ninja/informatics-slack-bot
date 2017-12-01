@@ -1,13 +1,13 @@
-import {BaseModuleClass} from '../BaseModule.class';
+import {BaseModuleClass} from '../core/BaseModule.class';
 import {PoltavaNewsRouter} from './poltava-news.router';
 import {PoltavaNewsService} from './poltava-news.service';
 import poltavaNewsRegistrationCommand from './commands/registration.command';
-import RegisteredModuleModel from '../../models/registered-module.model';
+import RegisteredModuleModel from '../slack-apps/models/registered-module.model';
 import {ModuleTypes} from '../../enums/module-types';
 import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/interval';
-import {RegisteredModulesService} from '../slack-apps/registered-modules.service';
+import {RegisteredModulesService} from '../core/Modules.service';
 import poltavaNewsRemoveCommand from './commands/remove.command';
 import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
 import {LogService} from '../../services/log.service';
@@ -37,7 +37,7 @@ class PoltavaNewsModule extends BaseModuleClass {
                 this.collectData();
             });
 
-        this.collectData().then(() => this.preloadActiveModules());
+        super.init();
     }
 
     collectData() {

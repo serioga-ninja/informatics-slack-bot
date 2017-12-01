@@ -1,4 +1,4 @@
-import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
+import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 
 export interface ICommandSuccess {
     response_type: 'in_channel';

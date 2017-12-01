@@ -1,4 +1,4 @@
-import {BaseCommand, ICommandSuccess} from '../../BaseCommand.class';
+import {BaseCommand, ICommandSuccess} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 
 class CommandInProgress extends BaseCommand {

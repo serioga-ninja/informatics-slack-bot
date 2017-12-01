@@ -1,9 +1,9 @@
-import {RegisteredModuleInstance} from '../RegisteredModuleInstance';
-import {IRegisteredModule} from '../../interfaces/i-registered-module';
+import {RegisteredModuleInstance} from './RegisteredModuleInstance';
+import {IBaseRegisteredModule, IRegisteredModule} from '../../interfaces/i-registered-module';
 import {ModuleTypes} from '../../enums/module-types';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../slack-apps/models/registered-module.model';
 import {ObjectId} from 'mongodb';
-import {ModuleAlreadeyStoppedError} from '../Errors';
+import {ModuleAlreadeyStoppedError} from './Errors';
 import {LogService} from '../../services/log.service';
 
 let logService = new LogService('RegisteredModulesService');
@@ -35,8 +35,8 @@ export class RegisteredModulesService {
         RegisteredModulesService.startedInstances.push(inst);
     }
 
-    public static saveNewModule(channelId: string, chanelLink: string): Promise<IRegisteredModule> {
-        return new RegisteredModuleModel().set(<IRegisteredModule>{
+    public static saveNewModule(channelId: string, chanelLink: string): Promise<IRegisteredModule<any>> {
+        return new RegisteredModuleModel().set(<IRegisteredModule<any>>{
             module_type: ModuleTypes.poltavaNews,
             configuration: {
                 frequency: 10
@@ -46,25 +46,25 @@ export class RegisteredModulesService {
         }).save();
     }
 
-    public static activateModuleByModel(model: IRegisteredModuleModelDocument): Promise<IRegisteredModuleModelDocument> {
+    public static activateModuleByModel(model: IRegisteredModuleModelDocument<any>): Promise<IRegisteredModuleModelDocument<any>> {
         return model.set({
             is_active: true
         }).save();
     }
 
-    public static activateModuleByChannelId(moduleType: ModuleTypes, channelId: string): Promise<IRegisteredModuleModelDocument> {
+    public static activateModuleByChannelId(moduleType: ModuleTypes, channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
         return RegisteredModuleModel
             .findOne({module_type: moduleType, chanel_id: channelId})
             .then(model => RegisteredModulesService.activateModuleByModel(model));
     }
 
-    public static deactivateModuleByModel(model: IRegisteredModuleModelDocument): Promise<IRegisteredModuleModelDocument> {
+    public static deactivateModuleByModel(model: IRegisteredModuleModelDocument<any>): Promise<IRegisteredModuleModelDocument<any>> {
         return model.set({
             is_active: false
         }).save();
     }
 
-    public static deactivateModuleByChannelId(channelId: string): Promise<IRegisteredModuleModelDocument> {
+    public static deactivateModuleByChannelId(channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
         return RegisteredModuleModel
             .findOne({chanel_id: channelId})
             .then(model => RegisteredModulesService.deactivateModuleByModel(model));

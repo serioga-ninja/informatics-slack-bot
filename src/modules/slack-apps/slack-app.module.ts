@@ -1,4 +1,4 @@
-import {BaseModuleClass} from '../BaseModule.class';
+import {BaseModuleClass} from '../core/BaseModule.class';
 import slackBotRegistrationCommand from './commands/registration.command';
 
 class SlackAppModule extends BaseModuleClass {
@@ -12,6 +12,10 @@ class SlackAppModule extends BaseModuleClass {
     commands = {};
 
     init() {
+    }
+
+    collectData() {
+        return Promise.resolve();
     }
 
     preloadActiveModules(): Promise<any> {

@@ -1,57 +1,49 @@
-import variables from '../configs/variables';
-import {ParserService} from '../classes/parser.service';
-import ImageModel, {IImageModel, IImageModelDocument} from '../models/image.model';
+import {ParserService} from '../../classes/parser.service';
+import InstagramLinkModel, {IInstagramLinkModelDocument} from './models/instagram-link.model';
+import {IInstagramLinkModel} from './interfaces/i-instagram-link-model';
 
 const DOMAIN_URL = 'https://api.instagram.com';
 
 export class InstagramService extends ParserService<string[]> {
 
-    static parseUrlFn(a: string[]): string {
+    public static parseUrlFn(a: string[]): string {
         return a[1];
     }
 
-    static filterLinks(data: string[]): Promise<string[]> {
+    public static filterLinks(data: string[]): Promise<string[]> {
 
-        return ImageModel
+        return InstagramLinkModel
             .aggregate({$match: {link: {$in: data}}})
-            .then((objects: IImageModelDocument[]) => {
+            .then((objects: IInstagramLinkModelDocument[]) => {
                 return data
                     .filter(link => {
                         return !objects.find((obj) => {
-                            return obj.link === link;
+                            return obj.image_url === link;
                         });
                     })
             });
     }
 
-    static saveToDB(data: string[]) {
+    public static saveToDB(data: string[]) {
         return Promise.all(data.map(link => {
-            return new ImageModel().set(<IImageModel>{
-                link: link
+            return new InstagramLinkModel().set(<IInstagramLinkModel>{
+                image_url: link
             }).save();
         }))
     }
 
-    public static getAllImageDocuments(): Promise<IImageModelDocument[]> {
-        return ImageModel
+    public static getAllImageDocuments(): Promise<IInstagramLinkModelDocument[]> {
+        return InstagramLinkModel
             .find({link: /^http/})
-            .then((data: IImageModelDocument[]) => data);
+            .then((data: IInstagramLinkModelDocument[]) => data);
     }
 
     public static getAllImages(): Promise<string[]> {
         return InstagramService
             .getAllImageDocuments()
             .then(data => {
-                return data.map((row: IImageModelDocument) => row.link)
+                return data.map((row: IInstagramLinkModelDocument) => row.image_url)
             });
-    }
-
-    static get authUrl() {
-        return `${DOMAIN_URL}/oauth/authorize/?client_id=${variables.social.instagram.CLIENT_ID}&redirect_uri=${InstagramService.authRedirectUri}&response_type=code`;
-    }
-
-    static get authRedirectUri() {
-        return `${variables.domainUrl}/api/v1/social/instagram/auth-callback`;
     }
 
     public urls: string[];

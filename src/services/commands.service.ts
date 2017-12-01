@@ -1,14 +1,14 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
-import poltavaNewsModule from './poltava-news/poltava-news.module';
-import {BaseModuleClass} from './BaseModule.class';
-import slackAppModule from './slack-apps/slack-app.module';
+import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
+import {BaseModuleClass} from '../modules/core/BaseModule.class';
+import slackAppModule from '../modules/slack-apps/slack-app.module';
 
 const MODULES_LIST = {
     'slack-app': slackAppModule,
     'poltava-news': poltavaNewsModule
 };
 
-export class CommandsModule {
+export class CommandsService {
 
     static getModule(commandStringArr: string[]): BaseModuleClass {
         let [command, moduleName] = commandStringArr;
@@ -31,9 +31,9 @@ export class CommandsModule {
         return new Promise((resolve, reject) => {
             let commandStringArr = commandString.split(' ');
 
-            let module = CommandsModule.getModule(commandStringArr);
-            let command = CommandsModule.getCommand(commandStringArr);
-            let args = CommandsModule.collectArguments(commandStringArr);
+            let module = CommandsService.getModule(commandStringArr);
+            let command = CommandsService.getCommand(commandStringArr);
+            let args = CommandsService.collectArguments(commandStringArr);
 
             resolve({module, command, args});
         });
@@ -48,6 +48,6 @@ export class CommandsModule {
     }
 }
 
-let commandsModule = new CommandsModule();
+let commandsModule = new CommandsService();
 
 export default commandsModule;

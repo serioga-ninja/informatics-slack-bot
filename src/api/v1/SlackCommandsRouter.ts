@@ -1,8 +1,8 @@
 import {Request, Response} from 'express';
 import {RouterClass} from '../../classes/router.class';
 import weatherService, {OpenWeatherService} from '../../services/open-weather.service';
-import {InstagramService} from '../../services/instagram.service';
-import slackAppModule from '../../modules/commands.module';
+import {InstagramService} from '../../modules/instagram/instagram.service';
+import slackAppModule from '../../services/commands.service';
 
 export class SlackCommandsRouter extends RouterClass {
 

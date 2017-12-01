@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
-import {IRegisteredModule} from '../interfaces/i-registered-module';
+import {IBaseRegisteredModule, IRegisteredModule} from '../../../interfaces/i-registered-module';
 
-export interface IRegisteredModuleModelDocument extends IRegisteredModule, mongoose.Document {
+export interface IRegisteredModuleModelDocument<T> extends IRegisteredModule<T>, mongoose.Document {
 }
 
 export const RegisteredModulesModelSchema: mongoose.Schema = new mongoose.Schema({
@@ -26,6 +26,6 @@ export const RegisteredModulesModelSchema: mongoose.Schema = new mongoose.Schema
     timestamps: {createdAt: 'created_at'}
 });
 
-export const RegisteredModuleModel = mongoose.model<IRegisteredModuleModelDocument>('registered_modules', RegisteredModulesModelSchema);
+export const RegisteredModuleModel = mongoose.model<IRegisteredModuleModelDocument<any>>('registered_modules', RegisteredModulesModelSchema);
 
 export default RegisteredModuleModel;

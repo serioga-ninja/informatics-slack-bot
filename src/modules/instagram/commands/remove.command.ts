@@ -7,9 +7,8 @@ import {
 } from '../../core/Errors';
 import {ModuleTypes} from '../../../enums/module-types';
 import {RegisteredModulesService} from '../../core/Modules.service';
-import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 
-class PoltavaNewsRemoveCommand extends BaseCommand {
+ class PoltavaNewsRemoveCommand extends BaseCommand {
 
     validate(requestBody: ISlackRequestBody) {
         return RegisteredAppModel
@@ -29,13 +28,26 @@ class PoltavaNewsRemoveCommand extends BaseCommand {
             })
     }
 
-    @ChannelIsRegistered
-    @ChannelIsActivated(ModuleTypes.poltavaNews)
-    @SimpleCommandResponse
-    execute(requestBody: ISlackRequestBody): Promise<any> {
-        return RegisteredModulesService
-            .deactivateModuleByChannelId(requestBody.channel_id)
-            .then((model) => RegisteredModulesService.stopModuleInstance(model._id));
+    execute(requestBody: ISlackRequestBody): Promise<ICommandSuccess> {
+        return this
+            .validate(requestBody)
+            .then(() => {
+                return RegisteredModulesService
+                    .deactivateModuleByChannelId(requestBody.channel_id)
+                    .then((model) => RegisteredModulesService.stopModuleInstance(model._id));
+            })
+            .then((data) => {
+                return <ICommandSuccess>{
+                    response_type: 'in_channel',
+                    text: 'Success!'
+                }
+            })
+            .catch((error: InformaticsSlackBotBaseError) => {
+                return <ICommandSuccess>{
+                    response_type: 'in_channel',
+                    text: error.message
+                }
+            });
     }
 }
 
