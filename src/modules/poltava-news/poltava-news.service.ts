@@ -1,15 +1,9 @@
-import * as request from 'request';
 import {ParserService} from '../../classes/parser.service';
 import {JSDOM} from 'jsdom';
-import PoltavaNewsModel, {IPoltavaNewsModel, IPoltavaNewsModelDocument} from '../../models/poltava-news.model';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {IRegisteredModule} from '../../interfaces/i-registered-module';
-import {ModuleTypes} from '../../enums/module-types';
-import {RegisteredModuleModel} from '../../models/registered-module.model';
+import PoltavaNewsModel, {IPoltavaNewsModelDocument} from './models/poltava-news.model';
+import {IPoltavaNewsModel} from './interfaces/i-poltava-news-model';
 
 export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
-
-    public static activeModules: BehaviorSubject<IRegisteredModule[]> = new BehaviorSubject([]);
 
     public static filterData(data: IPoltavaNewsModel[]): Promise<IPoltavaNewsModel[]> {
         return PoltavaNewsModel
@@ -33,48 +27,6 @@ export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
                 imageUrl: row.imageUrl
             }).save();
         }))
-    }
-
-    public static postToSlack(data: IPoltavaNewsModelDocument[] = [], chanelLink: string): Promise<void> {
-        return new Promise(resolve => {
-            if (data.length === 0) {
-                return resolve();
-            }
-
-            request({
-                method: 'POST',
-                url: chanelLink,
-                json: true,
-                body: {
-                    text: '',
-                    attachments: data.map(row => {
-                        return {
-                            title: row.title,
-                            text: row.link,
-                            image_url: row.imageUrl
-                        }
-                    })
-                }
-            }, (error, result: any) => {
-                resolve();
-            });
-        })
-    }
-
-    public static registerNewChannel(chanelId: string, chanelLink: string) {
-        return new RegisteredModuleModel().set(<IRegisteredModule>{
-            module_type: ModuleTypes.poltavaNews,
-            configuration: {
-                frequency: 10
-            },
-            chanel_id: chanelId,
-            chanel_link: chanelLink,
-        }).save().then((model) => {
-            let allCollection = PoltavaNewsService.activeModules.getValue();
-            allCollection.push(model);
-            PoltavaNewsService.activeModules.next(allCollection);
-            return model;
-        })
     }
 
     public urls: string[];

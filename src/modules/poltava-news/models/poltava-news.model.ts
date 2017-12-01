@@ -1,13 +1,5 @@
 import * as mongoose from 'mongoose';
-
-export interface IPoltavaNewsModel {
-    id?: string;
-    link: string;
-    title: string;
-    imageUrl: string;
-    postedChannels: string[];
-    createdAt?: Date;
-}
+import {IPoltavaNewsModel} from '../interfaces/i-poltava-news-model';
 
 export interface IPoltavaNewsModelDocument extends IPoltavaNewsModel, mongoose.Document {
 }

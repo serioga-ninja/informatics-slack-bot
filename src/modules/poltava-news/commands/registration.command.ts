@@ -3,10 +3,10 @@ import RegisteredAppModel from '../../../models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ChanelNotRegisteredError, InformaticsSlackBotBaseError, ModuleAlreadyRegisteredError} from '../../Errors';
 import {ModuleTypes} from '../../../enums/module-types';
-import {RegisteredModuleModel} from '../../../models/registered-module.model';
-import {PoltavaNewsService} from '../poltava-news.service';
+import {RegisteredModulesService} from '../../slack-apps/registered-modules.service';
+import poltavaNewsInstanceFactory from '../poltava-news-instanace.factory';
 
-export class PoltavaNewsRegistrationCommand extends BaseCommand {
+class PoltavaNewsRegistrationCommand extends BaseCommand {
 
     validate(requestBody: ISlackRequestBody) {
         return RegisteredAppModel
@@ -15,14 +15,6 @@ export class PoltavaNewsRegistrationCommand extends BaseCommand {
                 if (collection.length === 0) {
                     throw new ChanelNotRegisteredError();
                 }
-
-                return RegisteredModuleModel
-                    .findOne({module_type: ModuleTypes.poltavaNews, chanel_id: requestBody.channel_id})
-                    .then(model => {
-                        if (model) {
-                            throw new ModuleAlreadyRegisteredError();
-                        }
-                    })
             })
     }
 
@@ -30,18 +22,30 @@ export class PoltavaNewsRegistrationCommand extends BaseCommand {
         return this
             .validate(requestBody)
             .then(() => {
-                return RegisteredAppModel
-                    .find({'incoming_webhook.channel_id': requestBody.channel_id})
-                    .then(collection => {
-                        let registeredAppModelDocument = collection[0];
+                return RegisteredModulesService
+                    .moduleIsExists(ModuleTypes.poltavaNews, requestBody.channel_id)
+                    .then(exists => {
+                        if (exists) {
+                            return RegisteredModulesService
+                                .activateModuleByChannelId(ModuleTypes.poltavaNews, requestBody.channel_id)
+                                .then(moduleModel => RegisteredModulesService.startModuleInstance(poltavaNewsInstanceFactory(moduleModel)))
+                        }
 
-                        return PoltavaNewsService
-                            .registerNewChannel(requestBody.channel_id, registeredAppModelDocument.incoming_webhook.url)
-                            .then(moduleModel => {
-                                registeredAppModelDocument.modules.push(moduleModel._id);
+                        return RegisteredAppModel
+                            .find({'incoming_webhook.channel_id': requestBody.channel_id})
+                            .then(collection => {
+                                let registeredAppModelDocument = collection[0];
 
-                                return registeredAppModelDocument.save();
-                            });
+                                return RegisteredModulesService
+                                    .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incoming_webhook.url)
+                                    .then(moduleModel => {
+                                        registeredAppModelDocument.modules.push(moduleModel._id);
+
+                                        registeredAppModelDocument.save();
+                                        return RegisteredModulesService
+                                            .startModuleInstance(poltavaNewsInstanceFactory(moduleModel))
+                                    });
+                            })
                     })
             })
             .then((data) => {
@@ -53,8 +57,12 @@ export class PoltavaNewsRegistrationCommand extends BaseCommand {
             .catch((error: InformaticsSlackBotBaseError) => {
                 return <ICommandSuccess>{
                     response_type: 'in_channel',
-                    text: error.name
+                    text: error.message
                 }
             });
     }
 }
+
+let poltavaNewsRegistrationCommand = new PoltavaNewsRegistrationCommand();
+
+export default poltavaNewsRegistrationCommand;

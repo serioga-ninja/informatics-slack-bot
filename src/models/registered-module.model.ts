@@ -9,6 +9,10 @@ export const RegisteredModulesModelSchema: mongoose.Schema = new mongoose.Schema
         type: String,
         require: true
     },
+    is_active: {
+        type: Boolean,
+        default: true
+    },
     module_type: Number,
     chanel_id: String,
     chanel_link: String,

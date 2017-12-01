@@ -3,8 +3,13 @@ import Timer = NodeJS.Timer;
 import * as mongoose from 'mongoose';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
 import request = require('request');
+import {LogService} from '../services/log.service';
 
-interface ISomething extends mongoose.Document {
+let logService = new LogService('Registered Modules');
+
+const MINUTE = 1000 * 60;
+
+export interface ISomething extends mongoose.Document {
     postedChannels: string[];
 }
 
@@ -14,8 +19,10 @@ export class RegisteredModuleInstance {
 
     constructor(public model: IRegisteredModule,
                 private modelInstance: mongoose.Model<ISomething>,
-                private agregateFunction: (model: ISomething[]) => Promise<ISlackWebhookRequestBody | null>) {
-        this._interval = setInterval(() => this.onAction(), model.configuration.frequency);
+                private agregateFunction: (collection: ISomething[]) => Promise<ISlackWebhookRequestBody | null>) {
+        this._interval = setInterval(() => this.onAction(), MINUTE * model.configuration.frequency);
+
+        this.onAction();
     }
 
     private onAction() {
@@ -27,6 +34,8 @@ export class RegisteredModuleInstance {
                     if (data === null) {
                         return;
                     }
+
+                    logService.info(`Posting data to channel ${this.model.chanel_id}`, data);
 
                     return new Promise(resolve => {
 
@@ -49,6 +58,7 @@ export class RegisteredModuleInstance {
     }
 
     destroy() {
+        logService.info(`Stopping instance for moduleId ${this.model._id} for channel ${this.model.chanel_id}`);
         clearInterval(this._interval);
     }
 }

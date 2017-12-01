@@ -11,14 +11,17 @@ export abstract class BaseModuleClass {
 
     abstract registerCommand: BaseCommand;
 
+    abstract removeCommand: BaseCommand;
+
     abstract commands: { [key: string]: BaseCommand };
 
     constructor() {
         this.router = Router();
-        this.init();
     }
 
     abstract init(): void;
+
+    abstract preloadActiveModules(): Promise<any>
 
     execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<{
         response_type: 'in_channel';
@@ -30,6 +33,9 @@ export abstract class BaseModuleClass {
         switch (command) {
             case 'register':
                 executableCommand = this.registerCommand;
+                break;
+            case 'remove':
+                executableCommand = this.removeCommand;
                 break;
             // case 'config':
             //     executableCommand = (...args: any[]) => Promise.resolve(<ICommandSuccess>{});

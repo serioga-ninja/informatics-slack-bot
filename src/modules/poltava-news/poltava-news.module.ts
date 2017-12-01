@@ -1,11 +1,18 @@
 import {BaseModuleClass} from '../BaseModule.class';
 import {PoltavaNewsRouter} from './poltava-news.router';
 import {PoltavaNewsService} from './poltava-news.service';
-import {PoltavaNewsRegistrationCommand} from './commands/registration.command';
+import poltavaNewsRegistrationCommand from './commands/registration.command';
 import RegisteredModuleModel from '../../models/registered-module.model';
 import {ModuleTypes} from '../../enums/module-types';
 import {Observable} from 'rxjs/Observable';
-import {RegisteredModuleInstance} from '../RegisteredModuleInstance';
+
+import 'rxjs/add/observable/interval';
+import {RegisteredModulesService} from '../slack-apps/registered-modules.service';
+import poltavaNewsRemoveCommand from './commands/remove.command';
+import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
+import {LogService} from '../../services/log.service';
+
+let logService = new LogService('PoltavaNewsModule');
 
 const POST_FREQUENCY = 1000 * 60 * 10;
 
@@ -17,55 +24,48 @@ class PoltavaNewsModule extends BaseModuleClass {
 
     routerClass: PoltavaNewsRouter = new PoltavaNewsRouter();
 
-    registerCommand = new PoltavaNewsRegistrationCommand();
+    registerCommand = poltavaNewsRegistrationCommand;
+
+    removeCommand = poltavaNewsRemoveCommand;
 
     commands = {};
 
-    startedInstances: RegisteredModuleInstance[] = [];
-
     init() {
-        PoltavaNewsService
-            .activeModules
-            .subscribe(modules => {
-                let activeModulesIds = this.startedInstances.map(item => item.model._id.toString());
-                let modulesIds = modules.map(item => item._id.toString());
-
-                let modulesToRemove = this.startedInstances
-                    .filter(inst => modulesIds.indexOf(inst.model._id.toString()) === -1);
-                let modulesToAdd = modules
-                    .filter(module => activeModulesIds.indexOf(module._id.toString()) === -1);
-
-                console.log(modules);
-                // create a subject for each of module
-            });
-
-        RegisteredModuleModel
-            .find({module_type: ModuleTypes.poltavaNews})
-            .then(collection => {
-                PoltavaNewsService
-                    .activeModules
-                    .next(collection);
-            });
-
         Observable
             .interval(POST_FREQUENCY)
             .subscribe(() => {
                 this.collectData();
             });
 
-        this.collectData();
+        this.collectData().then(() => this.preloadActiveModules());
     }
 
     collectData() {
         let poltavaNewsService = new PoltavaNewsService(URLS);
 
-        poltavaNewsService
+        return poltavaNewsService
             .grabTheData()
             .then(data => PoltavaNewsService.filterData(data))
             .then(data => PoltavaNewsService.saveToDB(data));
     }
+
+    preloadActiveModules() {
+        return RegisteredModuleModel
+            .find({
+                module_type: ModuleTypes.poltavaNews,
+                is_active: true
+            })
+            .then(collection => {
+                logService.info(`Registering ${collection.length} modules`);
+                collection.forEach(module => {
+                    RegisteredModulesService.startModuleInstance(poltavaNewsInstanceFactory(module));
+                });
+            });
+
+    }
 }
 
 let poltavaNewsModule = new PoltavaNewsModule();
+poltavaNewsModule.init();
 
 export default poltavaNewsModule;

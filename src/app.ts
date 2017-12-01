@@ -7,7 +7,6 @@ import * as path from 'path';
 import './configs/database';
 
 import SlackRouter from './api/v1/SlackRouter';
-import SlackWebHookRouter from './api/v1/SlackWebHookRouter';
 import SlackEventRouter from './api/v1/SlackEventRouter';
 import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
 import IndexRouter from './view-routers/index.router';
@@ -69,7 +68,6 @@ class App {
 
         // placeholder route handler
         this.express.use('/api/v1/slack', SlackRouter);
-        this.express.use('/api/v1/slack', SlackWebHookRouter);
         this.express.use('/api/v1/events', SlackEventRouter);
         this.express.use('/api/v1/commands', SlackCommandsRouter);
         this.express.use('/api/v1/social/instagram', InstagramRouter);

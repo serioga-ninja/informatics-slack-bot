@@ -18,7 +18,9 @@ export class CommandsModule {
 
     static getCommand(commandStringArr: string[]): string {
 
-        return commandStringArr.length === 1 ? commandStringArr[0] : commandStringArr[2] || 'register';
+        let command = commandStringArr.length === 1 ? commandStringArr[0] : commandStringArr[2];
+
+        return command || 'register';
     }
 
     static collectArguments(commandStringArr: string[]): object {

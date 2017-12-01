@@ -26,7 +26,23 @@ export class ModuleAlreadyRegisteredError extends Error implements InformaticsSl
     }
 }
 
-export class CommandNotFoundError extends Error implements InformaticsSlackBotBaseError{
+export class ModuleNotExistsError extends Error implements InformaticsSlackBotBaseError {
+    constructor() {
+        super('ModuleNotExistsError');
+
+        Object.setPrototypeOf(this, ModuleNotExistsError.prototype);
+    }
+}
+
+export class ModuleAlreadeyStoppedError extends Error implements InformaticsSlackBotBaseError {
+    constructor() {
+        super('Module already stopped');
+
+        Object.setPrototypeOf(this, ModuleAlreadeyStoppedError.prototype);
+    }
+}
+
+export class CommandNotFoundError extends Error implements InformaticsSlackBotBaseError {
     constructor() {
         super('Unknown command');
 
