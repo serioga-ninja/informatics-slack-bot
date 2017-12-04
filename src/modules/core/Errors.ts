@@ -56,3 +56,11 @@ export class CommandNotFoundError extends Error implements InformaticsSlackBotBa
         }
     }
 }
+
+export class UnknownConfigError extends Error implements InformaticsSlackBotBaseError {
+    constructor(configName: string) {
+        super(`Unknown config name "${configName}"`);
+
+        Object.setPrototypeOf(this, UnknownConfigError.prototype);
+    }
+}

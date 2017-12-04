@@ -16,7 +16,7 @@ class RegistrationCommand extends BaseCommand {
 
     validate(requestBody: ISlackRequestBody) {
         return RegisteredAppModel
-            .find({'incoming_webhook.channel_id': requestBody.channel_id})
+            .find({'incomingWebhook.channel_id': requestBody.channel_id})
             .then(collection => {
                 if (collection.length > 0) {
                     throw new ChanelAlreadyRegisteredError();

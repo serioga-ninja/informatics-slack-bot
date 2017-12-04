@@ -1,16 +1,22 @@
 import {InstagramService} from './instagram.service';
 
 import {BaseModuleClass} from '../core/BaseModule.class';
-import poltavaNewsRegistrationCommand from './commands/registration.command';
+import instagramLinksRegistrationCommand from './commands/registration.command';
 import RegisteredModuleModel from '../slack-apps/models/registered-module.model';
 import {ModuleTypes} from '../../enums/module-types';
 
 import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';
-import poltavaNewsRemoveCommand from './commands/remove.command';
+import instagramLinksRemoveCommand from './commands/remove.command';
 import {LogService} from '../../services/log.service';
 import {InstagramRouter} from './instagram.router';
 import instagramInstanceFactory from './instagram-instanace.factory';
+import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
+import instagramLinksConfigureCommand from './commands/configure.command';
+import commandInProgress from '../slack-apps/commands/in-progress';
+import instagramEmitter from './instagram.emitter';
+import {CONFIG_HAS_CHANGED} from '../core/Commands';
+import * as _ from 'lodash';
 
 let logService = new LogService('InstagramModule');
 
@@ -33,26 +39,63 @@ class InstagramModule extends BaseModuleClass {
 
     routerClass: InstagramRouter = new InstagramRouter();
 
-    registerCommand = poltavaNewsRegistrationCommand;
+    registerCommand = instagramLinksRegistrationCommand;
 
-    removeCommand = poltavaNewsRemoveCommand;
+    removeCommand = instagramLinksRemoveCommand;
+
+    configureCommand = instagramLinksConfigureCommand;
+
+    helpCommand = commandInProgress;
 
     commands = {};
 
-    collectData() {
-        let instagramPhotoParser = new InstagramService(URLS, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
+    init() {
+        super.init();
 
-        return instagramPhotoParser
-            .collectData()
-            .then(data => InstagramService.filterLinks(data))
-            .then(data => InstagramService.saveToDB(data));
+        instagramEmitter.on(CONFIG_HAS_CHANGED, (chanelId: string) => {
+            logService.info(`Update configure for chanelId ${chanelId}`);
+            return RegisteredModuleModel
+                .findOne({moduleType: ModuleTypes.instagramLinks, chanelId: chanelId})
+                .then(moduleModel => {
+                    let updatedIns = RegisteredModulesService
+                        .startedInstances
+                        .filter(inst => inst.model.chanelId === chanelId && inst.model.moduleType === ModuleTypes.instagramLinks)[0];
+
+                    updatedIns.model = moduleModel;
+                });
+        });
+    }
+
+    collectData() {
+        return RegisteredModuleModel
+            .find(<IRegisteredModule<IInstagramConfiguration>>{
+                moduleType: ModuleTypes.instagramLinks,
+                isActive: true
+            })
+            .select('configuration.links')
+            .then(modulesCollection => {
+                let instagramPublicIds: string[] = _.uniq(
+                    modulesCollection
+                        .map(module => module.configuration.links)
+                        .reduce((all: string[], current: string[]) => {
+                            return all.concat(current);
+                        }, [])
+                );
+
+                let instagramPhotoParser = new InstagramService(instagramPublicIds, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
+
+                return instagramPhotoParser
+                    .collectData()
+                    .then(data => InstagramService.filterLinks(data))
+                    .then(data => InstagramService.saveToDB(data));
+            });
     }
 
     preloadActiveModules() {
         return RegisteredModuleModel
             .find({
-                module_type: ModuleTypes.poltavaNews,
-                is_active: true
+                moduleType: ModuleTypes.instagramLinks,
+                isActive: true
             })
             .then(collection => {
                 logService.info(`Registering ${collection.length} modules`);
@@ -64,7 +107,7 @@ class InstagramModule extends BaseModuleClass {
     }
 }
 
-let poltavaNewsModule = new InstagramModule();
-poltavaNewsModule.init();
+let instagramModule = new InstagramModule();
+instagramModule.init();
 
-export default poltavaNewsModule;
+export default instagramModule;

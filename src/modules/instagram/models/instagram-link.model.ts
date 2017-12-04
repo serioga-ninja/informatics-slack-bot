@@ -5,20 +5,20 @@ export interface IInstagramLinkModelDocument extends IInstagramLinkModel, mongoo
 }
 
 export const InstagramLinkModelSchema: mongoose.Schema = new mongoose.Schema({
-    inst_chanel_link: {
+    instChanelId: {
+        type: String,
+        require: true
+    },
+    imageUrl: {
         type: String,
         require: true,
         unique: true
     },
-    image_url: {
-        type: String,
-        require: true
-    },
     postedChannels: [String]
 }, {
-    timestamps: {createdAt: 'created_at'}
+    timestamps: true
 });
 
-export const InstagramLinkModel = mongoose.model<IInstagramLinkModelDocument>('instagram_links', InstagramLinkModelSchema);
+export const InstagramLinkModel = mongoose.model<IInstagramLinkModelDocument>('instagramLinks', InstagramLinkModelSchema);
 
 export default InstagramLinkModel;

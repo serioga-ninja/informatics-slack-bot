@@ -1,4 +1,5 @@
 import {ModuleTypes} from '../enums/module-types';
+import {ITimestamps} from './i-timestamps';
 
 export interface IBaseModuleConfiguration {
     frequency: number;
@@ -8,14 +9,13 @@ export interface IInstagramConfiguration extends IBaseModuleConfiguration {
     links: string[];
 }
 
-export interface IRegisteredModule<T> {
+export interface IRegisteredModule<T> extends ITimestamps {
     _id: any;
-    module_type: ModuleTypes;
-    is_active: boolean;
-    chanel_id: string;
-    chanel_link: string;
+    moduleType: ModuleTypes;
+    isActive: boolean;
+    chanelId: string;
+    chanelLink: string;
     configuration: T;
-    created_at: Date;
 }
 
 export interface IBaseRegisteredModule extends IRegisteredModule<IBaseModuleConfiguration> {

@@ -1,4 +1,5 @@
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
+import * as Bluebird from 'bluebird';
 
 export interface ICommandSuccess {
     response_type: 'in_channel';
@@ -8,7 +9,5 @@ export interface ICommandSuccess {
 
 export abstract class BaseCommand {
 
-    abstract validate(requestBody: ISlackRequestBody): Promise<void>;
-
-    abstract execute(requestBody: ISlackRequestBody, args?: object): Promise<ICommandSuccess>;
+    abstract execute(requestBody: ISlackRequestBody, args?: object): Promise<ICommandSuccess> | Bluebird<any>;
 }

@@ -9,7 +9,7 @@ export const RegisteredAppModelSchema: mongoose.Schema = new mongoose.Schema({
         type: String,
         require: true
     },
-    incoming_webhook: {
+    incomingWebhook: {
         url: String,
         channel: String,
         channel_id: String,
@@ -17,9 +17,9 @@ export const RegisteredAppModelSchema: mongoose.Schema = new mongoose.Schema({
     },
     modules: [String]
 }, {
-    timestamps: {createdAt: 'created_at'}
+    timestamps: true
 });
 
-export const RegisteredAppModel = mongoose.model<IRegisteredAppModelDocument>('registered_apps', RegisteredAppModelSchema);
+export const RegisteredAppModel = mongoose.model<IRegisteredAppModelDocument>('registeredApps', RegisteredAppModelSchema);
 
 export default RegisteredAppModel;

@@ -13,3 +13,5 @@ declare module '*.json' {
 declare global {
     interface Window { __PRELOADED_STATE__: any; }
 }
+
+type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';

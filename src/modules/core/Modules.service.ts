@@ -35,44 +35,44 @@ export class RegisteredModulesService {
         RegisteredModulesService.startedInstances.push(inst);
     }
 
-    public static saveNewModule(channelId: string, chanelLink: string): Promise<IRegisteredModule<any>> {
+    public static saveNewModule(channelId: string, chanelLink: string, moduleType: ModuleTypes): Promise<IRegisteredModuleModelDocument<any>> {
         return new RegisteredModuleModel().set(<IRegisteredModule<any>>{
-            module_type: ModuleTypes.poltavaNews,
+            moduleType: moduleType,
             configuration: {
                 frequency: 10
             },
-            chanel_id: channelId,
-            chanel_link: chanelLink,
+            chanelId: channelId,
+            chanelLink: chanelLink,
         }).save();
     }
 
     public static activateModuleByModel(model: IRegisteredModuleModelDocument<any>): Promise<IRegisteredModuleModelDocument<any>> {
         return model.set({
-            is_active: true
+            isActive: true
         }).save();
     }
 
     public static activateModuleByChannelId(moduleType: ModuleTypes, channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
         return RegisteredModuleModel
-            .findOne({module_type: moduleType, chanel_id: channelId})
+            .findOne({moduleType: moduleType, chanelId: channelId})
             .then(model => RegisteredModulesService.activateModuleByModel(model));
     }
 
     public static deactivateModuleByModel(model: IRegisteredModuleModelDocument<any>): Promise<IRegisteredModuleModelDocument<any>> {
         return model.set({
-            is_active: false
+            isActive: false
         }).save();
     }
 
-    public static deactivateModuleByChannelId(channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
+    public static deactivateModuleByChannelId(moduleType: ModuleTypes, channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
         return RegisteredModuleModel
-            .findOne({chanel_id: channelId})
+            .findOne(<IRegisteredModule<any>>{moduleType: moduleType, chanelId: channelId})
             .then(model => RegisteredModulesService.deactivateModuleByModel(model));
     }
 
     public static moduleIsExists(moduleType: ModuleTypes, chanelId: string): Promise<boolean> {
         return RegisteredModuleModel
-            .findOne({module_type: moduleType, chanel_id: chanelId})
+            .findOne({moduleType: moduleType, chanelId: chanelId})
             .then(model => {
                 return !!model;
             })

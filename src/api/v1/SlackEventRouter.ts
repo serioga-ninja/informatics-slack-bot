@@ -4,7 +4,7 @@ import {RouterClass} from '../../classes/router.class';
 import variables from '../../configs/variables';
 import * as request from 'request';
 import * as qs from 'querystring';
-import {SlackService} from '../../services/slack.service';
+import {ISlackAuthSuccessBody, SlackService} from '../../services/slack.service';
 
 export class SlackEventRouter extends RouterClass {
 
@@ -36,7 +36,7 @@ export class SlackEventRouter extends RouterClass {
             if (err) {
                 return res.send('Error');
             }
-            let body = JSON.parse(result.body);
+            let body: ISlackAuthSuccessBody = JSON.parse(result.body);
             if (!body.ok) {
                 return res.send(body.error);
             }

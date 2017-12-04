@@ -1,7 +1,8 @@
-export interface IInstagramLinkModel {
+import {ITimestamps} from '../../../interfaces/i-timestamps';
+
+export interface IInstagramLinkModel extends ITimestamps {
     _id: any;
-    inst_chanel_link: string;
-    image_url: string;
+    instChanelId: string;
+    imageUrl: string;
     postedChannels: string[];
-    createdAt?: Date;
 }

@@ -1,26 +1,16 @@
-import {BaseCommand, ICommandSuccess} from '../../core/BaseCommand.class';
+import {BaseCommand} from '../../core/BaseCommand.class';
 import RegisteredAppModel from '../../slack-apps/models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ChanelNotRegisteredError, InformaticsSlackBotBaseError, ModuleAlreadyRegisteredError} from '../../core/Errors';
 import {ModuleTypes} from '../../../enums/module-types';
 import {RegisteredModulesService} from '../../core/Modules.service';
 import poltavaNewsInstanceFactory from '../poltava-news-instanace.factory';
-import {ChannelIsRegistered} from '../../core/CommandDecorators';
+import {ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 
 class PoltavaNewsRegistrationCommand extends BaseCommand {
 
-    validate(requestBody: ISlackRequestBody) {
-        return RegisteredAppModel
-            .find({'incoming_webhook.channel_id': requestBody.channel_id})
-            .then(collection => {
-                if (collection.length === 0) {
-                    throw new ChanelNotRegisteredError();
-                }
-            })
-    }
-
     @ChannelIsRegistered
-    execute(requestBody: ISlackRequestBody): Promise<ICommandSuccess> {
+    @SimpleCommandResponse
+    execute(requestBody: ISlackRequestBody): Promise<any> {
         return RegisteredModulesService
             .moduleIsExists(ModuleTypes.poltavaNews, requestBody.channel_id)
             .then(exists => {
@@ -31,12 +21,12 @@ class PoltavaNewsRegistrationCommand extends BaseCommand {
                 }
 
                 return RegisteredAppModel
-                    .find({'incoming_webhook.channel_id': requestBody.channel_id})
+                    .find({'incomingWebhook.channel_id': requestBody.channel_id})
                     .then(collection => {
                         let registeredAppModelDocument = collection[0];
 
                         return RegisteredModulesService
-                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incoming_webhook.url)
+                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.poltavaNews)
                             .then(moduleModel => {
                                 registeredAppModelDocument.modules.push(moduleModel._id);
 
@@ -45,12 +35,6 @@ class PoltavaNewsRegistrationCommand extends BaseCommand {
                                     .startModuleInstance(poltavaNewsInstanceFactory(moduleModel))
                             });
                     })
-            })
-            .then((data) => {
-                return <ICommandSuccess>{
-                    response_type: 'in_channel',
-                    text: 'Success!'
-                }
             });
     }
 }

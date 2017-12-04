@@ -1,31 +1,28 @@
 import * as mongoose from 'mongoose';
-import {IBaseRegisteredModule, IRegisteredModule} from '../../../interfaces/i-registered-module';
+import {IRegisteredModule} from '../../../interfaces/i-registered-module';
 
 export interface IRegisteredModuleModelDocument<T> extends IRegisteredModule<T>, mongoose.Document {
 }
 
 export const RegisteredModulesModelSchema: mongoose.Schema = new mongoose.Schema({
-    id: {
-        type: String,
-        require: true
-    },
-    is_active: {
+    isActive: {
         type: Boolean,
         default: true
     },
-    module_type: Number,
-    chanel_id: String,
-    chanel_link: String,
+    moduleType: Number,
+    chanelId: String,
+    chanelLink: String,
     configuration: {
         frequency: {
             type: Number,
             default: 10
-        }
+        },
+        links: [String]
     }
 }, {
-    timestamps: {createdAt: 'created_at'}
+    timestamps: true
 });
 
-export const RegisteredModuleModel = mongoose.model<IRegisteredModuleModelDocument<any>>('registered_modules', RegisteredModulesModelSchema);
+export const RegisteredModuleModel = mongoose.model<IRegisteredModuleModelDocument<any>>('registeredModules', RegisteredModulesModelSchema);
 
 export default RegisteredModuleModel;

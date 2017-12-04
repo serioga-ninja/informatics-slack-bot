@@ -1,5 +1,6 @@
 import {BaseModuleClass} from '../core/BaseModule.class';
 import slackBotRegistrationCommand from './commands/registration.command';
+import commandInProgress from './commands/in-progress';
 
 class SlackAppModule extends BaseModuleClass {
 
@@ -7,7 +8,9 @@ class SlackAppModule extends BaseModuleClass {
 
     registerCommand = slackBotRegistrationCommand;
 
-    removeCommand = slackBotRegistrationCommand;
+    removeCommand = commandInProgress;
+
+    helpCommand = commandInProgress;
 
     commands = {};
 

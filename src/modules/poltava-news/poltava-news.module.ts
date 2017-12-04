@@ -11,6 +11,7 @@ import {RegisteredModulesService} from '../core/Modules.service';
 import poltavaNewsRemoveCommand from './commands/remove.command';
 import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
 import {LogService} from '../../services/log.service';
+import commandInProgress from '../slack-apps/commands/in-progress';
 
 let logService = new LogService('PoltavaNewsModule');
 
@@ -27,6 +28,8 @@ class PoltavaNewsModule extends BaseModuleClass {
     registerCommand = poltavaNewsRegistrationCommand;
 
     removeCommand = poltavaNewsRemoveCommand;
+
+    helpCommand = commandInProgress;
 
     commands = {};
 
@@ -52,8 +55,8 @@ class PoltavaNewsModule extends BaseModuleClass {
     preloadActiveModules() {
         return RegisteredModuleModel
             .find({
-                module_type: ModuleTypes.poltavaNews,
-                is_active: true
+                moduleType: ModuleTypes.poltavaNews,
+                isActive: true
             })
             .then(collection => {
                 logService.info(`Registering ${collection.length} modules`);

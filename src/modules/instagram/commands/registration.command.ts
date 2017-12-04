@@ -1,68 +1,44 @@
-import {BaseCommand, ICommandSuccess} from '../../core/BaseCommand.class';
+import {BaseCommand} from '../../core/BaseCommand.class';
 import RegisteredAppModel from '../../slack-apps/models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ChanelNotRegisteredError, InformaticsSlackBotBaseError} from '../../core/Errors';
 import {ModuleTypes} from '../../../enums/module-types';
 import {RegisteredModulesService} from '../../core/Modules.service';
 import instagramInstanceFactory from '../instagram-instanace.factory';
+import {ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 
-class PoltavaNewsRegistrationCommand extends BaseCommand {
+class InstagramLinksRegistrationCommand extends BaseCommand {
 
-    validate(requestBody: ISlackRequestBody) {
-        return RegisteredAppModel
-            .find({'incoming_webhook.channel_id': requestBody.channel_id})
-            .then(collection => {
-                if (collection.length === 0) {
-                    throw new ChanelNotRegisteredError();
+    @ChannelIsRegistered
+    @SimpleCommandResponse
+    execute(requestBody: ISlackRequestBody): Promise<any> {
+        return RegisteredModulesService
+            .moduleIsExists(ModuleTypes.instagramLinks, requestBody.channel_id)
+            .then(exists => {
+                if (exists) {
+                    return RegisteredModulesService
+                        .activateModuleByChannelId(ModuleTypes.instagramLinks, requestBody.channel_id)
+                        .then(moduleModel => RegisteredModulesService.startModuleInstance(instagramInstanceFactory(moduleModel)))
                 }
-            })
-    }
 
-    execute(requestBody: ISlackRequestBody): Promise<ICommandSuccess> {
-        return this
-            .validate(requestBody)
-            .then(() => {
-                return RegisteredModulesService
-                    .moduleIsExists(ModuleTypes.poltavaNews, requestBody.channel_id)
-                    .then(exists => {
-                        if (exists) {
-                            return RegisteredModulesService
-                                .activateModuleByChannelId(ModuleTypes.poltavaNews, requestBody.channel_id)
-                                .then(moduleModel => RegisteredModulesService.startModuleInstance(instagramInstanceFactory(moduleModel)))
-                        }
+                return RegisteredAppModel
+                    .find({'incomingWebhook.channel_id': requestBody.channel_id})
+                    .then(collection => {
+                        let registeredAppModelDocument = collection[0];
 
-                        return RegisteredAppModel
-                            .find({'incoming_webhook.channel_id': requestBody.channel_id})
-                            .then(collection => {
-                                let registeredAppModelDocument = collection[0];
+                        return RegisteredModulesService
+                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.instagramLinks)
+                            .then(moduleModel => {
+                                registeredAppModelDocument.modules.push(moduleModel._id);
 
+                                registeredAppModelDocument.save();
                                 return RegisteredModulesService
-                                    .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incoming_webhook.url)
-                                    .then(moduleModel => {
-                                        registeredAppModelDocument.modules.push(moduleModel._id);
-
-                                        registeredAppModelDocument.save();
-                                        return RegisteredModulesService
-                                            .startModuleInstance(instagramInstanceFactory(moduleModel))
-                                    });
-                            })
+                                    .startModuleInstance(instagramInstanceFactory(moduleModel))
+                            });
                     })
             })
-            .then((data) => {
-                return <ICommandSuccess>{
-                    response_type: 'in_channel',
-                    text: 'Success!'
-                }
-            })
-            .catch((error: InformaticsSlackBotBaseError) => {
-                return <ICommandSuccess>{
-                    response_type: 'in_channel',
-                    text: error.message
-                }
-            });
     }
 }
 
-let poltavaNewsRegistrationCommand = new PoltavaNewsRegistrationCommand();
+let instagramLinksRegistrationCommand = new InstagramLinksRegistrationCommand();
 
-export default poltavaNewsRegistrationCommand;
+export default instagramLinksRegistrationCommand;

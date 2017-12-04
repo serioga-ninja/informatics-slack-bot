@@ -1,10 +1,10 @@
 import {RegisteredModuleInstance} from '../core/RegisteredModuleInstance';
-import {IBaseRegisteredModule} from '../../interfaces/i-registered-module';
 import PoltavaNewsModel, {IPoltavaNewsModelDocument} from './models/poltava-news.model';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
+import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-module.model';
 
-function poltavaNewsInstanceFactory(moduleModel: IBaseRegisteredModule): RegisteredModuleInstance {
+function poltavaNewsInstanceFactory(moduleModel: IRegisteredModuleModelDocument<any>): RegisteredModuleInstance {
     return new RegisteredModuleInstance(
         moduleModel,
         PoltavaNewsModel,

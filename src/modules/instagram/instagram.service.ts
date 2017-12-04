@@ -1,8 +1,9 @@
-import {ParserService} from '../../classes/parser.service';
+import {IParseDataResults, ParserService} from '../../classes/parser.service';
 import InstagramLinkModel, {IInstagramLinkModelDocument} from './models/instagram-link.model';
 import {IInstagramLinkModel} from './interfaces/i-instagram-link-model';
+import * as _ from 'lodash';
 
-const DOMAIN_URL = 'https://api.instagram.com';
+const DOMAIN_URL = 'http://instagram.com';
 
 export class InstagramService extends ParserService<string[]> {
 
@@ -10,25 +11,36 @@ export class InstagramService extends ParserService<string[]> {
         return a[1];
     }
 
-    public static filterLinks(data: string[]): Promise<string[]> {
+    public static filterLinks(data: IParseDataResults[]): Promise<IParseDataResults[]> {
+        let allLinks: string[] = data
+            .map(row => {
+                return row.results;
+            })
+            .reduce((all: string[], current: string[]) => {
+                return all.concat(current);
+            }, []);
 
         return InstagramLinkModel
-            .aggregate({$match: {link: {$in: data}}})
+            .find({imageUrl: {$in: allLinks}})
             .then((objects: IInstagramLinkModelDocument[]) => {
-                return data
-                    .filter(link => {
-                        return !objects.find((obj) => {
-                            return obj.image_url === link;
-                        });
-                    })
+                let existingLinks = objects.map(model => model.imageUrl);
+
+                data.forEach(row => {
+                    row.results = row.results.filter(link => existingLinks.indexOf(link) === -1);
+                });
+
+                return data;
             });
     }
 
-    public static saveToDB(data: string[]) {
-        return Promise.all(data.map(link => {
-            return new InstagramLinkModel().set(<IInstagramLinkModel>{
-                image_url: link
-            }).save();
+    public static saveToDB(data: IParseDataResults[]) {
+        return Promise.all(data.map(row => {
+            return Promise.all(row.results.map(link => {
+                return new InstagramLinkModel().set(<IInstagramLinkModel>{
+                    imageUrl: link,
+                    instChanelId: row.chanelId
+                }).save();
+            }));
         }))
     }
 
@@ -42,30 +54,22 @@ export class InstagramService extends ParserService<string[]> {
         return InstagramService
             .getAllImageDocuments()
             .then(data => {
-                return data.map((row: IInstagramLinkModelDocument) => row.image_url)
+                return data.map((row: IInstagramLinkModelDocument) => row.imageUrl)
             });
     }
 
     public urls: string[];
     public thumbnailReg: RegExp;
 
-    constructor(urls: string[], thumbnailReg: RegExp) {
+    constructor(instagramPublicIds: string[], thumbnailReg: RegExp) {
         super();
 
-        this.urls = urls;
+        this.urls = instagramPublicIds.map(id => `${DOMAIN_URL}/${id}`);
 
         this.thumbnailReg = thumbnailReg;
     }
 
-    public collectData(): Promise<string[]> {
-        return this
-            .grabTheData(InstagramService.parseUrlFn, this.urls)
-            .then((data: string[][]) => {
-                return data
-                    .reduce((result: string[], current: string[]) => {
-                        result = result.concat(current);
-                        return result;
-                    }, []);
-            });
+    public collectData(): Promise<IParseDataResults[]> {
+        return this.grabTheData(InstagramService.parseUrlFn, this.urls);
     }
 }

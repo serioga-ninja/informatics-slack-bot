@@ -2,34 +2,56 @@ import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import {BaseModuleClass} from '../modules/core/BaseModule.class';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
+import instagramModule from '../modules/instagram/instagram.module';
+import {InstagramCommand} from '../typings';
 
 const MODULES_LIST = {
-    'slack-app': slackAppModule,
-    'poltava-news': poltavaNewsModule
+    'app': slackAppModule,
+    'poltava-news': poltavaNewsModule,
+    'instagram-links': instagramModule
 };
 
 export class CommandsService {
 
     static getModule(commandStringArr: string[]): BaseModuleClass {
-        let [command, moduleName] = commandStringArr;
+        let [moduleName] = commandStringArr;
 
-        return MODULES_LIST[moduleName] === undefined ? MODULES_LIST['slack-app'] : MODULES_LIST[moduleName];
+        return MODULES_LIST[moduleName];
     }
 
-    static getCommand(commandStringArr: string[]): string {
+    static getCommand(commandStringArr: string[]): InstagramCommand {
+        let command = commandStringArr[1];
 
-        let command = commandStringArr.length === 1 ? commandStringArr[0] : commandStringArr[2];
-
-        return command || 'register';
+        return <InstagramCommand>command || 'help';
     }
 
     static collectArguments(commandStringArr: string[]): object {
-        return {};
+        if (commandStringArr[1] !== 'config' || (commandStringArr[1] === 'config' && commandStringArr.length <= 2)) {
+            return {};
+        }
+        let [module, command, ...configArgs] = commandStringArr;
+
+        return configArgs.reduce((all: string[], current: string) => {
+            let [key, value] = current.split('=');
+            key = key
+                .split('-')
+                .map((keyPart, index) => index === 0 ? keyPart : keyPart[0].toUpperCase() + keyPart.slice(1))
+                .join('');
+
+            return {
+                [key]: value.split(',').map(link => link.replace(/ /, ''))
+            }
+        }, {});
     }
 
     private parse(commandString: string): Promise<{ module: BaseModuleClass, command: string; args: object }> {
         return new Promise((resolve, reject) => {
             let commandStringArr = commandString.split(' ');
+
+            // if module has not been set we set it to the default one
+            if (MODULES_LIST[commandStringArr[0]] === undefined) {
+                commandStringArr = ['app'].concat(commandStringArr);
+            }
 
             let module = CommandsService.getModule(commandStringArr);
             let command = CommandsService.getCommand(commandStringArr);
