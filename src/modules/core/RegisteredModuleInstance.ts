@@ -30,7 +30,7 @@ export class RegisteredModuleInstance {
         this.onAction();
     }
 
-    private onAction() {
+    public onAction() {
         this.modelInstance
             .find(this.searchAggregationFn(this.model))
             .then((items) => this

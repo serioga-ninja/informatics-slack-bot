@@ -62,6 +62,11 @@ class InstagramModule extends BaseModuleClass {
                         .filter(inst => inst.model.chanelId === chanelId && inst.model.moduleType === ModuleTypes.instagramLinks)[0];
 
                     updatedIns.model = moduleModel;
+                    this
+                        .collectData()
+                        .then(() => {
+                            updatedIns.onAction();
+                        });
                 });
         });
     }

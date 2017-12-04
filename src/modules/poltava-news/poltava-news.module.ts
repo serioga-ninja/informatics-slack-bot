@@ -33,16 +33,6 @@ class PoltavaNewsModule extends BaseModuleClass {
 
     commands = {};
 
-    init() {
-        Observable
-            .interval(POST_FREQUENCY)
-            .subscribe(() => {
-                this.collectData();
-            });
-
-        super.init();
-    }
-
     collectData() {
         let poltavaNewsService = new PoltavaNewsService(URLS);
 
