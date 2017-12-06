@@ -1,0 +1,1 @@
+export const CONFIG_HAS_CHANGED = 'CONFIG_HAS_CHANGED';

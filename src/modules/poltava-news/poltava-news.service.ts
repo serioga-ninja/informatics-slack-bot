@@ -1,8 +1,7 @@
-import * as request from 'request';
-import {ParserService} from '../classes/parser.service';
+import {ParserService} from '../../classes/parser.service';
 import {JSDOM} from 'jsdom';
-import PoltavaNewsModel, {IPoltavaNewsModel, IPoltavaNewsModelDocument} from '../models/poltava-news.model';
-import variables from '../configs/variables';
+import PoltavaNewsModel, {IPoltavaNewsModelDocument} from './models/poltava-news.model';
+import {IPoltavaNewsModel} from './interfaces/i-poltava-news-model';
 
 export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
 
@@ -23,37 +22,11 @@ export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
         return Promise.all(data.map(row => {
             return new PoltavaNewsModel().set(<IPoltavaNewsModel>{
                 link: row.link,
-                isPosted: true,
+                postedChannels: [],
                 title: row.title,
                 imageUrl: row.imageUrl
             }).save();
         }))
-    }
-
-    public static postToSlack(data: IPoltavaNewsModelDocument[] = []): Promise<void> {
-        return new Promise(resolve => {
-            if (data.length === 0) {
-                return resolve();
-            }
-
-            request({
-                method: 'POST',
-                url: variables.slack.SLACK_NEWS_CHANEL_LINK,
-                json: true,
-                body: {
-                    text: '',
-                    attachments: data.map(row => {
-                        return {
-                            title: row.title,
-                            text: row.link,
-                            image_url: row.imageUrl
-                        }
-                    })
-                }
-            }, (error, result: any) => {
-                resolve();
-            });
-        })
     }
 
     public urls: string[];

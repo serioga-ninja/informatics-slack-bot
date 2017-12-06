@@ -1,23 +1,11 @@
 import * as mongoose from 'mongoose';
-
-export interface IPoltavaNewsModel {
-    id?: string;
-    link: string;
-    title: string;
-    imageUrl: string;
-    isPosted?: boolean;
-    createdAt?: Date;
-}
+import {IPoltavaNewsModel} from '../interfaces/i-poltava-news-model';
 
 export interface IPoltavaNewsModelDocument extends IPoltavaNewsModel, mongoose.Document {
 }
 
 
 export const PoltavaNewsModelSchema: mongoose.Schema = new mongoose.Schema({
-    id: {
-        type: String,
-        require: true
-    },
     link: {
         type: String,
         require: true,
@@ -31,14 +19,11 @@ export const PoltavaNewsModelSchema: mongoose.Schema = new mongoose.Schema({
         type: String,
         require: true
     },
-    isPosted: {
-        type: Boolean,
-        default: false
-    }
+    postedChannels: [String]
 }, {
-    timestamps: {createdAt: 'created_at'}
+    timestamps: true
 });
 
-export const PoltavaNewsModel = mongoose.model<IPoltavaNewsModelDocument>('PoltavaNews', PoltavaNewsModelSchema);
+export const PoltavaNewsModel = mongoose.model<IPoltavaNewsModelDocument>('poltavaNewsEmitter', PoltavaNewsModelSchema);
 
 export default PoltavaNewsModel;

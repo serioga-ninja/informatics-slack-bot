@@ -1,5 +1,10 @@
 import * as request from 'request';
 
+export interface IParseDataResults {
+    chanelId: string;
+    results: string[];
+}
+
 export abstract class ParserService<T> {
 
     static getMatches<T>(string: string, regex: RegExp, parseFn: (a: any[]) => T): T[] {
@@ -27,19 +32,33 @@ export abstract class ParserService<T> {
     }
 
     grabTheData(parseFn: (a: any[]) => any, urls: string[] = this.urls): Promise<any> {
-        return Promise.all(this.urls.map(url => {
-            return new Promise(resolve => {
-                request.get(url, (err, result) => {
-                    let results: T[];
-                    if(result) {
-                        results = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
-                    } else {
-                        console.info(`${url} - undefined`);
-                    }
+        let data: IParseDataResults[] = [];
 
-                    resolve(results);
+        return urls.map(url => {
+            return () => {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        request.get(url, (err, result) => {
+                            let results: string[] = [];
+                            if (result) {
+                                results = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
+                            } else {
+                                console.info(`${url} - undefined`);
+                            }
+
+                            data.push(<IParseDataResults>{
+                                chanelId: url.split('/').slice(-1)[0],
+                                results
+                            });
+
+                            resolve(results);
+                        });
+                    }, 1000);
                 });
-            });
-        }));
+            }
+        }).reduce((prev: Promise<any>, current: any) => {
+
+            return prev.then(current);
+        }, Promise.resolve()).then(() => (data));
     }
 }

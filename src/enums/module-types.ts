@@ -1,4 +1,4 @@
 export enum ModuleTypes {
-    boobs = 1,
+    instagramLinks = 1,
     poltavaNews = 2
 }

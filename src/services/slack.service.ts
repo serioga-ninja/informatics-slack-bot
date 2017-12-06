@@ -3,10 +3,11 @@ import * as qs from 'querystring';
 import * as http from 'http';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
 import variables from '../configs/variables';
-import RegisteredAppModel from '../models/registered-app.model';
+import RegisteredAppModel from '../modules/slack-apps/models/registered-app.model';
 
-interface ISlackAuthSuccessBody {
+export interface ISlackAuthSuccessBody {
     ok: boolean;
+    error?: string;
     access_token: string;
     scope: string;
     user_id: string;
@@ -65,14 +66,14 @@ export class SlackService {
 
     static registerNewChanel(responseBody: ISlackAuthSuccessBody) {
         return new RegisteredAppModel().set({
-            incoming_webhook: responseBody.incoming_webhook,
+            incomingWebhook: responseBody.incoming_webhook,
             modules: []
         }).save();
     }
 
     static chanelAlreadyRegistered(chanelId: string): Promise<boolean> {
         return RegisteredAppModel
-            .find({'incoming_webhook.channel_id': chanelId})
+            .find({'incomingWebhook.channel_id': chanelId})
             .then(collection => {
                 return collection.length > 0;
             })
