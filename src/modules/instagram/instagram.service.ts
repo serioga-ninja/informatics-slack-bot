@@ -1,7 +1,6 @@
 import {IParseDataResults, ParserService} from '../../classes/parser.service';
 import InstagramLinkModel, {IInstagramLinkModelDocument} from './models/instagram-link.model';
 import {IInstagramLinkModel} from './interfaces/i-instagram-link-model';
-import * as _ from 'lodash';
 
 const DOMAIN_URL = 'http://instagram.com';
 
@@ -34,14 +33,29 @@ export class InstagramService extends ParserService<string[]> {
     }
 
     public static saveToDB(data: IParseDataResults[]) {
-        return Promise.all(data.map(row => {
-            return Promise.all(row.results.map(link => {
-                return new InstagramLinkModel().set(<IInstagramLinkModel>{
-                    imageUrl: link,
-                    instChanelId: row.chanelId
-                }).save();
-            }));
-        }))
+        let writeData: object[] = [];
+
+        data.forEach(row => {
+            row.results.forEach(link => {
+                writeData.push({
+                    insertOne: {
+                        document: {
+                            imageUrl: link,
+                            instChanelId: row.chanelId
+                        }
+                    }
+                });
+            });
+        });
+
+        if (writeData.length === 0) {
+            return Promise.resolve();
+        }
+
+        return InstagramLinkModel.collection.bulkWrite(writeData)
+            .catch(error => {
+                debugger;
+            });
     }
 
     public static getAllImageDocuments(): Promise<IInstagramLinkModelDocument[]> {

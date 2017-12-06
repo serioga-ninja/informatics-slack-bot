@@ -1,3 +1,4 @@
+import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ICommandSuccess} from './BaseCommand.class';
 import RegisteredAppModel from '../slack-apps/models/registered-app.model';
 import {
@@ -15,7 +16,7 @@ export const SimpleCommandResponse = (target: any, propertyKey: string, descript
         return method
             .apply(target, args)
             .then((data: ICommandSuccess = <ICommandSuccess>{}) => {
-                return <ICommandSuccess>{
+                return <ISlackWebhookRequestBody>{
                     response_type: 'in_channel',
                     text: data.text || 'Success!',
                     attachments: data.attachments || []

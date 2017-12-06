@@ -1,3 +1,4 @@
+import {LogService} from '../../services/log.service';
 import {BaseCommand, ICommandSuccess} from './BaseCommand.class';
 import {Router} from 'express';
 import {RouterClass} from '../../classes/router.class';
@@ -13,6 +14,10 @@ export abstract class BaseModuleClass {
 
     public router: Router;
 
+    protected logService: LogService;
+
+    abstract moduleName: string;
+
     abstract routerClass: RouterClass;
 
     // informatics-slack-bot [:moduleName] register
@@ -27,11 +32,12 @@ export abstract class BaseModuleClass {
     // informatics-slack-bot [:moduleName] config
     public configureCommand: BaseCommand = commandInProgress;
 
-
     abstract commands: { [key: string]: BaseCommand };
 
     constructor() {
         this.router = Router();
+
+        this.logService = new LogService(this.moduleName);
     }
 
     init(): void {

@@ -39,7 +39,7 @@ export class CommandsService {
                 .join('');
 
             return {
-                [key]: value.split(',').map(link => link.replace(/ /, ''))
+                [key]: (value || '').split(',').map(link => link.replace(/ /, ''))
             }
         }, {});
     }

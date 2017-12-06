@@ -4,16 +4,12 @@ import {PoltavaNewsService} from './poltava-news.service';
 import poltavaNewsRegistrationCommand from './commands/registration.command';
 import RegisteredModuleModel from '../slack-apps/models/registered-module.model';
 import {ModuleTypes} from '../../enums/module-types';
-import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';
 import poltavaNewsRemoveCommand from './commands/remove.command';
 import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
-import {LogService} from '../../services/log.service';
 import commandInProgress from '../slack-apps/commands/in-progress';
-
-let logService = new LogService('PoltavaNewsModule');
 
 const POST_FREQUENCY = 1000 * 60 * 10;
 
@@ -22,6 +18,8 @@ const URLS = [
 ];
 
 class PoltavaNewsModule extends BaseModuleClass {
+
+    moduleName = 'PoltavaNewsModule';
 
     routerClass: PoltavaNewsRouter = new PoltavaNewsRouter();
 
@@ -49,7 +47,7 @@ class PoltavaNewsModule extends BaseModuleClass {
                 isActive: true
             })
             .then(collection => {
-                logService.info(`Registering ${collection.length} modules`);
+                this.logService.info(`Registering ${collection.length} modules`);
                 collection.forEach(module => {
                     RegisteredModulesService.startModuleInstance(poltavaNewsInstanceFactory(module));
                 });

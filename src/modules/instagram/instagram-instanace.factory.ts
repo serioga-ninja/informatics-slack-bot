@@ -8,7 +8,7 @@ import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-mo
 function instagramInstanceFactory(moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>): RegisteredModuleInstance {
 
     return new RegisteredModuleInstance(
-        moduleModel,
+        moduleModel._id,
         InstagramLinkModel,
         function (collection: IInstagramLinkModelDocument[]): Promise<ISlackWebhookRequestBody | null> {
             return Promise.resolve(<ISlackWebhookRequestBody>{

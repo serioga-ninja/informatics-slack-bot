@@ -6,7 +6,7 @@ import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-mo
 
 function poltavaNewsInstanceFactory(moduleModel: IRegisteredModuleModelDocument<any>): RegisteredModuleInstance {
     return new RegisteredModuleInstance(
-        moduleModel,
+        moduleModel._id,
         PoltavaNewsModel,
         function (collection: IPoltavaNewsModelDocument[]): Promise<ISlackWebhookRequestBody | null> {
             return Promise.resolve(<ISlackWebhookRequestBody>{

@@ -4,6 +4,8 @@ import commandInProgress from './commands/in-progress';
 
 class SlackAppModule extends BaseModuleClass {
 
+    moduleName = 'SlackAppModule';
+
     routerClass: any;
 
     registerCommand = slackBotRegistrationCommand;

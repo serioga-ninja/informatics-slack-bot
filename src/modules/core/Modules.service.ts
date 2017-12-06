@@ -15,7 +15,7 @@ export class RegisteredModulesService {
     public static stopModuleInstance(id: ObjectId) {
         logService.info(`Trying to stop module ${id}`);
         let inst = RegisteredModulesService.startedInstances.filter(module => {
-            return id.equals(module.model._id)
+            return id.equals(module.modelId)
         })[0];
 
         if (!inst) {
@@ -25,13 +25,13 @@ export class RegisteredModulesService {
 
         inst.destroy();
         RegisteredModulesService.startedInstances = RegisteredModulesService
-            .startedInstances.filter(module => !id.equals(module.model._id));
+            .startedInstances.filter(module => !id.equals(module.modelId));
 
         logService.info('Started instances count: ', RegisteredModulesService.startedInstances.length);
     }
 
     public static startModuleInstance(inst: RegisteredModuleInstance): void {
-        logService.info(`Starting new instance ${inst.model._id}`);
+        logService.info(`Starting new instance ${inst.modelId}`);
         RegisteredModulesService.startedInstances.push(inst);
     }
 

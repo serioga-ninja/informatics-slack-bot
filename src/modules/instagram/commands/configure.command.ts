@@ -1,3 +1,4 @@
+import {ISlackWebhookRequestBodyAttachment} from '../../../interfaces/i-slack-webhook-request-body-attachment';
 import {BaseCommand} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
@@ -33,7 +34,8 @@ const configActions: IConfigurationList<string[]> = {
                         links: allLinks
                     }
                 }).save()
-            });
+            })
+            .then(() => ([{text: 'Success'}]));
     },
 
     removeLinks: (requestBody: ISlackRequestBody, links: string[]) => {
@@ -52,6 +54,27 @@ const configActions: IConfigurationList<string[]> = {
                         links: addLinks
                     }
                 }).save()
+            })
+            .then(() => ([{text: 'Success'}]));
+    },
+
+    showLinks: (requestBody: ISlackRequestBody) => {
+        return RegisteredModuleModel
+            .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
+            .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
+                return moduleModel.configuration.links.map(link => ({title: link}))
+            });
+    },
+
+    frequency: (requestBody: ISlackRequestBody, minutes: string[]) => {
+        return RegisteredModuleModel
+            .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
+            .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
+                moduleModel.configuration.frequency = parseInt(minutes[0], 10);
+
+                moduleModel.save();
+
+                return [{text: 'Success'}];
             });
     },
 };
@@ -60,13 +83,21 @@ const configActions: IConfigurationList<string[]> = {
 class InstagramLinksConfigureCommand extends BaseCommand {
 
     @ChannelIsRegistered
-    @SimpleCommandResponse
     @ValidateConfigs(configActions)
+    @SimpleCommandResponse
     execute(requestBody: ISlackRequestBody, configs: IInstagramLinksConfig): Promise<any> {
+        let attachments: ISlackWebhookRequestBodyAttachment[] = [];
+
         return Promise.each(Object.keys(configs), (key: string) => {
-            return configActions[key](requestBody, configs[key]);
-        })
-            .then(() => instagramEmitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id));
+            return configActions[key](requestBody, configs[key])
+                .then(res => {
+                    attachments = attachments.concat(res)
+                });
+        }).then(() => {
+            instagramEmitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
+
+            return {attachments};
+        });
     }
 }
 

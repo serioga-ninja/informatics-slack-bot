@@ -8,7 +8,6 @@ import {ModuleTypes} from '../../enums/module-types';
 import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';
 import instagramLinksRemoveCommand from './commands/remove.command';
-import {LogService} from '../../services/log.service';
 import {InstagramRouter} from './instagram.router';
 import instagramInstanceFactory from './instagram-instanace.factory';
 import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
@@ -18,24 +17,9 @@ import instagramEmitter from './instagram.emitter';
 import {CONFIG_HAS_CHANGED} from '../core/Commands';
 import * as _ from 'lodash';
 
-let logService = new LogService('InstagramModule');
-
-const URLS = [
-    'http://instagram.com/art_of_ck',
-    'http://instagram.com/sensual_models',
-    'http://instagram.com/sensuality_bnw',
-    'http://instagram.com/man_talk_about_this',
-    'http://instagram.com/mens_top_girls',
-    'http://instagram.com/beautiful_shapes777',
-    'http://instagram.com/top_girl_russia_',
-    'http://instagram.com/playboy_moscow',
-    'http://instagram.com/exclusive_grls',
-    'http://instagram.com/top_hotestgirls_',
-    'http://instagram.com/prideallamen',
-    'http://instagram.com/classybabesxo'
-];
-
 class InstagramModule extends BaseModuleClass {
+
+    moduleName = 'InstagramModule';
 
     routerClass: InstagramRouter = new InstagramRouter();
 
@@ -53,20 +37,17 @@ class InstagramModule extends BaseModuleClass {
         super.init();
 
         instagramEmitter.on(CONFIG_HAS_CHANGED, (chanelId: string) => {
-            logService.info(`Update configure for chanelId ${chanelId}`);
+            this.logService.info(`Update configure for chanelId ${chanelId}`);
             return RegisteredModuleModel
                 .findOne({moduleType: ModuleTypes.instagramLinks, chanelId: chanelId})
                 .then(moduleModel => {
-                    let updatedIns = RegisteredModulesService
-                        .startedInstances
-                        .filter(inst => inst.model.chanelId === chanelId && inst.model.moduleType === ModuleTypes.instagramLinks)[0];
 
-                    updatedIns.model = moduleModel;
-                    this
-                        .collectData()
-                        .then(() => {
-                            updatedIns.onAction();
-                        });
+                    this.collectData().then(() => {
+                        RegisteredModulesService
+                            .startedInstances
+                            .find(inst => moduleModel._id.equals(inst.modelId))
+                            .init();
+                    });
                 });
         });
     }
@@ -103,7 +84,7 @@ class InstagramModule extends BaseModuleClass {
                 isActive: true
             })
             .then(collection => {
-                logService.info(`Registering ${collection.length} modules`);
+                this.logService.info(`Registering ${collection.length} modules`);
                 collection.forEach(module => {
                     RegisteredModulesService.startModuleInstance(instagramInstanceFactory(module));
                 });

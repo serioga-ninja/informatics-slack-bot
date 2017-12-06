@@ -37,21 +37,23 @@ export abstract class ParserService<T> {
         return urls.map(url => {
             return () => {
                 return new Promise(resolve => {
-                    request.get(url, (err, result) => {
-                        let results: string[] = [];
-                        if (result) {
-                            results = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
-                        } else {
-                            console.info(`${url} - undefined`);
-                        }
+                    setTimeout(() => {
+                        request.get(url, (err, result) => {
+                            let results: string[] = [];
+                            if (result) {
+                                results = ParserService.getMatches((<any>result).body, this.thumbnailReg, parseFn);
+                            } else {
+                                console.info(`${url} - undefined`);
+                            }
 
-                        data.push(<IParseDataResults>{
-                            chanelId: url.split('/').slice(-1)[0],
-                            results
+                            data.push(<IParseDataResults>{
+                                chanelId: url.split('/').slice(-1)[0],
+                                results
+                            });
+
+                            resolve(results);
                         });
-
-                        resolve(results);
-                    });
+                    }, 1000);
                 });
             }
         }).reduce((prev: Promise<any>, current: any) => {

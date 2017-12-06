@@ -1,10 +1,14 @@
+import {ObjectId} from 'mongodb';
 import {IRegisteredModule} from '../../interfaces/i-registered-module';
 import Timer = NodeJS.Timer;
 import * as mongoose from 'mongoose';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import request = require('request');
 import {LogService} from '../../services/log.service';
-import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-module.model';
+import {
+    IRegisteredModuleModelDocument,
+    default as RegisteredModuleModel
+} from '../slack-apps/models/registered-module.model';
 
 let logService = new LogService('Registered Modules');
 
@@ -19,18 +23,17 @@ export interface ISomething extends mongoose.Document {
 export class RegisteredModuleInstance {
 
     private _interval: Timer;
+    private model: IRegisteredModuleModelDocument<any>;
 
-    constructor(public model: IRegisteredModuleModelDocument<any>,
+    constructor(public modelId: ObjectId,
                 protected modelInstance: mongoose.Model<ISomething>,
                 protected aggregateFunction: (collection: ISomething[]) => Promise<ISlackWebhookRequestBody | null>,
                 protected searchAggregationFn: (model: IRegisteredModule<any>) => object = baseSearchAggregationFn) {
 
-        this._interval = setInterval(() => this.onAction(), MINUTE * model.configuration.frequency);
-
-        this.onAction();
+        this.init();
     }
 
-    public onAction() {
+    private onAction() {
         this.modelInstance
             .find(this.searchAggregationFn(this.model))
             .then((items) => this
@@ -62,8 +65,26 @@ export class RegisteredModuleInstance {
             )
     }
 
-    destroy() {
+    public destroy() {
         logService.info(`Stopping instance for moduleId ${this.model._id} for channel ${this.model.chanelId}`);
         clearInterval(this._interval);
+    }
+
+    public init() {
+        RegisteredModuleModel
+            .findById(this.modelId)
+            .then(model => {
+                this.model = model;
+
+                logService.info(`Init channel ${this.model.chanelId}`);
+
+                if (this._interval) {
+                    clearInterval(this._interval);
+                }
+
+                this._interval = setInterval(() => this.onAction(), MINUTE * this.model.configuration.frequency);
+
+                this.onAction();
+            });
     }
 }
