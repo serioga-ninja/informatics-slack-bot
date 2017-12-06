@@ -1,9 +1,11 @@
+import variables from '../../../configs/variables';
+import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../../interfaces/i-slack-webhook-request-body-attachment';
 import {BaseCommand} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
-import * as Promise from 'bluebird';
 import {ModuleTypes} from '../../../enums/module-types';
+import {camelCaseToCebabCase} from '../../core/utils';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../slack-apps/models/registered-module.model';
 import * as _ from 'lodash';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
@@ -88,16 +90,53 @@ class InstagramLinksConfigureCommand extends BaseCommand {
     execute(requestBody: ISlackRequestBody, configs: IInstagramLinksConfig): Promise<any> {
         let attachments: ISlackWebhookRequestBodyAttachment[] = [];
 
-        return Promise.each(Object.keys(configs), (key: string) => {
-            return configActions[key](requestBody, configs[key])
-                .then(res => {
-                    attachments = attachments.concat(res)
-                });
-        }).then(() => {
-            instagramEmitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
+        return Object.keys(configs).map(key => {
+            return () => {
+                return configActions[key](requestBody, configs[key])
+                    .then(res => {
+                        attachments = attachments.concat(res)
+                    });
+            }
+        }).reduce((prev: Promise<any>, current: any) => {
 
-            return {attachments};
-        });
+            return prev.then(current);
+        }, Promise.resolve())
+            .then(() => {
+                instagramEmitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
+
+                return {attachments};
+            });
+    }
+
+    help() {
+        return Promise.resolve(<ISlackWebhookRequestBody>{
+            response_type: 'in_channel',
+            text: '',
+            attachments: [
+                {
+                    title: 'Usage',
+                    text: `/${variables.slack.COMMAND} instagram-links config [key1=value1 key2=key2value1,key2value1 ...]`
+                },
+                {
+                    title: 'Config list',
+                    text: Object.keys(configActions)
+                        .map(key => camelCaseToCebabCase(key))
+                        .join('|')
+                },
+                {
+                    title: 'Example add instagram public',
+                    text: `/${variables.slack.COMMAND} instagram-links config add-links=inst_cat_public1,inst_cat_public2`
+                },
+                {
+                    title: 'Example remove instagram public',
+                    text: `/${variables.slack.COMMAND} instagram-links config remove-links=inst_cat_public1,inst_cat_public2`
+                },
+                {
+                    title: 'Example set post frequency (minutes)',
+                    text: `/${variables.slack.COMMAND} instagram-links config frequency=20`
+                }
+            ]
+        })
     }
 }
 

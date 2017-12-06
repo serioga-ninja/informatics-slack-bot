@@ -1,3 +1,4 @@
+import helpCommand from './commands/help.command';
 import {InstagramService} from './instagram.service';
 
 import {BaseModuleClass} from '../core/BaseModule.class';
@@ -12,7 +13,6 @@ import {InstagramRouter} from './instagram.router';
 import instagramInstanceFactory from './instagram-instanace.factory';
 import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
 import instagramLinksConfigureCommand from './commands/configure.command';
-import commandInProgress from '../slack-apps/commands/in-progress';
 import instagramEmitter from './instagram.emitter';
 import {CONFIG_HAS_CHANGED} from '../core/Commands';
 import * as _ from 'lodash';
@@ -29,7 +29,7 @@ class InstagramModule extends BaseModuleClass {
 
     configureCommand = instagramLinksConfigureCommand;
 
-    helpCommand = commandInProgress;
+    helpCommand = helpCommand;
 
     commands = {};
 

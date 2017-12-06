@@ -1,13 +1,16 @@
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import * as Bluebird from 'bluebird';
-
-export interface ICommandSuccess {
-    response_type: 'in_channel';
-    text: string;
-    attachments: any[];
-}
+import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 
 export abstract class BaseCommand {
 
-    abstract execute(requestBody: ISlackRequestBody, args?: object): Promise<ICommandSuccess> | Bluebird<any>;
+    abstract execute(requestBody: ISlackRequestBody, args?: object): Promise<ISlackWebhookRequestBody>;
+
+    help(): Promise<ISlackWebhookRequestBody> {
+        return Promise.resolve(<ISlackWebhookRequestBody>{
+            text: 'Not Implemented',
+            attachments: []
+        })
+    };
+
 }

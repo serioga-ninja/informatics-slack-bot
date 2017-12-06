@@ -1,14 +1,18 @@
+import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {LogService} from '../../services/log.service';
-import {BaseCommand, ICommandSuccess} from './BaseCommand.class';
+import {BaseCommand} from './BaseCommand.class';
 import {Router} from 'express';
 import {RouterClass} from '../../classes/router.class';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import commandInProgress from '../slack-apps/commands/in-progress';
-import * as Bluebird from 'bluebird';
 
 const PRELOAD_DATA_FREQUENCY = 1000 * 60 * 10;
+
+const CALL_HELP_ON_EMPRY_ARGS_COMMANDS = [
+    'config'
+];
 
 export abstract class BaseModuleClass {
 
@@ -21,13 +25,13 @@ export abstract class BaseModuleClass {
     abstract routerClass: RouterClass;
 
     // informatics-slack-bot [:moduleName] register
-    abstract registerCommand: BaseCommand;
+    abstract registerCommand: BaseCommand = commandInProgress;
 
     // informatics-slack-bot [:moduleName] remove
-    abstract removeCommand: BaseCommand;
+    abstract removeCommand: BaseCommand = commandInProgress;
 
     // informatics-slack-bot [:moduleName] [:help]
-    abstract helpCommand: BaseCommand;
+    abstract helpCommand: BaseCommand = commandInProgress;
 
     // informatics-slack-bot [:moduleName] config
     public configureCommand: BaseCommand = commandInProgress;
@@ -56,7 +60,7 @@ export abstract class BaseModuleClass {
 
     abstract preloadActiveModules(): Promise<any>
 
-    execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ICommandSuccess> | Bluebird<any> {
+    execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebhookRequestBody> {
         let executableCommand: BaseCommand;
 
         switch (command) {
@@ -74,6 +78,11 @@ export abstract class BaseModuleClass {
                 break;
             default:
                 executableCommand = this.commands[command];
+        }
+
+        if (CALL_HELP_ON_EMPRY_ARGS_COMMANDS.indexOf(command) !== -1 && Object.keys(args).length === 0) {
+            return executableCommand
+                .help();
         }
 
         return executableCommand

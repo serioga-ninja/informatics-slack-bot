@@ -1,7 +1,7 @@
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import {ICommandSuccess} from './BaseCommand.class';
 import RegisteredAppModel from '../slack-apps/models/registered-app.model';
 import {
+    ChanelAlreadyRegisteredError,
     ChanelNotRegisteredError, InformaticsSlackBotBaseError, ModuleNotExistsError,
     UnknownConfigError
 } from './Errors';
@@ -9,13 +9,13 @@ import {ModuleTypes} from '../../enums/module-types';
 import {RegisteredModulesService} from './Modules.service';
 
 export const SimpleCommandResponse = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    let method: () => Promise<ICommandSuccess> = descriptor.value;
+    let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
     descriptor.value = function (...args: any[]) {
 
         return method
             .apply(target, args)
-            .then((data: ICommandSuccess = <ICommandSuccess>{}) => {
+            .then((data: ISlackWebhookRequestBody = <ISlackWebhookRequestBody>{}) => {
                 return <ISlackWebhookRequestBody>{
                     response_type: 'in_channel',
                     text: data.text || 'Success!',
@@ -26,7 +26,7 @@ export const SimpleCommandResponse = (target: any, propertyKey: string, descript
 };
 
 export function ChannelIsRegistered(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-    let method: () => Promise<ICommandSuccess> = descriptor.value;
+    let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
     descriptor.value = function (...args: any[]) {
         let [requestBody] = args;
@@ -40,7 +40,30 @@ export function ChannelIsRegistered(target: any, propertyKey: string, descriptor
             })
             .then(() => method.apply(target, args))
             .catch((error: InformaticsSlackBotBaseError) => {
-                return <ICommandSuccess>{
+                return <ISlackWebhookRequestBody>{
+                    response_type: 'in_channel',
+                    text: error.message
+                }
+            });
+    };
+}
+
+export function ChannelNotRegistered(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+
+    descriptor.value = function (...args: any[]) {
+        let [requestBody] = args;
+
+        return RegisteredAppModel
+            .find({'incomingWebhook.channel_id': requestBody.channel_id})
+            .then(collection => {
+                if (collection.length > 0) {
+                    throw new ChanelAlreadyRegisteredError();
+                }
+            })
+            .then(() => method.apply(target, args))
+            .catch((error: InformaticsSlackBotBaseError) => {
+                return <ISlackWebhookRequestBody>{
                     response_type: 'in_channel',
                     text: error.message
                 }
@@ -50,7 +73,7 @@ export function ChannelIsRegistered(target: any, propertyKey: string, descriptor
 
 export const ChannelIsActivated = (moduleType: ModuleTypes) => {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-        let method: () => Promise<ICommandSuccess> = descriptor.value;
+        let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
         descriptor.value = function (...args: any[]) {
             let [requestBody] = args;
@@ -64,7 +87,7 @@ export const ChannelIsActivated = (moduleType: ModuleTypes) => {
                 })
                 .then(() => method.apply(target, args))
                 .catch((error: InformaticsSlackBotBaseError) => {
-                    return <ICommandSuccess>{
+                    return <ISlackWebhookRequestBody>{
                         response_type: 'in_channel',
                         text: error.message
                     }
@@ -76,7 +99,7 @@ export const ChannelIsActivated = (moduleType: ModuleTypes) => {
 export const ValidateConfigs = (availableCommands: { [key: string]: (requestBody: any, configs: any) => Promise<any> }) => {
 
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-        let method: () => Promise<ICommandSuccess> = descriptor.value;
+        let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
         descriptor.value = function (...args: any[]) {
             let [requestBody, configs] = args;

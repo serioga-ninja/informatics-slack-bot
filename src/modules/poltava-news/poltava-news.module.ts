@@ -1,4 +1,7 @@
 import {BaseModuleClass} from '../core/BaseModule.class';
+import {CONFIG_HAS_CHANGED} from '../core/Commands';
+import poltavaNewsConfigureCommand from './commands/configure.command';
+import poltavaNewsEmitter from './poltava-news.emitter';
 import {PoltavaNewsRouter} from './poltava-news.router';
 import {PoltavaNewsService} from './poltava-news.service';
 import poltavaNewsRegistrationCommand from './commands/registration.command';
@@ -9,7 +12,7 @@ import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';
 import poltavaNewsRemoveCommand from './commands/remove.command';
 import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
-import commandInProgress from '../slack-apps/commands/in-progress';
+import helpCommand from './commands/help.command';
 
 const POST_FREQUENCY = 1000 * 60 * 10;
 
@@ -27,9 +30,30 @@ class PoltavaNewsModule extends BaseModuleClass {
 
     removeCommand = poltavaNewsRemoveCommand;
 
-    helpCommand = commandInProgress;
+    helpCommand = helpCommand;
+
+    configureCommand = poltavaNewsConfigureCommand;
 
     commands = {};
+
+    init() {
+        super.init();
+
+        poltavaNewsEmitter.on(CONFIG_HAS_CHANGED, (chanelId: string) => {
+            this.logService.info(`Update configure for chanelId ${chanelId}`);
+            return RegisteredModuleModel
+                .findOne({moduleType: ModuleTypes.poltavaNews, chanelId: chanelId})
+                .then(moduleModel => {
+
+                    this.collectData().then(() => {
+                        RegisteredModulesService
+                            .startedInstances
+                            .find(inst => moduleModel._id.equals(inst.modelId))
+                            .init();
+                    });
+                });
+        });
+    }
 
     collectData() {
         let poltavaNewsService = new PoltavaNewsService(URLS);

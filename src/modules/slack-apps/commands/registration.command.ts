@@ -1,5 +1,6 @@
-import {BaseCommand, ICommandSuccess} from '../../core/BaseCommand.class';
-import RegisteredAppModel from '../models/registered-app.model';
+import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
+import {BaseCommand} from '../../core/BaseCommand.class';
+import {ChannelNotRegistered} from '../../core/CommandDecorators';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import variables from '../../../configs/variables';
 
@@ -14,40 +15,22 @@ export class ChanelAlreadyRegisteredError extends Error {
 
 class RegistrationCommand extends BaseCommand {
 
-    validate(requestBody: ISlackRequestBody) {
-        return RegisteredAppModel
-            .find({'incomingWebhook.channel_id': requestBody.channel_id})
-            .then(collection => {
-                if (collection.length > 0) {
-                    throw new ChanelAlreadyRegisteredError();
+    @ChannelNotRegistered
+    execute(requestBody: ISlackRequestBody, args: string[]) {
+        return Promise.resolve(<ISlackWebhookRequestBody>{
+            response_type: 'in_channel',
+            text: '',
+            attachments: [
+                {
+                    title_link: `https://slack.com/oauth/authorize?scope=incoming-webhook,commands&client_id=${variables.slack.CLIENT_ID}`,
+                    title: 'Click to register',
+                    image_url: 'https://platform.slack-edge.com/img/add_to_slack.png'
                 }
-            })
+            ]
+        });
     }
 
-    execute(requestBody: ISlackRequestBody, args: string[]) {
-        return this
-            .validate(requestBody)
-            .then(() => {
-                return <ICommandSuccess>{
-                    response_type: 'in_channel',
-                    text: '',
-                    attachments: [
-                        {
-                            title_link: `https://slack.com/oauth/authorize?scope=incoming-webhook,commands&client_id=${variables.slack.CLIENT_ID}`,
-                            title: 'Click to register',
-                            image_url: 'https://platform.slack-edge.com/img/add_to_slack.png'
-                        }
-                    ]
-                }
-            })
-            .catch(error => {
-                return <ICommandSuccess>{
-                    response_type: 'in_channel',
-                    text: 'You are already in this chanel.',
-                    attachments: []
-                }
-            });
-    }
+
 }
 
 let slackBotRegistrationCommand = new RegistrationCommand();

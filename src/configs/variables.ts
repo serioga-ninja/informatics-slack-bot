@@ -1,5 +1,6 @@
 export const variables = {
     slack: {
+        COMMAND: process.env.SLACK_COMMAND,
         CLIENT_ID: process.env.SLACK_CLIENT_ID,
         CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
         XXX_CHANEL_URL: process.env.SLACK_XXX_CHANEL_LINK,
