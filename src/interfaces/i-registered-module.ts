@@ -1,4 +1,4 @@
-import {ModuleTypes} from '../enums/module-types';
+import {ModuleTypes} from '../modules/core/Enums';
 import {ITimestamps} from './i-timestamps';
 
 export interface IBaseModuleConfiguration {

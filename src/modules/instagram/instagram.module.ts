@@ -1,10 +1,10 @@
+import {ModuleTypes} from '../core/Enums';
 import helpCommand from './commands/help.command';
 import {InstagramService} from './instagram.service';
 
 import {BaseModuleClass} from '../core/BaseModule.class';
 import instagramLinksRegistrationCommand from './commands/registration.command';
 import RegisteredModuleModel from '../slack-apps/models/registered-module.model';
-import {ModuleTypes} from '../../enums/module-types';
 
 import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';

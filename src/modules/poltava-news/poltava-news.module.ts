@@ -1,12 +1,12 @@
 import {BaseModuleClass} from '../core/BaseModule.class';
 import {CONFIG_HAS_CHANGED} from '../core/Commands';
+import {ModuleTypes} from '../core/Enums';
 import poltavaNewsConfigureCommand from './commands/configure.command';
 import poltavaNewsEmitter from './poltava-news.emitter';
 import {PoltavaNewsRouter} from './poltava-news.router';
 import {PoltavaNewsService} from './poltava-news.service';
 import poltavaNewsRegistrationCommand from './commands/registration.command';
 import RegisteredModuleModel from '../slack-apps/models/registered-module.model';
-import {ModuleTypes} from '../../enums/module-types';
 
 import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';

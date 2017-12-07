@@ -1,6 +1,6 @@
+import {ModuleTypes} from './Enums';
 import {RegisteredModuleInstance} from './RegisteredModuleInstance';
-import {IBaseRegisteredModule, IRegisteredModule} from '../../interfaces/i-registered-module';
-import {ModuleTypes} from '../../enums/module-types';
+import {IRegisteredModule} from '../../interfaces/i-registered-module';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../slack-apps/models/registered-module.model';
 import {ObjectId} from 'mongodb';
 import {ModuleAlreadeyStoppedError} from './Errors';

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {ILinkModel} from '../../interfaces/i-link-model';
-import {LinkTypes} from '../../enums/link-types';
 import {RouteComponentProps} from 'react-router';
 import {connect} from 'react-redux'
+import {LinkTypes} from '../../modules/core/Enums';
 import linksApiService from '../services/links-api.service';
 import store from '../reducers/store';
 import {addLink, updateSingleLink} from '../reducers/links/actions';

@@ -17,7 +17,11 @@ export const RegisteredModulesModelSchema: mongoose.Schema = new mongoose.Schema
             type: Number,
             default: 10
         },
-        links: [String]
+        links: [String],
+        postStrategy: {
+            type: Number,
+            default: 2
+        }
     }
 }, {
     timestamps: true

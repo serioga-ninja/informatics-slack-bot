@@ -1,6 +1,6 @@
 import {BaseCommand} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ModuleTypes} from '../../../enums/module-types';
+import {ModuleTypes} from '../../core/Enums';
 import {RegisteredModulesService} from '../../core/Modules.service';
 import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 
