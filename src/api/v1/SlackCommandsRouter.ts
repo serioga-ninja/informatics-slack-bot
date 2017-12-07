@@ -23,6 +23,6 @@ export class SlackCommandsRouter extends RouterClass {
 }
 
 // Create the SlackRouter, and export its configured Express.Router
-const slackBoobsRouter = new SlackCommandsRouter();
+const slackCommandsRouter = new SlackCommandsRouter();
 
-export default slackBoobsRouter.router;
+export default slackCommandsRouter.router;

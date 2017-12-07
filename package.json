@@ -9,7 +9,7 @@
     "start": "node index.js",
     "start:prod": "./node_modules/.bin/pm2 start process.json",
     "start:db": "mongod --dbpath ./data/db/",
-    "prestart": "./node_modules/.bin/tsc && cp -r src/views build/views",
+    "prestart": "rm -r ./build && ./node_modules/.bin/tsc",
     "webpack": "webpack -wd",
     "ngrok": "./node_modules/.bin/ngrok http 3000"
   },
