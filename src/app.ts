@@ -1,7 +1,10 @@
 import * as express from 'express';
-import * as logger from 'morgan';
+import * as fs from 'fs';
+import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
+import * as errorHandler from 'errorhandler';
 import './configs/database';
+import * as path from 'path';
 
 import SlackRouter from './api/v1/SlackRouter';
 import SlackEventRouter from './api/v1/SlackEventRouter';
@@ -29,7 +32,24 @@ class App {
 
     // Configure Express middleware.
     private middleware(): void {
-        this.express.use(logger('dev'));
+        let env = process.env.NODE_ENV;
+
+        if (['development', 'test', 'local'].indexOf(env) !== -1) {
+            this.express.use(morgan('dev', {immediate: true}));
+            this.express.use(errorHandler({dumpExceptions: true, showStack: true}));
+        } else if (env === 'production') {
+            this.express.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+                stream: fs.createWriteStream(path.join(process.cwd(), 'log', 'access.log'), {
+                    flags: 'a',
+                    encoding: 'utf-8'
+                })
+            }));
+            this.express.use(errorHandler({
+                dumpExceptions: true,
+                showStack: true
+            }));
+        }
+
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({extended: false}));
         this.express.use(express.static('public'));

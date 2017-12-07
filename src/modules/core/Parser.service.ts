@@ -1,9 +1,12 @@
 import * as request from 'request';
+import {LogService} from '../../services/log.service';
 
 export interface IParseDataResults {
     chanelId: string;
     results: string[];
 }
+
+let logService = new LogService('parser');
 
 export abstract class ParserService<T> {
 
@@ -38,6 +41,7 @@ export abstract class ParserService<T> {
             return () => {
                 return new Promise(resolve => {
                     setTimeout(() => {
+                        logService.info(`Parsing ${url} start`);
                         request.get(url, (err, result) => {
                             let results: string[] = [];
                             if (result) {
@@ -50,6 +54,8 @@ export abstract class ParserService<T> {
                                 chanelId: url.split('/').slice(-1)[0],
                                 results
                             });
+
+                            logService.info(`Parsing ${url} done`);
 
                             resolve(results);
                         });

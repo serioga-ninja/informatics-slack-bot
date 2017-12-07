@@ -53,6 +53,8 @@ class InstagramModule extends BaseModuleClass {
     }
 
     collectData() {
+        this.logService.info(`Collecting data`);
+
         return RegisteredModuleModel
             .find(<IRegisteredModule<IInstagramConfiguration>>{
                 moduleType: ModuleTypes.instagramLinks,
@@ -67,6 +69,8 @@ class InstagramModule extends BaseModuleClass {
                             return all.concat(current);
                         }, [])
                 );
+
+                this.logService.info(`Collecting data for public`, instagramPublicIds);
 
                 let instagramPhotoParser = new InstagramService(instagramPublicIds, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
 

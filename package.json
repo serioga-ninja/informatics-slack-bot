@@ -1,6 +1,6 @@
 {
   "name": "rss-reader",
-  "repository": "",
+  "repository": "https://github.com/serioga-ninja/informatics-slack-bot",
   "version": "1.0.0",
   "description": "Informatics slack bot",
   "main": "index.js",
@@ -25,7 +25,9 @@
     "body-parser": "^1.17.2",
     "dotenv": "^2.0.0",
     "ejs": "^2.5.7",
+    "errorhandler": "^1.5.0",
     "express": "^4.15.3",
+    "express-winston": "^2.4.0",
     "feedparser": "^1.1.6",
     "jsdom": "^11.3.0",
     "lodash": "^4.17.4",
@@ -44,7 +46,8 @@
     "request": "^2.81.0",
     "rxjs": "^5.4.0",
     "ts-node": "^3.3.0",
-    "webpack": "^3.8.1"
+    "webpack": "^3.8.1",
+    "winston": "^2.4.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.12",
@@ -62,6 +65,7 @@
     "@types/request": "0.0.32",
     "@types/sequelize": "^4.0.55",
     "@types/sqlite3": "^2.2.33",
+    "@types/winston": "^2.3.7",
     "awesome-typescript-loader": "^3.3.0",
     "redux-devtools-extension": "^2.13.2",
     "source-map-loader": "^0.2.3",

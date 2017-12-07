@@ -41,11 +41,10 @@ export abstract class BaseModuleClass {
 
     constructor() {
         this.router = Router();
-
-        this.logService = new LogService(this.moduleName);
     }
 
     init(): void {
+        this.logService = new LogService(this.moduleName);
 
         Observable
             .interval(PRELOAD_DATA_FREQUENCY)
