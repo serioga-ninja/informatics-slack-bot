@@ -1,7 +1,7 @@
 import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfigureCommand';
-import {ModuleTypes} from '../../../enums/module-types';
 import {baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
+import {ModuleTypes} from '../../core/Enums';
 import MODULES_CONFIG from '../../modules.config';
 import {IConfigurationList} from '../../core/Interfaces';
 import poltavaNewsEmitter from '../poltava-news.emitter';

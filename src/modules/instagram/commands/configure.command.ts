@@ -1,9 +1,9 @@
 import variables from '../../../configs/variables';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfigureCommand';
-import {ModuleTypes} from '../../../enums/module-types';
 import {BASE_CONFIGURE_COMMANDS, baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
+import {ModuleTypes} from '../../core/Enums';
 import {camelCaseToCebabCase, simpleSuccessAttachment} from '../../core/utils';
 import MODULES_CONFIG from '../../modules.config';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../slack-apps/models/registered-module.model';

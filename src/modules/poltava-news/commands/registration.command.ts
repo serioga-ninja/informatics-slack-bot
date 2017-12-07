@@ -1,7 +1,7 @@
 import {BaseCommand} from '../../core/BaseCommand.class';
+import {ModuleTypes} from '../../core/Enums';
 import RegisteredAppModel from '../../slack-apps/models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ModuleTypes} from '../../../enums/module-types';
 import {RegisteredModulesService} from '../../core/Modules.service';
 import poltavaNewsInstanceFactory from '../poltava-news-instanace.factory';
 import {ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';

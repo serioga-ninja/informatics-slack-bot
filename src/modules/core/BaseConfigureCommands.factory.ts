@@ -1,6 +1,6 @@
-import {ModuleTypes} from '../../enums/module-types';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../slack-apps/models/registered-module.model';
+import {ModuleTypes} from './Enums';
 import {simpleSuccessAttachment} from './utils';
 
 export const BASE_CONFIGURE_COMMANDS = {
