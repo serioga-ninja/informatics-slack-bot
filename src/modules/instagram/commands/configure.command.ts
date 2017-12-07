@@ -6,6 +6,7 @@ import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
 import {ModuleTypes} from '../../../enums/module-types';
 import {camelCaseToCebabCase} from '../../core/utils';
+import MODULES_CONFIG from '../../modules.config';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../slack-apps/models/registered-module.model';
 import * as _ from 'lodash';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
@@ -17,9 +18,16 @@ interface IInstagramLinksConfig {
     addLinks: string;
 }
 
+const INSTAGRAM_LINKS_AVAILABLE_CONFIGS = {
+    ADD_LINKS: 'addLinks',
+    REMOVE_LINKS: 'removeLinks',
+    SHOW_LINKS: 'showLinks',
+    FREQUENCY: 'frequency',
+};
+
 
 const configActions: IConfigurationList<string[]> = {
-    addLinks: (requestBody: ISlackRequestBody, links: string[]) => {
+    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS]: (requestBody: ISlackRequestBody, links: string[]) => {
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
             .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
@@ -40,7 +48,7 @@ const configActions: IConfigurationList<string[]> = {
             .then(() => ([{text: 'Success'}]));
     },
 
-    removeLinks: (requestBody: ISlackRequestBody, links: string[]) => {
+    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS]: (requestBody: ISlackRequestBody, links: string[]) => {
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
             .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
@@ -60,7 +68,7 @@ const configActions: IConfigurationList<string[]> = {
             .then(() => ([{text: 'Success'}]));
     },
 
-    showLinks: (requestBody: ISlackRequestBody) => {
+    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.SHOW_LINKS]: (requestBody: ISlackRequestBody) => {
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
             .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
@@ -68,7 +76,7 @@ const configActions: IConfigurationList<string[]> = {
             });
     },
 
-    frequency: (requestBody: ISlackRequestBody, minutes: string[]) => {
+    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.FREQUENCY]: (requestBody: ISlackRequestBody, minutes: string[]) => {
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
             .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
@@ -115,7 +123,7 @@ class InstagramLinksConfigureCommand extends BaseCommand {
             attachments: [
                 {
                     title: 'Usage',
-                    text: `/${variables.slack.COMMAND} instagram-links config [key1=value1 key2=key2value1,key2value1 ...]`
+                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} [key1=value1 key2=key2value1,key2value1 ...]`
                 },
                 {
                     title: 'Config list',
@@ -125,15 +133,15 @@ class InstagramLinksConfigureCommand extends BaseCommand {
                 },
                 {
                     title: 'Example add instagram public',
-                    text: `/${variables.slack.COMMAND} instagram-links config add-links=inst_cat_public1,inst_cat_public2`
+                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS)}=inst_cat_public1,inst_cat_public2`
                 },
                 {
                     title: 'Example remove instagram public',
-                    text: `/${variables.slack.COMMAND} instagram-links config remove-links=inst_cat_public1,inst_cat_public2`
+                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS)}=inst_cat_public1,inst_cat_public2`
                 },
                 {
                     title: 'Example set post frequency (minutes)',
-                    text: `/${variables.slack.COMMAND} instagram-links config frequency=20`
+                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.FREQUENCY)}=20`
                 }
             ]
         })

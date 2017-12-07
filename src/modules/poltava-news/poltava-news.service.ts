@@ -1,4 +1,4 @@
-import {ParserService} from '../../classes/parser.service';
+import {ParserService} from '../core/Parser.service';
 import {JSDOM} from 'jsdom';
 import PoltavaNewsModel, {IPoltavaNewsModelDocument} from './models/poltava-news.model';
 import {IPoltavaNewsModel} from './interfaces/i-poltava-news-model';

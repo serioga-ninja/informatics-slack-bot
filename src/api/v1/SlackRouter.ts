@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import * as request from 'request';
 import configs from '../../configs/variables';
-import {RouterClass} from '../../classes/router.class';
+import {RouterClass} from '../Router.class';
 
 let clientId = configs.slack.CLIENT_ID;
 let clientSecret = configs.slack.CLIENT_SECRET;

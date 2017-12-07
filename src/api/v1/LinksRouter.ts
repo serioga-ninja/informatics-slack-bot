@@ -1,6 +1,6 @@
-import {Request, Response, NextFunction} from 'express';
-import {RouterClass} from '../../classes/router.class';
-import LinkModel, {ILinkModelDocument, LinkModelSchema} from '../../models/link.model';
+import {Request, Response} from 'express';
+import {RouterClass} from '../Router.class';
+import LinkModel from '../../models/link.model';
 import {LinkTypes} from '../../enums/link-types';
 import {ILinkModel} from '../../interfaces/i-link-model';
 

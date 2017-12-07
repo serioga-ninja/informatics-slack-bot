@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
-import {RouterClass} from '../../classes/router.class';
+import {RouterClass} from '../Router.class';
 import variables from '../../configs/variables';
 import * as request from 'request';
 import * as qs from 'querystring';

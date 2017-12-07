@@ -23,7 +23,7 @@ class RegistrationCommand extends BaseCommand {
             attachments: [
                 {
                     title_link: `https://slack.com/oauth/authorize?scope=incoming-webhook,commands&client_id=${variables.slack.CLIENT_ID}`,
-                    title: 'Click to register',
+                    title: 'Click to init',
                     image_url: 'https://platform.slack-edge.com/img/add_to_slack.png'
                 }
             ]

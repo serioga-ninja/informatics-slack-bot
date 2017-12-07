@@ -1,4 +1,5 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
+import MODULES_CONFIG from '../modules/modules.config';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import {BaseModuleClass} from '../modules/core/BaseModule.class';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
@@ -7,8 +8,8 @@ import {InstagramCommand} from '../typings';
 
 const MODULES_LIST = {
     'app': slackAppModule,
-    'poltava-news': poltavaNewsModule,
-    'instagram-links': instagramModule
+    [MODULES_CONFIG.MODULES.POLTAVA_NEWS]: poltavaNewsModule,
+    [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule
 };
 
 export class CommandsService {
@@ -26,7 +27,8 @@ export class CommandsService {
     }
 
     static collectArguments(commandStringArr: string[]): object {
-        if (commandStringArr[1] !== 'config' || (commandStringArr[1] === 'config' && commandStringArr.length <= 2)) {
+        if (commandStringArr[1] !== MODULES_CONFIG.COMMANDS.CONFIGURE
+            || (commandStringArr[1] === MODULES_CONFIG.COMMANDS.CONFIGURE && commandStringArr.length <= 2)) {
             return {};
         }
         let [module, command, ...configArgs] = commandStringArr;

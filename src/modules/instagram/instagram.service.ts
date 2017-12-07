@@ -1,4 +1,4 @@
-import {IParseDataResults, ParserService} from '../../classes/parser.service';
+import {IParseDataResults, ParserService} from '../core/Parser.service';
 import InstagramLinkModel, {IInstagramLinkModelDocument} from './models/instagram-link.model';
 import {IInstagramLinkModel} from './interfaces/i-instagram-link-model';
 

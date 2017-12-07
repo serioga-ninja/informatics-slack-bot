@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express';
-import {RouterClass} from '../../classes/router.class';
+import {RouterClass} from '../Router.class';
 import * as request from 'request';
 import variables from '../../configs/variables';
 import * as qs from 'querystring';

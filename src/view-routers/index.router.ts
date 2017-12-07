@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express';
-import {RouterClass} from '../classes/router.class';
+import {RouterClass} from '../api/Router.class';
 import serverHtml from '../client-app/Server';
 import LinkModel from '../models/link.model';
 import {LinkTypes} from '../enums/link-types';

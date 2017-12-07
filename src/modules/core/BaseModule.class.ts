@@ -1,8 +1,9 @@
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {LogService} from '../../services/log.service';
+import MODULES_CONFIG from '../modules.config';
 import {BaseCommand} from './BaseCommand.class';
 import {Router} from 'express';
-import {RouterClass} from '../../classes/router.class';
+import {RouterClass} from '../../api/Router.class';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
@@ -11,7 +12,7 @@ import commandInProgress from '../slack-apps/commands/in-progress';
 const PRELOAD_DATA_FREQUENCY = 1000 * 60 * 10;
 
 const CALL_HELP_ON_EMPRY_ARGS_COMMANDS = [
-    'config'
+    MODULES_CONFIG.COMMANDS.CONFIGURE
 ];
 
 export abstract class BaseModuleClass {
@@ -24,7 +25,7 @@ export abstract class BaseModuleClass {
 
     abstract routerClass: RouterClass;
 
-    // informatics-slack-bot [:moduleName] register
+    // informatics-slack-bot [:moduleName] init
     abstract registerCommand: BaseCommand = commandInProgress;
 
     // informatics-slack-bot [:moduleName] remove
@@ -64,16 +65,16 @@ export abstract class BaseModuleClass {
         let executableCommand: BaseCommand;
 
         switch (command) {
-            case 'register':
+            case MODULES_CONFIG.COMMANDS.INIT:
                 executableCommand = this.registerCommand;
                 break;
-            case 'remove':
+            case MODULES_CONFIG.COMMANDS.REMOVE:
                 executableCommand = this.removeCommand;
                 break;
-            case 'config':
+            case MODULES_CONFIG.COMMANDS.CONFIGURE:
                 executableCommand = this.configureCommand;
                 break;
-            case 'help':
+            case MODULES_CONFIG.COMMANDS.HELP:
                 executableCommand = this.helpCommand;
                 break;
             default:
