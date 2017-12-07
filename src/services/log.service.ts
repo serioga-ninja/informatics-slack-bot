@@ -29,6 +29,10 @@ export class LogService {
 
         logger.info(`${this.environment}:`, message, args);
     }
+
+    error(error: Error) {
+        logger.error(`${this.environment}:`, error.name, error.message, error.stack);
+    }
 }
 
 export default logger;

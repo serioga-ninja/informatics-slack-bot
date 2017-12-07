@@ -1,16 +1,20 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
+import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
 import MODULES_CONFIG from '../modules/modules.config';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import {BaseModuleClass} from '../modules/core/BaseModule.class';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
 import instagramModule from '../modules/instagram/instagram.module';
 import {InstagramCommand} from '../typings';
+import {LogService} from './log.service';
 
 const MODULES_LIST = {
     'app': slackAppModule,
     [MODULES_CONFIG.MODULES.POLTAVA_NEWS]: poltavaNewsModule,
     [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule
 };
+
+let logService = new LogService('CommandsService');
 
 export class CommandsService {
 
@@ -63,11 +67,22 @@ export class CommandsService {
         });
     }
 
-    public execute(commandString: string, requestBody: ISlackRequestBody) {
+    public execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebhookRequestBody> {
         return this.parse(commandString)
             .then(({module, command, args}) => module.execute(requestBody, command, args))
             .catch(error => {
-                return error.getSlackJson();
+                logService.error(error);
+
+                return <ISlackWebhookRequestBody>{
+                    text: 'error',
+                    attachments: [
+                        {
+                            title: error.name,
+                            text: error.stack,
+                            color: '#a60200'
+                        }
+                    ]
+                }
             });
     }
 }
