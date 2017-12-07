@@ -1,32 +1,36 @@
 import variables from '../../../configs/variables';
-import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
-import {ISlackWebhookRequestBodyAttachment} from '../../../interfaces/i-slack-webhook-request-body-attachment';
-import {BaseCommand} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
+import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfigureCommand';
 import {ModuleTypes} from '../../../enums/module-types';
-import {camelCaseToCebabCase} from '../../core/utils';
+import {BASE_CONFIGURE_COMMANDS, baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
+import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
+import {camelCaseToCebabCase, simpleSuccessAttachment} from '../../core/utils';
 import MODULES_CONFIG from '../../modules.config';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../slack-apps/models/registered-module.model';
 import * as _ from 'lodash';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
-import {IConfigurationList} from '../../core/interfaces';
+import {IConfigurationList} from '../../core/Interfaces';
 import instagramEmitter from '../instagram.emitter';
-import {CONFIG_HAS_CHANGED} from '../../core/Commands';
 
 interface IInstagramLinksConfig {
-    addLinks: string;
+    addLinks?: string[];
+    removeLinks?: string[];
+    showLinks?: string[];
+    frequency?: string[];
 }
 
 const INSTAGRAM_LINKS_AVAILABLE_CONFIGS = {
+    ...BASE_CONFIGURE_COMMANDS,
+
     ADD_LINKS: 'addLinks',
     REMOVE_LINKS: 'removeLinks',
-    SHOW_LINKS: 'showLinks',
-    FREQUENCY: 'frequency',
+    SHOW_LINKS: 'showLinks'
 };
 
 
 const configActions: IConfigurationList<string[]> = {
+    ...baseConfigureCommandsFactory(ModuleTypes.instagramLinks),
+
     [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS]: (requestBody: ISlackRequestBody, links: string[]) => {
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
@@ -45,7 +49,7 @@ const configActions: IConfigurationList<string[]> = {
                     }
                 }).save()
             })
-            .then(() => ([{text: 'Success'}]));
+            .then(() => ([simpleSuccessAttachment()]));
     },
 
     [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS]: (requestBody: ISlackRequestBody, links: string[]) => {
@@ -65,86 +69,47 @@ const configActions: IConfigurationList<string[]> = {
                     }
                 }).save()
             })
-            .then(() => ([{text: 'Success'}]));
+            .then(() => ([simpleSuccessAttachment()]));
     },
 
     [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.SHOW_LINKS]: (requestBody: ISlackRequestBody) => {
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
             .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
-                return moduleModel.configuration.links.map(link => ({title: link}))
+                return moduleModel.configuration.links.map(link => ([simpleSuccessAttachment({title: link})]))
             });
-    },
-
-    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.FREQUENCY]: (requestBody: ISlackRequestBody, minutes: string[]) => {
-        return RegisteredModuleModel
-            .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
-            .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
-                moduleModel.configuration.frequency = parseInt(minutes[0], 10);
-
-                moduleModel.save();
-
-                return [{text: 'Success'}];
-            });
-    },
+    }
 };
 
 
-class InstagramLinksConfigureCommand extends BaseCommand {
+class InstagramLinksConfigureCommand extends BaseConfigureCommand<IInstagramLinksConfig> implements IBaseConfigureCommand<IInstagramLinksConfig> {
+
+    moduleName = MODULES_CONFIG.MODULES.INSTAGRAM_LINKS;
+
+    emitter = instagramEmitter;
+
+    configList = configActions;
+
+    additionalHelpCommands = [
+        {
+            title: 'Example add instagram public',
+            text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS)}=inst_cat_public1,inst_cat_public2`
+        },
+        {
+            title: 'Example remove instagram public',
+            text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS)}=inst_cat_public1,inst_cat_public2`
+        },
+        {
+            title: 'Example set post frequency (minutes)',
+            text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.FREQUENCY)}=20`
+        }
+    ];
 
     @ChannelIsRegistered
     @ValidateConfigs(configActions)
     @SimpleCommandResponse
-    execute(requestBody: ISlackRequestBody, configs: IInstagramLinksConfig): Promise<any> {
-        let attachments: ISlackWebhookRequestBodyAttachment[] = [];
-
-        return Object.keys(configs).map(key => {
-            return () => {
-                return configActions[key](requestBody, configs[key])
-                    .then(res => {
-                        attachments = attachments.concat(res)
-                    });
-            }
-        }).reduce((prev: Promise<any>, current: any) => {
-
-            return prev.then(current);
-        }, Promise.resolve())
-            .then(() => {
-                instagramEmitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
-
-                return {attachments};
-            });
-    }
-
-    help() {
-        return Promise.resolve(<ISlackWebhookRequestBody>{
-            response_type: 'in_channel',
-            text: '',
-            attachments: [
-                {
-                    title: 'Usage',
-                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} [key1=value1 key2=key2value1,key2value1 ...]`
-                },
-                {
-                    title: 'Config list',
-                    text: Object.keys(configActions)
-                        .map(key => camelCaseToCebabCase(key))
-                        .join('|')
-                },
-                {
-                    title: 'Example add instagram public',
-                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS)}=inst_cat_public1,inst_cat_public2`
-                },
-                {
-                    title: 'Example remove instagram public',
-                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS)}=inst_cat_public1,inst_cat_public2`
-                },
-                {
-                    title: 'Example set post frequency (minutes)',
-                    text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.FREQUENCY)}=20`
-                }
-            ]
-        })
+    execute(...args) {
+        return super.execute.apply(this, args);
     }
 }
 
