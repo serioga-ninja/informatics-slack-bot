@@ -29,7 +29,8 @@ export class SlackEventRouter extends RouterClass {
             body: qs.stringify({
                 client_id: variables.slack.CLIENT_ID,
                 client_secret: variables.slack.CLIENT_SECRET,
-                code: code
+                code: code,
+                redirect_uri: `http://${variables.domainUrl}/api/v1/events/oauth-callback`
             })
         }, (err, result: any) => {
 
