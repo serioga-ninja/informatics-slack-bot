@@ -44,9 +44,9 @@ export class CommandsService {
                 .map((keyPart, index) => index === 0 ? keyPart : keyPart[0].toUpperCase() + keyPart.slice(1))
                 .join('');
 
-            return {
-                [key]: (value || '').split(',').map(link => link.replace(/ /, ''))
-            }
+            all[key] = (value || '').split(',').map(link => link.replace(/ /, ''))
+
+            return all;
         }, {});
     }
 

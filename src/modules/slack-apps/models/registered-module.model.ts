@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import {IRegisteredModule} from '../../../interfaces/i-registered-module';
+import {PostStrategies} from '../../core/Enums';
 
 export interface IRegisteredModuleModelDocument<T> extends IRegisteredModule<T>, mongoose.Document {
 }
@@ -20,7 +21,7 @@ export const RegisteredModulesModelSchema: mongoose.Schema = new mongoose.Schema
         links: [String],
         postStrategy: {
             type: Number,
-            default: 2
+            default: PostStrategies.RandomSingle
         }
     }
 }, {

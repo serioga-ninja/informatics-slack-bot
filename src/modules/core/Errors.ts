@@ -64,3 +64,11 @@ export class UnknownConfigError extends Error implements InformaticsSlackBotBase
         Object.setPrototypeOf(this, UnknownConfigError.prototype);
     }
 }
+
+export class InvalidConfigValueError extends Error implements InformaticsSlackBotBaseError {
+    constructor(configName: string) {
+        super(`Invalid config value for "${configName}"`);
+
+        Object.setPrototypeOf(this, InvalidConfigValueError.prototype);
+    }
+}
