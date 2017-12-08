@@ -48,8 +48,9 @@ export class RegisteredModuleInstance {
                 });
             }).then(() => {
                 return Promise.all(items.map(item => {
-                    item.postedChannels.push(this.model.chanelId);
-                    return item.update({});
+                    let postedChannels = [...item.postedChannels, this.model.chanelId];
+
+                    return item.update({postedChannels});
                 }));
             });
         });
