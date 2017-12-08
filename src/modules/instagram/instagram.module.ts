@@ -42,43 +42,56 @@ class InstagramModule extends BaseModuleClass {
                 .findOne({moduleType: ModuleTypes.instagramLinks, chanelId: chanelId})
                 .then(moduleModel => {
 
-                    this.collectData().then(() => {
-                        RegisteredModulesService
-                            .startedInstances
-                            .find(inst => moduleModel._id.equals(inst.modelId))
-                            .init();
+                    this.collectData(moduleModel.configuration.links).then(() => {
+                        try {
+                            RegisteredModulesService
+                                .startedInstances
+                                .find(inst => moduleModel._id.equals(inst.modelId))
+                                .init();
+                        } catch (e) {
+                            this.logService.error(e);
+                        }
                     });
                 });
         });
     }
 
-    collectData() {
+    collectData(publicList?: string[]) {
         this.logService.info(`Collecting data`);
 
-        return RegisteredModuleModel
-            .find(<IRegisteredModule<IInstagramConfiguration>>{
-                moduleType: ModuleTypes.instagramLinks,
-                isActive: true
-            })
-            .select('configuration.links')
-            .then(modulesCollection => {
-                let instagramPublicIds: string[] = _.uniq(
-                    modulesCollection
-                        .map(module => module.configuration.links)
-                        .reduce((all: string[], current: string[]) => {
-                            return all.concat(current);
-                        }, [])
-                );
+        return new Promise(resolve => {
+            if (publicList && publicList.length > 0) {
+                resolve(publicList);
+            } else {
+                return RegisteredModuleModel
+                    .find(<IRegisteredModule<IInstagramConfiguration>>{
+                        moduleType: ModuleTypes.instagramLinks,
+                        isActive: true
+                    })
+                    .select('configuration.links')
+                    .then(modulesCollection => {
 
-                this.logService.info(`Collecting data for public`, instagramPublicIds);
+                        let publicList = _.uniq(
+                            modulesCollection
+                                .map(module => module.configuration.links)
+                                .reduce((all: string[], current: string[]) => {
+                                    return all.concat(current);
+                                }, [])
+                        );
 
-                let instagramPhotoParser = new InstagramService(instagramPublicIds, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
+                        resolve(publicList);
+                    })
+            }
+        }).then((instagramPublicIds: string[]) => {
+            this.logService.info(`Collecting data for public`, instagramPublicIds);
 
-                return instagramPhotoParser
-                    .collectData()
-                    .then(data => InstagramService.filterLinks(data))
-                    .then(data => InstagramService.saveToDB(data));
-            });
+            let instagramPhotoParser = new InstagramService(instagramPublicIds, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
+
+            return instagramPhotoParser
+                .collectData()
+                .then(data => InstagramService.filterLinks(data))
+                .then(data => InstagramService.saveToDB(data));
+        })
     }
 
     preloadActiveModules() {

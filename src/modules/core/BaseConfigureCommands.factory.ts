@@ -1,42 +1,29 @@
-import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../slack-apps/models/registered-module.model';
-import {ModuleTypes} from './Enums';
+import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-module.model';
 import {InvalidConfigValueError} from './Errors';
-import {camelCaseToCebabCase, simpleSuccessAttachment} from './utils';
+import {camelCaseToCebabCase} from './utils';
 
 export const BASE_CONFIGURE_COMMANDS = {
     FREQUENCY: 'frequency',
-    POST_STRATEGY: 'postStrategy',
+    POST_STRATEGY: 'postStrategy'
 };
 
-export const baseConfigureCommandsFactory = (moduleType: ModuleTypes) => {
+export const baseConfigureCommandsFactory = () => {
 
     return {
-        [BASE_CONFIGURE_COMMANDS.FREQUENCY]: (requestBody: ISlackRequestBody, minutes: string[]) => {
-            return RegisteredModuleModel
-                .findOne({chanelId: requestBody.channel_id, moduleType: moduleType})
-                .then((moduleModel: IRegisteredModuleModelDocument<any>) => {
-                    moduleModel.configuration.frequency = parseInt(minutes[0], 10);
+        [BASE_CONFIGURE_COMMANDS.FREQUENCY]: (moduleModel: IRegisteredModuleModelDocument<any>, minutes: string[]) => {
 
-                    moduleModel.save();
-
-                    return [simpleSuccessAttachment()];
-                });
+            return Promise.resolve({
+                frequency: parseInt(minutes[0], 10)
+            });
         },
-        [BASE_CONFIGURE_COMMANDS.POST_STRATEGY]: (requestBody: ISlackRequestBody, strategy: string[]) => {
+        [BASE_CONFIGURE_COMMANDS.POST_STRATEGY]: (moduleModel: IRegisteredModuleModelDocument<any>, strategy: string[]) => {
             if ([1, 2].indexOf(parseInt(strategy[0], 10)) === -1) {
                 return Promise.reject(new InvalidConfigValueError(camelCaseToCebabCase(BASE_CONFIGURE_COMMANDS.POST_STRATEGY)));
             }
 
-            return RegisteredModuleModel
-                .findOne({chanelId: requestBody.channel_id, moduleType: moduleType})
-                .then((moduleModel: IRegisteredModuleModelDocument<any>) => {
-                    moduleModel.configuration.postStrategy = parseInt(strategy[0], 10);
-
-                    moduleModel.save();
-
-                    return [simpleSuccessAttachment()];
-                });
+            return Promise.resolve({
+                postStrategy: parseInt(strategy[0], 10)
+            });
         }
     }
 };

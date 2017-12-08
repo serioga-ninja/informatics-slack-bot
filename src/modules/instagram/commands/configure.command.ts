@@ -23,61 +23,36 @@ const INSTAGRAM_LINKS_AVAILABLE_CONFIGS = {
     ...BASE_CONFIGURE_COMMANDS,
 
     ADD_LINKS: 'addLinks',
-    REMOVE_LINKS: 'removeLinks',
-    SHOW_LINKS: 'showLinks'
+    REMOVE_LINKS: 'removeLinks'
 };
 
 
-const configActions: IConfigurationList<string[]> = {
-    ...baseConfigureCommandsFactory(ModuleTypes.instagramLinks),
+const configActions: IConfigurationList<string[], IInstagramConfiguration> = {
+    ...baseConfigureCommandsFactory(),
 
-    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS]: (requestBody: ISlackRequestBody, links: string[]) => {
-        return RegisteredModuleModel
-            .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
-            .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
-                let configuration: IInstagramConfiguration = moduleModel.configuration;
-                let allLinks = (configuration.links || [])
-                    .concat(links)
-                    .map(link => link.split('/').slice(-1)[0]);
+    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS]: (moduleModel: IRegisteredModuleModelDocument<any>, newLinks: string[]) => {
+        let configuration: IInstagramConfiguration = moduleModel.configuration;
+        let links = (configuration.links || [])
+            .concat(newLinks)
+            .map(link => link.split('/').slice(-1)[0]);
 
-                allLinks = _.uniq(allLinks);
+        links = _.uniq(links);
 
-                return moduleModel.set({
-                    configuration: {
-                        ...configuration,
-                        links: allLinks
-                    }
-                }).save()
-            })
-            .then(() => ([simpleSuccessAttachment()]));
+        return Promise.resolve({
+            links
+        });
     },
 
-    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS]: (requestBody: ISlackRequestBody, links: string[]) => {
-        return RegisteredModuleModel
-            .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
-            .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
-                let configuration: IInstagramConfiguration = moduleModel.configuration;
-                let linksToRemove = links.map(link => link.split('/').slice(-1)[0]);
+    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS]: (moduleModel: IRegisteredModuleModelDocument<any>, newLinks: string[]) => {
+        let configuration: IInstagramConfiguration = moduleModel.configuration;
+        let linksToRemove = newLinks.map(link => link.split('/').slice(-1)[0]);
 
-                let differences = _.difference(configuration.links || [], linksToRemove);
-                let addLinks = configuration.links.filter(link => differences.indexOf(link) !== -1);
+        let differences = _.difference(configuration.links || [], linksToRemove);
+        let links = configuration.links.filter(link => differences.indexOf(link) !== -1);
 
-                return moduleModel.set({
-                    configuration: {
-                        ...configuration,
-                        links: addLinks
-                    }
-                }).save()
-            })
-            .then(() => ([simpleSuccessAttachment()]));
-    },
-
-    [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.SHOW_LINKS]: (requestBody: ISlackRequestBody) => {
-        return RegisteredModuleModel
-            .findOne({chanelId: requestBody.channel_id, moduleType: ModuleTypes.instagramLinks})
-            .then((moduleModel: IRegisteredModuleModelDocument<IInstagramConfiguration>) => {
-                return moduleModel.configuration.links.map(link => ([simpleSuccessAttachment({title: link})]))
-            });
+        return Promise.resolve({
+            links
+        });
     }
 };
 
@@ -90,6 +65,8 @@ class InstagramLinksConfigureCommand extends BaseConfigureCommand<IInstagramLink
 
     configList = configActions;
 
+    moduleType = ModuleTypes.instagramLinks;
+
     additionalHelpCommands = [
         {
             title: 'Example add instagram public',
@@ -98,10 +75,6 @@ class InstagramLinksConfigureCommand extends BaseConfigureCommand<IInstagramLink
         {
             title: 'Example remove instagram public',
             text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS)}=inst_cat_public1,inst_cat_public2`
-        },
-        {
-            title: 'Example set post frequency (minutes)',
-            text: `/${variables.slack.COMMAND} ${MODULES_CONFIG.MODULES.INSTAGRAM_LINKS} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${camelCaseToCebabCase(INSTAGRAM_LINKS_AVAILABLE_CONFIGS.FREQUENCY)}=20`
         }
     ];
 

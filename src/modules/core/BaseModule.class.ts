@@ -56,7 +56,7 @@ export abstract class BaseModuleClass {
             .then(() => this.preloadActiveModules());
     }
 
-    abstract collectData(): Promise<any>;
+    abstract collectData(publicList?: string[]): Promise<any>;
 
     abstract preloadActiveModules(): Promise<any>
 

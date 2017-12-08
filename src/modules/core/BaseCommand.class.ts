@@ -1,5 +1,6 @@
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
+import {LogService} from '../../services/log.service';
 
 export interface IBaseCommand {
     execute(...args: any[]): Promise<ISlackWebhookRequestBody>;
@@ -9,6 +10,8 @@ export interface IBaseCommand {
 }
 
 export abstract class BaseCommand implements IBaseCommand {
+
+    protected logService = new LogService('BaseCommand');
 
     abstract execute(requestBody: ISlackRequestBody, args?: any): Promise<ISlackWebhookRequestBody>;
 

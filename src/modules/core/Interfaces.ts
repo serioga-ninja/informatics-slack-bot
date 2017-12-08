@@ -1,8 +1,7 @@
-import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
-import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
+import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-module.model';
 
-export interface IConfigurationList<T> {
+export interface IConfigurationList<T, K> {
 
-    [key: string]: (requestBody: ISlackRequestBody, data?: T) => Promise<ISlackWebhookRequestBodyAttachment[]>;
+    [key: string]: (moduleModel: IRegisteredModuleModelDocument<any>, data?: T) => Promise<K>;
 
 }

@@ -1,3 +1,4 @@
+import {IBaseModuleConfiguration} from '../../../interfaces/i-registered-module';
 import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfigureCommand';
 import {baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
@@ -10,8 +11,8 @@ interface IInstagramLinksConfig {
     frequency: string[];
 }
 
-const configActions: IConfigurationList<string[]> = {
-    ...baseConfigureCommandsFactory(ModuleTypes.poltavaNews)
+const configActions: IConfigurationList<string[], IBaseModuleConfiguration> = {
+    ...baseConfigureCommandsFactory()
 };
 
 
@@ -22,6 +23,8 @@ class PoltavaNewsConfigureCommand extends BaseConfigureCommand<IInstagramLinksCo
     emitter = poltavaNewsEmitter;
 
     configList = configActions;
+
+    moduleType = ModuleTypes.poltavaNews;
 
     @ChannelIsRegistered
     @ValidateConfigs(configActions)
