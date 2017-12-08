@@ -1,8 +1,9 @@
-import {ModuleTypes} from '../modules/core/Enums';
+import {ModuleTypes, PostStrategies} from '../modules/core/Enums';
 import {ITimestamps} from './i-timestamps';
 
 export interface IBaseModuleConfiguration {
     frequency: number;
+    postStrategy: PostStrategies;
 }
 
 export interface IInstagramConfiguration extends IBaseModuleConfiguration {

@@ -63,6 +63,10 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
                 {
                     title: 'Example set post frequency (minutes)',
                     text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${BASE_CONFIGURE_COMMANDS.FREQUENCY}=20`
+                },
+                {
+                    title: `Example set post strategy. Available: As soon as possible = 1, Random and single = 2`,
+                    text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${BASE_CONFIGURE_COMMANDS.POST_STRATEGY}=2`
                 }
             ].concat(this.additionalHelpCommands)
         })

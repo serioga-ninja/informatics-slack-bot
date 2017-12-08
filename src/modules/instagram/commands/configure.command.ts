@@ -109,7 +109,7 @@ class InstagramLinksConfigureCommand extends BaseConfigureCommand<IInstagramLink
     @ValidateConfigs(configActions)
     @SimpleCommandResponse
     execute(...args) {
-        return super.execute.apply(this, args);
+        return super.execute.apply(instagramLinksConfigureCommand, args);
     }
 }
 

@@ -27,7 +27,7 @@ class PoltavaNewsConfigureCommand extends BaseConfigureCommand<IInstagramLinksCo
     @ValidateConfigs(configActions)
     @SimpleCommandResponse
     execute(...args) {
-        return super.execute.apply(this, args);
+        return super.execute.apply(poltavaNewsConfigureCommand, args);
     }
 }
 

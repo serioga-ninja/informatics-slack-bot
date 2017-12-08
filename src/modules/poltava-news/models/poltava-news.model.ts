@@ -24,6 +24,6 @@ export const PoltavaNewsModelSchema: mongoose.Schema = new mongoose.Schema({
     timestamps: true
 });
 
-export const PoltavaNewsModel = mongoose.model<IPoltavaNewsModelDocument>('poltavaNewsEmitter', PoltavaNewsModelSchema);
+export const PoltavaNewsModel = mongoose.model<IPoltavaNewsModelDocument>('PoltavaNews', PoltavaNewsModelSchema);
 
 export default PoltavaNewsModel;
