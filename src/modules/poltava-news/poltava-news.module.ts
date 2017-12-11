@@ -17,7 +17,7 @@ import helpCommand from './commands/help.command';
 const POST_FREQUENCY = 1000 * 60 * 10;
 
 const URLS = [
-    'https://poltava.to/news/'
+    'https://poltava.to/rss/news.xml'
 ];
 
 class PoltavaNewsModule extends BaseModuleClass {

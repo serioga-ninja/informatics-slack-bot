@@ -10,9 +10,9 @@ function aggregationFn(collection: IInstagramLinkModelDocument[]): ISlackWebhook
     return <ISlackWebhookRequestBody>{
         text: '',
         attachments: collection.map(model => (<ISlackWebhookRequestBodyAttachment>{
-            title_link: model.imageUrl,
+            title_link: model.imagePageUrl,
             image_url: model.imageUrl,
-            title: model.instChanelId
+            title: model.imagePageUrl
         }))
     };
 }

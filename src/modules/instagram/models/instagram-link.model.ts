@@ -14,6 +14,10 @@ export const InstagramLinkModelSchema: mongoose.Schema = new mongoose.Schema({
         require: true,
         unique: true
     },
+    imagePageUrl: {
+        type: String,
+        require: true
+    },
     postedChannels: [String]
 }, {
     timestamps: true

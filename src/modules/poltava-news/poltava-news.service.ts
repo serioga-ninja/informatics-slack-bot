@@ -1,9 +1,27 @@
-import {ParserService} from '../core/Parser.service';
-import {JSDOM} from 'jsdom';
+import {RssParserService} from '../core/RssParser.service';
 import PoltavaNewsModel, {IPoltavaNewsModelDocument} from './models/poltava-news.model';
 import {IPoltavaNewsModel} from './interfaces/i-poltava-news-model';
 
-export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
+interface IPoltavaNewsRssItem {
+    content: string;
+    contentSnippet: string;
+    isoDate: Date;
+    link: string;
+    pubDate: Date;
+    title: string;
+}
+
+export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IPoltavaNewsModel> {
+
+    public mapFn(item: IPoltavaNewsRssItem) {
+
+        return {
+            link: item.link,
+            title: item.title,
+            imageUrl: '',
+            postedChannels: []
+        }
+    }
 
     public static filterData(data: IPoltavaNewsModel[]): Promise<IPoltavaNewsModel[]> {
         return PoltavaNewsModel
@@ -38,37 +56,6 @@ export class PoltavaNewsService extends ParserService<IPoltavaNewsModel> {
     }
 
     grabTheData(): Promise<IPoltavaNewsModel[]> {
-        return this
-            .getTheDom()
-            .then(bodies => {
-                return <IPoltavaNewsModel[][]>bodies.map(body => {
-                    let dom = new JSDOM(body);
-                    let blocks: Array<Element> = Array.prototype.slice.call(
-                        dom.window.document
-                            .getElementsByClassName('stream-block')
-                    );
-
-                    return blocks
-                        .map((h1Elem: Element) => {
-                            return <IPoltavaNewsModel>{
-                                title: h1Elem.getElementsByClassName('stream-block-title')[0].childNodes[0].textContent,
-                                link: 'https:' + (
-                                    <any>h1Elem
-                                        .getElementsByClassName('stream-block-title')[0].childNodes[0]
-                                ).getAttribute('href'),
-                                imageUrl: 'https:' + (
-                                    <any>h1Elem
-                                        .getElementsByClassName('stream-block-left')[0].getElementsByTagName('img')[0]
-                                ).getAttribute('src')
-                            }
-                        });
-                })
-            })
-            .then((res: IPoltavaNewsModel[][]) => {
-                return res.reduce((res: IPoltavaNewsModel[], current: IPoltavaNewsModel[]) => {
-                    res = res.concat(current);
-                    return res;
-                }, [])
-            });
+        return this.getTheData(this.urls[0]);
     }
 }

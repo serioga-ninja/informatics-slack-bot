@@ -1,5 +1,5 @@
 {
-  "name": "rss-reader",
+  "name": "Informatics-slack-bot",
   "repository": "https://github.com/serioga-ninja/informatics-slack-bot",
   "version": "1.0.0",
   "description": "Informatics slack bot",
@@ -44,6 +44,7 @@
     "react-router-redux": "^4.0.8",
     "redux": "^3.7.2",
     "request": "^2.81.0",
+    "rss-parser": "^2.11.0",
     "rxjs": "^5.4.0",
     "ts-node": "^3.3.0",
     "webpack": "^3.8.1",

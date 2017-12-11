@@ -1,74 +1,88 @@
-import {IParseDataResults, ParserService} from '../core/Parser.service';
+import {RssParserService} from '../core/RssParser.service';
 import InstagramLinkModel, {IInstagramLinkModelDocument} from './models/instagram-link.model';
 import {IInstagramLinkModel} from './interfaces/i-instagram-link-model';
 
-const DOMAIN_URL = 'http://instagram.com';
+interface IRssInstagramItem {
+    link: string;
+    enclosure: {
+        length: string;
+        type: string;
+        url: string;
+    };
+}
 
-export class InstagramService extends ParserService<string[]> {
+interface IParseDataResults {
+    chanelId: string;
+    results: IInstagramLinkModel[];
+}
 
-    public static parseUrlFn(a: string[]): string {
-        return a[1];
+const DOMAIN_URL = 'https://queryfeed.net/instagram?q';
+
+export class InstagramService extends RssParserService<IRssInstagramItem, IInstagramLinkModel> {
+
+    public mapFn(item: IRssInstagramItem) {
+
+        return <IInstagramLinkModel>{
+            imageUrl: item.enclosure.url,
+            imagePageUrl: item.link
+        }
     }
 
-    public static filterLinks(data: IParseDataResults[]): Promise<IParseDataResults[]> {
-        let allLinks: string[] = data
+    public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
+        let allLinks: IInstagramLinkModel[] = parseDataResults
             .map(row => {
                 return row.results;
             })
-            .reduce((all: string[], current: string[]) => {
+            .reduce((all: IInstagramLinkModel[], current: IInstagramLinkModel[]) => {
                 return all.concat(current);
             }, []);
 
         return InstagramLinkModel
-            .find({imageUrl: {$in: allLinks}})
+            .find({imageUrl: {$in: allLinks.map(linkObj => linkObj.imageUrl)}})
             .then((objects: IInstagramLinkModelDocument[]) => {
                 let existingLinks = objects.map(model => model.imageUrl);
 
-                data.forEach(row => {
-                    row.results = row.results.filter(link => existingLinks.indexOf(link) === -1);
+                parseDataResults.forEach(parseRowResult => {
+                    parseRowResult.results = parseRowResult.results.filter(link => existingLinks.indexOf(link.imageUrl) === -1);
                 });
 
-                return data;
+                return parseDataResults;
             });
     }
 
-    public static saveToDB(data: IParseDataResults[]) {
-        return Promise.all(data.map(row => {
-            return Promise.all(row.results.map(link => {
+    public static saveToDB(parseDataResults: IParseDataResults[]) {
+        return Promise.all(parseDataResults.map(row => {
+            return Promise.all(row.results.map(linkObj => {
                 return new InstagramLinkModel().set(<IInstagramLinkModel>{
-                    imageUrl: link,
+                    imageUrl: linkObj.imageUrl,
+                    imagePageUrl: linkObj.imagePageUrl,
                     instChanelId: row.chanelId
                 }).save();
             }));
         }));
     }
 
-    public static getAllImageDocuments(): Promise<IInstagramLinkModelDocument[]> {
-        return InstagramLinkModel
-            .find({link: /^http/})
-            .then((data: IInstagramLinkModelDocument[]) => data);
-    }
-
-    public static getAllImages(): Promise<string[]> {
-        return InstagramService
-            .getAllImageDocuments()
-            .then(data => {
-                return data.map((row: IInstagramLinkModelDocument) => row.imageUrl)
-            });
-    }
-
     public urls: string[];
-    public thumbnailReg: RegExp;
 
-    constructor(instagramPublicIds: string[], thumbnailReg: RegExp) {
+    constructor(instagramPublicIds: string[]) {
         super();
 
-        this.urls = instagramPublicIds.map(id => `${DOMAIN_URL}/${id}`);
-
-        this.thumbnailReg = thumbnailReg;
+        this.urls = instagramPublicIds.map(id => `${DOMAIN_URL}=${id}`);
     }
 
-    public collectData(): Promise<IParseDataResults[]> {
-        return this.grabTheData(InstagramService.parseUrlFn, this.urls);
+    public async collectData(): Promise<IParseDataResults[]> {
+        let results: IParseDataResults[] = [];
+
+        for (let url of this.urls) {
+            try {
+                let result = await this.getTheData(url);
+                results.push({
+                    chanelId: url.split('q=').slice(-1)[0],
+                    results: result
+                });
+            } catch (e) {
+            }
+        }
+        return results;
     }
 }

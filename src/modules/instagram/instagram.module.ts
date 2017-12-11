@@ -85,7 +85,7 @@ class InstagramModule extends BaseModuleClass {
         }).then((instagramPublicIds: string[]) => {
             this.logService.info(`Collecting data for public`, instagramPublicIds);
 
-            let instagramPhotoParser = new InstagramService(instagramPublicIds, new RegExp(/"thumbnail_src": "([\w:\/\-\.\n]+)/g));
+            let instagramPhotoParser = new InstagramService(instagramPublicIds);
 
             return instagramPhotoParser
                 .collectData()
