@@ -1,6 +1,7 @@
+import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
+import {ModuleTypes} from '../core/Enums';
 import {RssParserService} from '../core/RssParser.service';
-import InstagramLinkModel, {IInstagramLinkModelDocument} from './models/instagram-link.model';
-import {IInstagramLinkModel} from './interfaces/i-instagram-link-model';
+import {ILinksToPostModelDocument, LinksToPostModel} from '../../models/links-to-post.model';
 
 interface IRssInstagramItem {
     link: string;
@@ -13,37 +14,38 @@ interface IRssInstagramItem {
 
 interface IParseDataResults {
     chanelId: string;
-    results: IInstagramLinkModel[];
+    results: ILinksToPostModel[];
 }
 
 const DOMAIN_URL = 'https://queryfeed.net/instagram?q';
 
-export class InstagramService extends RssParserService<IRssInstagramItem, IInstagramLinkModel> {
+export class InstagramService extends RssParserService<IRssInstagramItem, ILinksToPostModel> {
 
     public mapFn(item: IRssInstagramItem) {
 
-        return <IInstagramLinkModel>{
-            imageUrl: item.enclosure.url,
-            imagePageUrl: item.link
+        return <ILinksToPostModel>{
+            contentType: ModuleTypes.instagramLinks,
+            contentUrl: item.enclosure.url,
+            title: item.link
         }
     }
 
     public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
-        let allLinks: IInstagramLinkModel[] = parseDataResults
+        let allLinks: ILinksToPostModel[] = parseDataResults
             .map(row => {
                 return row.results;
             })
-            .reduce((all: IInstagramLinkModel[], current: IInstagramLinkModel[]) => {
+            .reduce((all: ILinksToPostModel[], current: ILinksToPostModel[]) => {
                 return all.concat(current);
             }, []);
 
-        return InstagramLinkModel
-            .find({imageUrl: {$in: allLinks.map(linkObj => linkObj.imageUrl)}})
-            .then((objects: IInstagramLinkModelDocument[]) => {
-                let existingLinks = objects.map(model => model.imageUrl);
+        return LinksToPostModel
+            .find({contentUrl: {$in: allLinks.map(linkObj => linkObj.contentUrl)}})
+            .then((objects: ILinksToPostModelDocument[]) => {
+                let existingLinks = objects.map(model => model.contentUrl);
 
                 parseDataResults.forEach(parseRowResult => {
-                    parseRowResult.results = parseRowResult.results.filter(link => existingLinks.indexOf(link.imageUrl) === -1);
+                    parseRowResult.results = parseRowResult.results.filter(link => existingLinks.indexOf(link.contentUrl) === -1);
                 });
 
                 return parseDataResults;
@@ -53,10 +55,11 @@ export class InstagramService extends RssParserService<IRssInstagramItem, IInsta
     public static saveToDB(parseDataResults: IParseDataResults[]) {
         return Promise.all(parseDataResults.map(row => {
             return Promise.all(row.results.map(linkObj => {
-                return new InstagramLinkModel().set(<IInstagramLinkModel>{
-                    imageUrl: linkObj.imageUrl,
-                    imagePageUrl: linkObj.imagePageUrl,
-                    instChanelId: row.chanelId
+                return new LinksToPostModel().set(<ILinksToPostModel>{
+                    contentUrl: linkObj.contentUrl,
+                    title: linkObj.title,
+                    category: row.chanelId,
+                    contentType: ModuleTypes.instagramLinks
                 }).save();
             }));
         }));

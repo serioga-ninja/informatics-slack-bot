@@ -1,4 +1,4 @@
-import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-module.model';
+import {IRegisteredModuleModelDocument} from '../../models/registered-module.model';
 import {InvalidConfigValueError} from './Errors';
 import {camelCaseToCebabCase} from './utils';
 

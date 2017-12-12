@@ -4,7 +4,7 @@ import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
 import {LogService} from '../../services/log.service';
 import MODULES_CONFIG from '../modules.config';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../slack-apps/models/registered-module.model';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {BaseCommand, IBaseCommand} from './BaseCommand.class';
 import {BASE_CONFIGURE_COMMANDS} from './BaseConfigureCommands.factory';
 import {CONFIG_HAS_CHANGED} from './Commands';

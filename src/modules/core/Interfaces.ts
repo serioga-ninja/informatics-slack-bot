@@ -1,4 +1,4 @@
-import {IRegisteredModuleModelDocument} from '../slack-apps/models/registered-module.model';
+import {IRegisteredModuleModelDocument} from '../../models/registered-module.model';
 
 export interface IConfigurationList<T, K> {
 

@@ -1,5 +1,5 @@
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import RegisteredAppModel from '../slack-apps/models/registered-app.model';
+import RegisteredAppModel from '../../models/registered-app.model';
 import {ModuleTypes} from './Enums';
 import {
     ChanelAlreadyRegisteredError,

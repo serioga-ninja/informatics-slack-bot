@@ -1,21 +1,17 @@
 import {ObjectId} from 'mongodb';
 import Timer = NodeJS.Timer;
-import * as mongoose from 'mongoose';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
+import {ILinksToPostModelDocument} from '../../models/links-to-post.model';
 import request = require('request');
 import {LogService} from '../../services/log.service';
 import {
     IRegisteredModuleModelDocument,
     default as RegisteredModuleModel
-} from '../slack-apps/models/registered-module.model';
+} from '../../models/registered-module.model';
 
 let logService = new LogService('Registered Modules');
 
 const MINUTE = 1000 * 60;
-
-export interface ISomething extends mongoose.Document {
-    postedChannels: string[];
-}
 
 export class RegisteredModuleInstance {
 
@@ -23,7 +19,7 @@ export class RegisteredModuleInstance {
     private model: IRegisteredModuleModelDocument<any>;
 
     constructor(public modelId: ObjectId,
-                protected collectDataFn: (model: IRegisteredModuleModelDocument<any>) => Promise<{ data: ISlackWebhookRequestBody | null; items: ISomething[] }>) {
+                protected collectDataFn: (model: IRegisteredModuleModelDocument<any>) => Promise<{ data: ISlackWebhookRequestBody | null; items: ILinksToPostModelDocument[] }>) {
 
         this.init();
     }
@@ -43,9 +39,7 @@ export class RegisteredModuleInstance {
                     url: this.model.chanelLink,
                     json: true,
                     body: data
-                }, (error, result: any) => {
-                    resolve();
-                });
+                }, () => resolve());
             }).then(() => {
                 return Promise.all(items.map(item => {
                     let postedChannels = [...item.postedChannels, this.model.chanelId];

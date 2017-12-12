@@ -6,7 +6,7 @@ import poltavaNewsEmitter from './poltava-news.emitter';
 import {PoltavaNewsRouter} from './poltava-news.router';
 import {PoltavaNewsService} from './poltava-news.service';
 import poltavaNewsRegistrationCommand from './commands/registration.command';
-import RegisteredModuleModel from '../slack-apps/models/registered-module.model';
+import RegisteredModuleModel from '../../models/registered-module.model';
 
 import 'rxjs/add/observable/interval';
 import {RegisteredModulesService} from '../core/Modules.service';

@@ -1,6 +1,7 @@
+import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
+import LinksToPostModel, {ILinksToPostModelDocument} from '../../models/links-to-post.model';
+import {ModuleTypes} from '../core/Enums';
 import {RssParserService} from '../core/RssParser.service';
-import PoltavaNewsModel, {IPoltavaNewsModelDocument} from './models/poltava-news.model';
-import {IPoltavaNewsModel} from './interfaces/i-poltava-news-model';
 
 interface IPoltavaNewsRssItem {
     content: string;
@@ -11,38 +12,38 @@ interface IPoltavaNewsRssItem {
     title: string;
 }
 
-export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IPoltavaNewsModel> {
+export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, ILinksToPostModel> {
 
     public mapFn(item: IPoltavaNewsRssItem) {
 
-        return {
-            link: item.link,
+        return <ILinksToPostModel>{
             title: item.title,
-            imageUrl: '',
+            contentUrl: item.link,
             postedChannels: []
         }
     }
 
-    public static filterData(data: IPoltavaNewsModel[]): Promise<IPoltavaNewsModel[]> {
-        return PoltavaNewsModel
-            .aggregate({$match: {link: {$in: data.map(row => row.link)}}})
-            .then((objects: IPoltavaNewsModelDocument[]) => {
+    public static filterData(data: ILinksToPostModel[]): Promise<ILinksToPostModel[]> {
+        return LinksToPostModel
+            .aggregate({$match: {link: {$in: data.map(row => row.contentType)}}})
+            .then((objects: ILinksToPostModelDocument[]) => {
                 return data
                     .filter(row => {
                         return !objects.find((obj) => {
-                            return obj.link === row.link;
+                            return obj.contentUrl === row.contentUrl;
                         });
                     })
             });
     }
 
-    public static saveToDB(data: IPoltavaNewsModel[]): Promise<IPoltavaNewsModelDocument[]> {
+    public static saveToDB(data: ILinksToPostModel[]): Promise<ILinksToPostModelDocument[]> {
         return Promise.all(data.map(row => {
-            return new PoltavaNewsModel().set(<IPoltavaNewsModel>{
-                link: row.link,
+            return new LinksToPostModel().set(<ILinksToPostModel>{
+                contentUrl: row.contentUrl,
                 postedChannels: [],
                 title: row.title,
-                imageUrl: row.imageUrl
+                contentType: ModuleTypes.poltavaNews,
+                category: 'poltava-news'
             }).save();
         }))
     }
@@ -55,7 +56,7 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IP
         this.urls = urls;
     }
 
-    grabTheData(): Promise<IPoltavaNewsModel[]> {
+    grabTheData(): Promise<ILinksToPostModel[]> {
         return this.getTheData(this.urls[0]);
     }
 }

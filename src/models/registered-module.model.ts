@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
-import {IRegisteredModule} from '../../../interfaces/i-registered-module';
-import {PostStrategies} from '../../core/Enums';
+import {IRegisteredModule} from '../interfaces/i-registered-module';
+import {PostStrategies} from '../modules/core/Enums';
 
 export interface IRegisteredModuleModelDocument<T> extends IRegisteredModule<T>, mongoose.Document {
 }

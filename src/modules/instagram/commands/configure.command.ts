@@ -6,7 +6,7 @@ import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../..
 import {ModuleTypes} from '../../core/Enums';
 import {camelCaseToCebabCase, simpleSuccessAttachment} from '../../core/utils';
 import MODULES_CONFIG from '../../modules.config';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../slack-apps/models/registered-module.model';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../../models/registered-module.model';
 import * as _ from 'lodash';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
 import {IConfigurationList} from '../../core/Interfaces';
