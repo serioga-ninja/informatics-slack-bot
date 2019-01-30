@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as winston from 'winston';
 
-let logger = new (winston.Logger)({
+const logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({
             name: 'console',
@@ -25,7 +25,7 @@ export class LogService {
     }
 
     info(...attrs) {
-        let [message, ...args] = attrs;
+        const [message, ...args] = attrs;
 
         logger.info(`${this.environment}:`, message, args);
     }

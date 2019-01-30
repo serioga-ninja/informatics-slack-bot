@@ -21,18 +21,11 @@ const DOMAIN_URL = 'https://queryfeed.net/instagram?q';
 
 export class InstagramService extends RssParserService<IRssInstagramItem, ILinksToPostModel> {
 
-    public mapFn(item: IRssInstagramItem) {
-
-        return <ILinksToPostModel>{
-            contentType: ModuleTypes.instagramLinks,
-            contentUrl: item.enclosure.url,
-            title: item.link
-        };
-    }
+    public urls: string[];
 
     public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
-        let allLinks: ILinksToPostModel[] = parseDataResults
-            .map(row => {
+        const allLinks: ILinksToPostModel[] = parseDataResults
+            .map((row) => {
                 return row.results;
             })
             .reduce((all: ILinksToPostModel[], current: ILinksToPostModel[]) => {
@@ -40,12 +33,12 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
             }, []);
 
         return LinksToPostModel
-            .find({contentUrl: {$in: allLinks.map(linkObj => linkObj.contentUrl)}})
+            .find({contentUrl: {$in: allLinks.map((linkObj) => linkObj.contentUrl)}})
             .then((objects: ILinksToPostModelDocument[]) => {
-                let existingLinks = objects.map(model => model.contentUrl);
+                const existingLinks = objects.map((model) => model.contentUrl);
 
-                parseDataResults.forEach(parseRowResult => {
-                    parseRowResult.results = parseRowResult.results.filter(link => existingLinks.indexOf(link.contentUrl) === -1);
+                parseDataResults.forEach((parseRowResult) => {
+                    parseRowResult.results = parseRowResult.results.filter((link) => existingLinks.indexOf(link.contentUrl) === -1);
                 });
 
                 return parseDataResults;
@@ -53,8 +46,8 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
     }
 
     public static saveToDB(parseDataResults: IParseDataResults[]) {
-        return Promise.all(parseDataResults.map(row => {
-            return Promise.all(row.results.map(linkObj => {
+        return Promise.all(parseDataResults.map((row) => {
+            return Promise.all(row.results.map((linkObj) => {
                 return new LinksToPostModel().set(<ILinksToPostModel>{
                     contentUrl: linkObj.contentUrl,
                     title: linkObj.title,
@@ -65,20 +58,27 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
         }));
     }
 
-    public urls: string[];
-
     constructor(instagramPublicIds: string[]) {
         super();
 
-        this.urls = instagramPublicIds.map(id => `${DOMAIN_URL}=${id}`);
+        this.urls = instagramPublicIds.map((id) => `${DOMAIN_URL}=${id}`);
+    }
+
+    public mapFn(item: IRssInstagramItem) {
+
+        return <ILinksToPostModel>{
+            contentType: ModuleTypes.instagramLinks,
+            contentUrl: item.enclosure.url,
+            title: item.link
+        };
     }
 
     public async collectData(): Promise<IParseDataResults[]> {
-        let results: IParseDataResults[] = [];
+        const results: IParseDataResults[] = [];
 
-        for (let url of this.urls) {
+        for (const url of this.urls) {
             try {
-                let result = await this.getTheData(url);
+                const result = await this.getTheData(url);
                 results.push({
                     chanelId: url.split('q=').slice(-1)[0],
                     results: result
@@ -86,6 +86,7 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
             } catch (e) {
             }
         }
+
         return results;
     }
 }

@@ -1,7 +1,7 @@
 import * as parser from 'rss-parser';
 import {LogService} from '../../services/log.service';
 
-let logService = new LogService('RssParserService');
+const logService = new LogService('RssParserService');
 
 export abstract class RssParserService<T, K> {
 
@@ -12,17 +12,18 @@ export abstract class RssParserService<T, K> {
 
             logService.info(`Parsing url ${url}`);
 
-            parser.parseURL(url, function (err, parsed) {
+            parser.parseURL(url, (err, parsed) => {
                 if (err) {
                     logService.info(`Error: ${url}`);
+
                     return reject(err);
                 }
 
-                let res = parsed.feed.entries.map(mapFn);
+                const res = parsed.feed.entries.map(mapFn);
 
                 logService.info(`Success: ${url}`);
                 resolve(res);
-            })
+            });
         });
     }
 }

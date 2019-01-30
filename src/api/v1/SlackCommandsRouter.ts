@@ -1,15 +1,15 @@
 import {Request, Response} from 'express';
-import {RouterClass} from '../Router.class';
 import slackAppModule from '../../services/commands.service';
+import {RouterClass} from '../Router.class';
 
 export class SlackCommandsRouter extends RouterClass {
 
     public informaticsBot(req: Request, res: Response) {
         return slackAppModule
             .execute(req.body.text, req.body)
-            .then(result => {
+            .then((result) => {
                 res.json(result);
-            })
+            });
     }
 
     /**

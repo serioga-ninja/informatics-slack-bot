@@ -1,8 +1,8 @@
-import * as request from 'request';
-import * as qs from 'querystring';
 import * as http from 'http';
-import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
+import * as qs from 'querystring';
+import * as request from 'request';
 import variables from '../configs/variables';
+import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
 import RegisteredAppModel from '../models/registered-app.model';
 
 export interface ISlackAuthSuccessBody {
@@ -18,7 +18,7 @@ export interface ISlackAuthSuccessBody {
         channel: string;
         channel_id: string;
         configuration_url: string;
-    }
+    };
 }
 
 export class SlackService {
@@ -32,7 +32,7 @@ export class SlackService {
     }
 
     static generateOauthAccessToken(): Promise<any> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
 
             request({
                 method: 'POST',
@@ -43,7 +43,7 @@ export class SlackService {
                 body: qs.stringify({
                     grant_type: 'client_credentials'
                 })
-            })
+            });
         });
     }
 
@@ -60,7 +60,7 @@ export class SlackService {
                 } else {
                     resolve(body);
                 }
-            })
+            });
         });
     }
 
@@ -74,9 +74,9 @@ export class SlackService {
     static chanelAlreadyRegistered(chanelId: string): Promise<boolean> {
         return RegisteredAppModel
             .find({'incomingWebhook.channel_id': chanelId})
-            .then(collection => {
+            .then((collection) => {
                 return collection.length > 0;
-            })
+            });
     }
 }
 

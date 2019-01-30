@@ -1,8 +1,8 @@
-import {BaseCommand} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
+import {BaseCommand} from '../../core/BaseCommand.class';
+import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 import {ModuleTypes} from '../../core/Enums';
 import {RegisteredModulesService} from '../../core/Modules.service';
-import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 
 class PoltavaNewsRemoveCommand extends BaseCommand {
 
@@ -16,6 +16,6 @@ class PoltavaNewsRemoveCommand extends BaseCommand {
     }
 }
 
-let poltavaNewsRemoveCommand = new PoltavaNewsRemoveCommand();
+const poltavaNewsRemoveCommand = new PoltavaNewsRemoveCommand();
 
 export default poltavaNewsRemoveCommand;

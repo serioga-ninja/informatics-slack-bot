@@ -19,7 +19,7 @@ export abstract class BaseCommand implements IBaseCommand {
         return Promise.resolve(<ISlackWebhookRequestBody>{
             text: 'Not Implemented',
             attachments: []
-        })
-    };
+        });
+    }
 
 }

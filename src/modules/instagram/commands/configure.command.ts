@@ -1,15 +1,15 @@
+import * as _ from 'lodash';
 import variables from '../../../configs/variables';
+import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../../models/registered-module.model';
 import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfigureCommand';
 import {BASE_CONFIGURE_COMMANDS, baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
 import {ModuleTypes} from '../../core/Enums';
+import {IConfigurationList} from '../../core/Interfaces';
 import {camelCaseToCebabCase, simpleSuccessAttachment} from '../../core/utils';
 import MODULES_CONFIG from '../../modules.config';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../../models/registered-module.model';
-import * as _ from 'lodash';
-import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
-import {IConfigurationList} from '../../core/Interfaces';
 import instagramEmitter from '../instagram.emitter';
 
 interface IInstagramLinksConfig {
@@ -31,10 +31,10 @@ const configActions: IConfigurationList<string[], IInstagramConfiguration> = {
     ...baseConfigureCommandsFactory(),
 
     [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.ADD_LINKS]: (moduleModel: IRegisteredModuleModelDocument<any>, newLinks: string[]) => {
-        let configuration: IInstagramConfiguration = moduleModel.configuration;
+        const configuration: IInstagramConfiguration = moduleModel.configuration;
         let links = (configuration.links || [])
             .concat(newLinks)
-            .map(link => link.split('/').slice(-1)[0]);
+            .map((link) => link.split('/').slice(-1)[0]);
 
         links = _.uniq(links);
 
@@ -44,11 +44,11 @@ const configActions: IConfigurationList<string[], IInstagramConfiguration> = {
     },
 
     [INSTAGRAM_LINKS_AVAILABLE_CONFIGS.REMOVE_LINKS]: (moduleModel: IRegisteredModuleModelDocument<any>, newLinks: string[]) => {
-        let configuration: IInstagramConfiguration = moduleModel.configuration;
-        let linksToRemove = newLinks.map(link => link.split('/').slice(-1)[0]);
+        const configuration: IInstagramConfiguration = moduleModel.configuration;
+        const linksToRemove = newLinks.map((link) => link.split('/').slice(-1)[0]);
 
-        let differences = _.difference(configuration.links || [], linksToRemove);
-        let links = configuration.links.filter(link => differences.indexOf(link) !== -1);
+        const differences = _.difference(configuration.links || [], linksToRemove);
+        const links = configuration.links.filter((link) => differences.indexOf(link) !== -1);
 
         return Promise.resolve({
             links
@@ -86,6 +86,6 @@ class InstagramLinksConfigureCommand extends BaseConfigureCommand<IInstagramLink
     }
 }
 
-let instagramLinksConfigureCommand = new InstagramLinksConfigureCommand();
+const instagramLinksConfigureCommand = new InstagramLinksConfigureCommand();
 
 export default instagramLinksConfigureCommand;

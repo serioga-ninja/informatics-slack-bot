@@ -2,9 +2,9 @@ import variables from '../../configs/variables';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {LogService} from '../../services/log.service';
 import MODULES_CONFIG from '../modules.config';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {BaseCommand, IBaseCommand} from './BaseCommand.class';
 import {BASE_CONFIGURE_COMMANDS} from './BaseConfigureCommands.factory';
 import {CONFIG_HAS_CHANGED} from './Commands';
@@ -38,9 +38,9 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
         return RegisteredModuleModel
             .findOne({chanelId: requestBody.channel_id, moduleType: this.moduleType})
             .then((moduleModel: IRegisteredModuleModelDocument<any>) => {
-                return Object.keys(configs).map(key => {
+                return Object.keys(configs).map((key) => {
                     return () => {
-                        return this.configList[key](moduleModel, configs[key]).then(configuration => {
+                        return this.configList[key](moduleModel, configs[key]).then((configuration) => {
                             moduleModel.set({
                                 ...moduleModel.configuration,
                                 configuration
@@ -48,10 +48,10 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
 
                             attachments = attachments.concat(simpleSuccessAttachment());
                         });
-                    }
+                    };
                 }).reduce((prev: Promise<any>, current: any) => prev.then(current), Promise.resolve()).then(() => {
                     return moduleModel.save();
-                })
+                });
             }).then(() => {
                 this.logService.info('Config is done');
                 this.emitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
@@ -72,7 +72,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
                 {
                     title: 'Config list',
                     text: Object.keys(this.configList)
-                        .map(key => camelCaseToCebabCase(key))
+                        .map((key) => camelCaseToCebabCase(key))
                         .join('|')
                 },
                 {
@@ -84,7 +84,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
                     text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${BASE_CONFIGURE_COMMANDS.POST_STRATEGY}=2`
                 }
             ].concat(this.additionalHelpCommands)
-        })
+        });
     }
 
 }

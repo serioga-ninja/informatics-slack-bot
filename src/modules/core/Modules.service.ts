@@ -1,12 +1,12 @@
-import {ModuleTypes} from './Enums';
-import {RegisteredModuleInstance} from './RegisteredModuleInstance';
+import {ObjectId} from 'mongodb';
 import {IRegisteredModule} from '../../interfaces/i-registered-module';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
-import {ObjectId} from 'mongodb';
-import {ModuleAlreadeyStoppedError} from './Errors';
 import {LogService} from '../../services/log.service';
+import {ModuleTypes} from './Enums';
+import {ModuleAlreadeyStoppedError} from './Errors';
+import {RegisteredModuleInstance} from './RegisteredModuleInstance';
 
-let logService = new LogService('RegisteredModulesService');
+const logService = new LogService('RegisteredModulesService');
 
 export class RegisteredModulesService {
 
@@ -14,8 +14,8 @@ export class RegisteredModulesService {
 
     public static stopModuleInstance(id: ObjectId) {
         logService.info(`Trying to stop module ${id}`);
-        let inst = RegisteredModulesService.startedInstances.filter(module => {
-            return id.equals(module.modelId)
+        const inst = RegisteredModulesService.startedInstances.filter((module) => {
+            return id.equals(module.modelId);
         })[0];
 
         if (!inst) {
@@ -25,7 +25,7 @@ export class RegisteredModulesService {
 
         inst.destroy();
         RegisteredModulesService.startedInstances = RegisteredModulesService
-            .startedInstances.filter(module => !id.equals(module.modelId));
+            .startedInstances.filter((module) => !id.equals(module.modelId));
 
         logService.info('Started instances count: ', RegisteredModulesService.startedInstances.length);
     }
@@ -55,7 +55,7 @@ export class RegisteredModulesService {
     public static activateModuleByChannelId(moduleType: ModuleTypes, channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
         return RegisteredModuleModel
             .findOne({moduleType: moduleType, chanelId: channelId})
-            .then(model => RegisteredModulesService.activateModuleByModel(model));
+            .then((model) => RegisteredModulesService.activateModuleByModel(model));
     }
 
     public static deactivateModuleByModel(model: IRegisteredModuleModelDocument<any>): Promise<IRegisteredModuleModelDocument<any>> {
@@ -67,15 +67,15 @@ export class RegisteredModulesService {
     public static deactivateModuleByChannelId(moduleType: ModuleTypes, channelId: string): Promise<IRegisteredModuleModelDocument<any>> {
         return RegisteredModuleModel
             .findOne(<IRegisteredModule<any>>{moduleType: moduleType, chanelId: channelId})
-            .then(model => RegisteredModulesService.deactivateModuleByModel(model));
+            .then((model) => RegisteredModulesService.deactivateModuleByModel(model));
     }
 
     public static moduleIsExists(moduleType: ModuleTypes, chanelId: string): Promise<boolean> {
         return RegisteredModuleModel
             .findOne({moduleType: moduleType, chanelId: chanelId})
-            .then(model => {
+            .then((model) => {
                 return !!model;
-            })
+            });
     }
 
 }

@@ -11,5 +11,5 @@ export abstract class RouterClass {
 
     init(): void {
         // init your routers down here
-    };
+    }
 }

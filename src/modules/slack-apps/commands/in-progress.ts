@@ -1,6 +1,6 @@
+import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
 import {BaseCommand} from '../../core/BaseCommand.class';
-import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 
 class CommandInProgress extends BaseCommand {
 
@@ -13,6 +13,6 @@ class CommandInProgress extends BaseCommand {
     }
 }
 
-let commandInProgress = new CommandInProgress();
+const commandInProgress = new CommandInProgress();
 
 export default commandInProgress;

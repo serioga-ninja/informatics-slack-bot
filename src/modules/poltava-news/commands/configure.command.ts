@@ -3,8 +3,8 @@ import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfig
 import {baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
 import {ChannelIsRegistered, SimpleCommandResponse, ValidateConfigs} from '../../core/CommandDecorators';
 import {ModuleTypes} from '../../core/Enums';
-import MODULES_CONFIG from '../../modules.config';
 import {IConfigurationList} from '../../core/Interfaces';
+import MODULES_CONFIG from '../../modules.config';
 import poltavaNewsEmitter from '../poltava-news.emitter';
 
 interface IInstagramLinksConfig {
@@ -34,6 +34,6 @@ class PoltavaNewsConfigureCommand extends BaseConfigureCommand<IInstagramLinksCo
     }
 }
 
-let poltavaNewsConfigureCommand = new PoltavaNewsConfigureCommand();
+const poltavaNewsConfigureCommand = new PoltavaNewsConfigureCommand();
 
 export default poltavaNewsConfigureCommand;

@@ -1,22 +1,22 @@
-import {Request, Response, NextFunction} from 'express';
-import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
-import {RouterClass} from '../Router.class';
-import variables from '../../configs/variables';
-import * as request from 'request';
+import {NextFunction, Request, Response} from 'express';
 import * as qs from 'querystring';
+import * as request from 'request';
+import variables from '../../configs/variables';
+import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
 import {ISlackAuthSuccessBody, SlackService} from '../../services/slack.service';
+import {RouterClass} from '../Router.class';
 
 export class SlackEventRouter extends RouterClass {
 
     public handleEventRequest(req: Request, res: Response, next: NextFunction) {
-        let body: ISlackEventRequestBody = req.body;
+        const body: ISlackEventRequestBody = req.body;
         res.setHeader('Content-type', 'text/plain');
         res.end(req.body.challenge);
         console.log(req.body);
     }
 
     public handleAuthoriseRequest(req: Request, res: Response) {
-        let {code} = req.query;
+        const {code} = req.query;
 
         variables.slack.authorization_code = code;
 
@@ -37,16 +37,16 @@ export class SlackEventRouter extends RouterClass {
             if (err) {
                 return res.send('Error');
             }
-            let body: ISlackAuthSuccessBody = JSON.parse(result.body);
+            const body: ISlackAuthSuccessBody = JSON.parse(result.body);
             if (!body.ok) {
                 return res.send(body.error);
             }
 
             return SlackService
                 .chanelAlreadyRegistered(body.incoming_webhook.channel_id)
-                .then(isRegistered => {
+                .then((isRegistered) => {
                     if (isRegistered) {
-                        res.send('Chanel already registered.')
+                        res.send('Chanel already registered.');
                     } else {
                         return SlackService.registerNewChanel(body);
                     }

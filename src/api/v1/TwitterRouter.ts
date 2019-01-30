@@ -1,9 +1,9 @@
-import {Request, Response, NextFunction} from 'express';
-import {RouterClass} from '../Router.class';
+import {NextFunction, Request, Response} from 'express';
+import * as qs from 'querystring';
 import * as request from 'request';
 import variables from '../../configs/variables';
-import * as qs from 'querystring';
 import {TwitterService} from '../../services/twitter.service';
+import {RouterClass} from '../Router.class';
 
 
 export class TwitterRouter extends RouterClass {
@@ -25,7 +25,7 @@ export class TwitterRouter extends RouterClass {
                 grant_type: 'client_credentials'
             })
         }, (error, result: any) => {
-            let resultBody: { token_type: string; access_token: string; } = JSON.parse(result.body);
+            const resultBody: { token_type: string; access_token: string; } = JSON.parse(result.body);
             variables.social.twitter.accessToken = resultBody.access_token;
 
             res.json(resultBody);
@@ -45,16 +45,18 @@ export class TwitterRouter extends RouterClass {
                 access_token: variables.social.twitter.accessToken
             })
         }, (error, result: any) => {
-            let resultBody: { token_type: string; access_token: string; } = JSON.parse(result.body);
-            if (resultBody.access_token)
+            const resultBody: { token_type: string; access_token: string; } = JSON.parse(result.body);
+
+            if (resultBody.access_token) {
                 variables.social.twitter.accessToken = resultBody.access_token;
+            }
 
             res.json(resultBody);
         });
     }
 
     public search(req: Request, res: Response) {
-        let searchQ: string = req.query.q;
+        const searchQ: string = req.query.q;
 
         request({
             method: 'GET',
@@ -71,7 +73,7 @@ export class TwitterRouter extends RouterClass {
     }
 
     public search2(req: Request, res: Response) {
-        let searchQ: string = req.query.q;
+        const searchQ: string = req.query.q;
 
         request({
             method: 'GET',
@@ -128,6 +130,6 @@ export class TwitterRouter extends RouterClass {
 }
 
 // Create the SlackRouter, and export its configured Express.Router
-let twitterRouter = new TwitterRouter();
+const twitterRouter = new TwitterRouter();
 
 export default twitterRouter.router;

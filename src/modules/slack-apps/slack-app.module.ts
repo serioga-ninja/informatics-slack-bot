@@ -1,7 +1,7 @@
 import {BaseModuleClass} from '../core/BaseModule.class';
-import slackBotRegistrationCommand from './commands/registration.command';
-import commandInProgress from './commands/in-progress';
 import helpCommand from './commands/help.command';
+import commandInProgress from './commands/in-progress';
+import slackBotRegistrationCommand from './commands/registration.command';
 
 class SlackAppModule extends BaseModuleClass {
 
@@ -29,6 +29,6 @@ class SlackAppModule extends BaseModuleClass {
     }
 }
 
-let slackAppModule = new SlackAppModule();
+const slackAppModule = new SlackAppModule();
 
 export default slackAppModule;

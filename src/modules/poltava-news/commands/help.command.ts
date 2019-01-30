@@ -16,6 +16,6 @@ class HelpCommand extends BaseCommand {
     }
 }
 
-let helpCommand = new HelpCommand();
+const helpCommand = new HelpCommand();
 
 export default helpCommand;

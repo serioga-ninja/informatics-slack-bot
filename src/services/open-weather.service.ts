@@ -1,7 +1,6 @@
-import variables from '../configs/variables';
-
-import * as request from 'request';
 import * as qs from 'querystring';
+import * as request from 'request';
+import variables from '../configs/variables';
 import {ISlackWebhookRequestBodyAttachment} from '../interfaces/i-slack-webhook-request-body-attachment';
 
 
@@ -19,7 +18,7 @@ export interface IWeatherItem {
     };
     weather: { id: number; main: string; description: string; icon: string; } [];
     clouds: { all: number; };
-    wind: { speed: number; deg: number; },
+    wind: { speed: number; deg: number; };
     sys: { pod: string; };
     dt_txt: string;
 }
@@ -36,6 +35,7 @@ interface ISuccessResponse {
 }
 
 export class OpenWeatherService {
+    public lastWeather: ISuccessResponse;
 
     static get PoltavaRequestUrl(): string {
         return `http://api.openweathermap.org/data/2.5/forecast?${qs.stringify({
@@ -47,7 +47,7 @@ export class OpenWeatherService {
     }
 
     static get PoltavaHtmlViewLink(): string {
-        return `http://openweathermap.org/city/${variables.weather.poltavaCityId}?utm_source=openweathermap&utm_medium=widget&utm_campaign=html_old`
+        return `http://openweathermap.org/city/${variables.weather.poltavaCityId}?utm_source=openweathermap&utm_medium=widget&utm_campaign=html_old`;
     }
 
     static getWeatherIcon(ico: string): string {
@@ -56,7 +56,7 @@ export class OpenWeatherService {
 
     static weatherItemToSlackAttachment(items: IWeatherItem[]): ISlackWebhookRequestBodyAttachment[] {
         return items
-            .map(row => {
+            .map((row) => {
                 return <ISlackWebhookRequestBodyAttachment>{
                     ts: row.dt,
                     footer: 'openweathermap',
@@ -69,15 +69,13 @@ export class OpenWeatherService {
             });
     }
 
-    public lastWeather: ISuccessResponse;
-
     getAvailableData(): Promise<ISuccessResponse> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             if (this.lastWeather) {
                 return resolve(this.lastWeather);
             }
 
-            return this.grabOpenWeatherData().then(data => {
+            return this.grabOpenWeatherData().then((data) => {
                 this.lastWeather = data;
                 resolve(data);
             });
@@ -85,7 +83,7 @@ export class OpenWeatherService {
     }
 
     grabOpenWeatherData(): Promise<ISuccessResponse> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             request
                 .get(OpenWeatherService.PoltavaRequestUrl, (err, result: any) => {
                     resolve(JSON.parse(result.body));
@@ -95,6 +93,6 @@ export class OpenWeatherService {
 
 }
 
-let weatherService = new OpenWeatherService();
+const weatherService = new OpenWeatherService();
 
 export default weatherService;

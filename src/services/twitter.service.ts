@@ -1,20 +1,18 @@
-import variables from '../configs/variables';
-import * as qs from 'querystring';
 import * as crypto from 'crypto';
+import variables from '../configs/variables';
 
 const ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
 
-function toPercentEncoding(str: string): string {
-    return str
-        .split('')
-        .map(ch => {
-            if (!/([\w\d\-\.\_\~])/g.test(ch)) {
-                return '%' + new Buffer(ch).toString('hex').toUpperCase();
-            }
-            return ch;
-        })
-        .join('');
-}
+const toPercentEncoding = (str: string): string => str
+    .split('')
+    .map((ch) => {
+        if (!/([\w\d\-\.\_\~])/g.test(ch)) {
+            return '%' + new Buffer(ch).toString('hex').toUpperCase();
+        }
+
+        return ch;
+    })
+    .join('');
 
 interface IOAuthData {
     oauth_consumer_key: string;
@@ -41,7 +39,7 @@ export class TwitterService {
     }
 
     static generateSignatureBaseString(method: string, url: string, data: object): string {
-        let requestBodyString: string = toPercentEncoding(
+        const requestBodyString: string = toPercentEncoding(
             Object
                 .keys(data)
                 .sort()
@@ -49,18 +47,19 @@ export class TwitterService {
                     res.push(
                         toPercentEncoding(`${value}=${data[value]}`)
                     );
+
                     return res;
                 }, <string[]>[])
                 .join('&')
         );
 
-        return `${method.toUpperCase()}&${toPercentEncoding(url)}&${requestBodyString}`
+        return `${method.toUpperCase()}&${toPercentEncoding(url)}&${requestBodyString}`;
     }
 
     static getOAuthAuthorizationString(method: string, url: string, requestBOdy: object = {}, time: string = new Date().getTime().toString()): string {
         console.log(new Date().getTime(), time);
 
-        let authData: IOAuthData = {
+        const authData: IOAuthData = {
             oauth_consumer_key: variables.social.twitter.API_KEY,
             oauth_nonce: new Buffer(Math.random().toString()).toString('hex'),
             oauth_signature_method: 'HMAC-SHA1',
@@ -68,15 +67,15 @@ export class TwitterService {
             oauth_token: variables.social.twitter.ACCESS_TOKEN,
             oauth_version: '1.0'
         };
-        let data = {
+        const data = {
             ...requestBOdy,
             ...authData
         };
 
-        let signatureBaseSting = TwitterService.generateSignatureBaseString(method, url, data);
+        const signatureBaseSting = TwitterService.generateSignatureBaseString(method, url, data);
 
         // generate a sign key
-        let signKey = `${variables.social.twitter.API_SECRET}&${variables.social.twitter.TOKEN_SECRET}`;
+        const signKey = `${variables.social.twitter.API_SECRET}&${variables.social.twitter.TOKEN_SECRET}`;
         authData.oauth_signature = crypto
             .createHmac('SHA1', signKey)
             .update(signatureBaseSting)
@@ -89,6 +88,7 @@ export class TwitterService {
                 res.push(
                     `${toPercentEncoding(key)}="${toPercentEncoding(authData[key])}"`
                 );
+
                 return res;
             }, [])
             .join(', ');

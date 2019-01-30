@@ -19,7 +19,7 @@ class App {
     // ref to Express instance
     public express: express.Application;
 
-    //Run configuration methods on the Express instance.
+    // Run configuration methods on the Express instance.
     constructor() {
         this.express = express();
         this.middleware();
@@ -32,7 +32,7 @@ class App {
 
     // Configure Express middleware.
     private middleware(): void {
-        let env = process.env.NODE_ENV;
+        const env = process.env.NODE_ENV;
 
         if (['development', 'test', 'local'].indexOf(env) !== -1) {
             this.express.use(morgan('dev', {immediate: true}));

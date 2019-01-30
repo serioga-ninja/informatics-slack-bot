@@ -1,17 +1,17 @@
+import {Router} from 'express';
+import 'rxjs/add/observable/interval';
+import {Observable} from 'rxjs/Observable';
+import {RouterClass} from '../../api/Router.class';
+import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {LogService} from '../../services/log.service';
 import MODULES_CONFIG from '../modules.config';
-import {BaseCommand} from './BaseCommand.class';
-import {Router} from 'express';
-import {RouterClass} from '../../api/Router.class';
-import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/interval';
 import commandInProgress from '../slack-apps/commands/in-progress';
+import {BaseCommand} from './BaseCommand.class';
 
-const PRELOAD_DATA_FREQUENCY = 1000 * 60 * 10;
+const PRELOAD_DATA_FREQUENCY = 600000;
 
-const CALL_HELP_ON_EMPRY_ARGS_COMMANDS = [
+const CALL_HELP_ON_EMPTY_ARGS_COMMANDS = [
     MODULES_CONFIG.COMMANDS.CONFIGURE
 ];
 
@@ -58,7 +58,7 @@ export abstract class BaseModuleClass {
 
     abstract collectData(publicList?: string[]): Promise<any>;
 
-    abstract preloadActiveModules(): Promise<any>
+    abstract preloadActiveModules(): Promise<any>;
 
     execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebhookRequestBody> {
         let executableCommand: BaseCommand;
@@ -80,7 +80,7 @@ export abstract class BaseModuleClass {
                 executableCommand = this.commands[command];
         }
 
-        if (CALL_HELP_ON_EMPRY_ARGS_COMMANDS.indexOf(command) !== -1 && Object.keys(args).length === 0) {
+        if (CALL_HELP_ON_EMPTY_ARGS_COMMANDS.indexOf(command) !== -1 && Object.keys(args).length === 0) {
             return executableCommand
                 .help();
         }

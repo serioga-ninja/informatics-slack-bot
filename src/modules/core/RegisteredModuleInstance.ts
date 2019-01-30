@@ -1,17 +1,17 @@
 import {ObjectId} from 'mongodb';
+import request = require('request');
 import Timer = NodeJS.Timer;
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ILinksToPostModelDocument} from '../../models/links-to-post.model';
-import request = require('request');
-import {LogService} from '../../services/log.service';
 import {
-    IRegisteredModuleModelDocument,
-    default as RegisteredModuleModel
+    default as RegisteredModuleModel,
+    IRegisteredModuleModelDocument
 } from '../../models/registered-module.model';
+import {LogService} from '../../services/log.service';
 
-let logService = new LogService('Registered Modules');
+const logService = new LogService('Registered Modules');
 
-const MINUTE = 1000 * 60;
+const MINUTE = 60000;
 
 export class RegisteredModuleInstance {
 
@@ -32,7 +32,7 @@ export class RegisteredModuleInstance {
 
             logService.info(`Posting data to channel ${this.model.chanelId}`, data);
 
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
 
                 request({
                     method: 'POST',
@@ -41,8 +41,8 @@ export class RegisteredModuleInstance {
                     body: data
                 }, () => resolve());
             }).then(() => {
-                return Promise.all(items.map(item => {
-                    let postedChannels = [...item.postedChannels, this.model.chanelId];
+                return Promise.all(items.map((item) => {
+                    const postedChannels = [...item.postedChannels, this.model.chanelId];
 
                     return item.update({postedChannels});
                 }));
@@ -58,7 +58,7 @@ export class RegisteredModuleInstance {
     public init() {
         RegisteredModuleModel
             .findById(this.modelId)
-            .then(model => {
+            .then((model) => {
                 this.model = model;
 
                 logService.info(`Init channel ${this.model.chanelId}`);

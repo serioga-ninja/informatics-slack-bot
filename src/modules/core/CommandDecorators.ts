@@ -3,37 +3,36 @@ import RegisteredAppModel from '../../models/registered-app.model';
 import {ModuleTypes} from './Enums';
 import {
     ChanelAlreadyRegisteredError,
-    ChanelNotRegisteredError, InformaticsSlackBotBaseError, ModuleNotExistsError,
+    ChanelNotRegisteredError,
+    InformaticsSlackBotBaseError,
+    ModuleNotExistsError,
     UnknownConfigError
 } from './Errors';
 import {RegisteredModulesService} from './Modules.service';
 
 export const SimpleCommandResponse = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
-
-        return method
-            .apply(target, args)
-            .then((data: ISlackWebhookRequestBody = <ISlackWebhookRequestBody>{}) => {
-                return <ISlackWebhookRequestBody>{
-                    response_type: 'in_channel',
-                    text: data.text || 'Success!',
-                    attachments: data.attachments || []
-                }
-            });
-    };
+    descriptor.value = (...args: any[]) => method
+        .apply(target, args)
+        .then((data: ISlackWebhookRequestBody = <ISlackWebhookRequestBody>{}) => {
+            return <ISlackWebhookRequestBody>{
+                response_type: 'in_channel',
+                text: data.text || 'Success!',
+                attachments: data.attachments || []
+            };
+        });
 };
 
-export function ChannelIsRegistered(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-    let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+export const ChannelIsRegistered = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
-        let [requestBody] = args;
+    descriptor.value = (...args: any[]) => {
+        const [requestBody] = args;
 
         return RegisteredAppModel
             .find({'incomingWebhook.channel_id': requestBody.channel_id})
-            .then(collection => {
+            .then((collection) => {
                 if (collection.length === 0) {
                     throw new ChanelNotRegisteredError();
                 }
@@ -43,20 +42,20 @@ export function ChannelIsRegistered(target: any, propertyKey: string, descriptor
                 return <ISlackWebhookRequestBody>{
                     response_type: 'in_channel',
                     text: error.message
-                }
+                };
             });
     };
-}
+};
 
-export function ChannelNotRegistered(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-    let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+export const ChannelNotRegistered = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
-        let [requestBody] = args;
+    descriptor.value = (...args: any[]) => {
+        const [requestBody] = args;
 
         return RegisteredAppModel
             .find({'incomingWebhook.channel_id': requestBody.channel_id})
-            .then(collection => {
+            .then((collection) => {
                 if (collection.length > 0) {
                     throw new ChanelAlreadyRegisteredError();
                 }
@@ -66,21 +65,21 @@ export function ChannelNotRegistered(target: any, propertyKey: string, descripto
                 return <ISlackWebhookRequestBody>{
                     response_type: 'in_channel',
                     text: error.message
-                }
+                };
             });
     };
-}
+};
 
 export const ChannelIsActivated = (moduleType: ModuleTypes) => {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-        let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+        const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
-        descriptor.value = function (...args: any[]) {
-            let [requestBody] = args;
+        descriptor.value = (...args: any[]) => {
+            const [requestBody] = args;
 
             return RegisteredModulesService
                 .moduleIsExists(moduleType, requestBody.channel_id)
-                .then(exists => {
+                .then((exists) => {
                     if (!exists) {
                         throw new ModuleNotExistsError();
                     }
@@ -90,22 +89,22 @@ export const ChannelIsActivated = (moduleType: ModuleTypes) => {
                     return <ISlackWebhookRequestBody>{
                         response_type: 'in_channel',
                         text: error.message
-                    }
+                    };
                 });
         };
-    }
+    };
 };
 
 export const ValidateConfigs = (availableCommands: { [key: string]: (requestBody: any, configs: any) => Promise<any> }) => {
 
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-        let method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+        const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
 
-        descriptor.value = function (...args: any[]) {
-            let [requestBody, configs] = args;
+        descriptor.value = (...args: any[]) => {
+            const [requestBody, configs] = args;
 
             return new Promise((resolve, reject) => {
-                let unknownKey = Object.keys(configs).filter(key => availableCommands[key] === undefined)[0];
+                const unknownKey = Object.keys(configs).filter((key) => availableCommands[key] === undefined)[0];
 
                 if (unknownKey) {
                     reject(new UnknownConfigError(unknownKey));
@@ -115,5 +114,5 @@ export const ValidateConfigs = (availableCommands: { [key: string]: (requestBody
             })
                 .then(() => method.apply(target, args));
         };
-    }
+    };
 };

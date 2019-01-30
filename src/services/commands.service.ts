@@ -1,31 +1,32 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
+import {BaseModuleClass} from '../modules/core/BaseModule.class';
+import instagramModule from '../modules/instagram/instagram.module';
 import MODULES_CONFIG from '../modules/modules.config';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
-import {BaseModuleClass} from '../modules/core/BaseModule.class';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
-import instagramModule from '../modules/instagram/instagram.module';
-import {InstagramCommand} from '../typings';
 import {LogService} from './log.service';
 
+type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';
+
 const MODULES_LIST = {
-    'app': slackAppModule,
+    app: slackAppModule,
     [MODULES_CONFIG.MODULES.POLTAVA_NEWS]: poltavaNewsModule,
     [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule
 };
 
-let logService = new LogService('CommandsService');
+const logService = new LogService('CommandsService');
 
 export class CommandsService {
 
     static getModule(commandStringArr: string[]): BaseModuleClass {
-        let [moduleName] = commandStringArr;
+        const [moduleName] = commandStringArr;
 
         return MODULES_LIST[moduleName];
     }
 
     static getCommand(commandStringArr: string[]): InstagramCommand {
-        let command = commandStringArr[1];
+        const command = commandStringArr[1];
 
         return <InstagramCommand>command || 'help';
     }
@@ -35,7 +36,7 @@ export class CommandsService {
             || (commandStringArr[1] === MODULES_CONFIG.COMMANDS.CONFIGURE && commandStringArr.length <= 2)) {
             return {};
         }
-        let [module, command, ...configArgs] = commandStringArr;
+        const [module, command, ...configArgs] = commandStringArr;
 
         return configArgs.reduce((all: string[], current: string) => {
             let [key, value] = current.split('=');
@@ -44,7 +45,7 @@ export class CommandsService {
                 .map((keyPart, index) => index === 0 ? keyPart : keyPart[0].toUpperCase() + keyPart.slice(1))
                 .join('');
 
-            all[key] = (value || '').split(',').map(link => link.replace(/ /, ''))
+            all[key] = (value || '').split(',').map((link) => link.replace(/ /, ''));
 
             return all;
         }, {});
@@ -59,9 +60,9 @@ export class CommandsService {
                 commandStringArr = ['app'].concat(commandStringArr);
             }
 
-            let module = CommandsService.getModule(commandStringArr);
-            let command = CommandsService.getCommand(commandStringArr);
-            let args = CommandsService.collectArguments(commandStringArr);
+            const module = CommandsService.getModule(commandStringArr);
+            const command = CommandsService.getCommand(commandStringArr);
+            const args = CommandsService.collectArguments(commandStringArr);
 
             resolve({module, command, args});
         });
@@ -70,7 +71,7 @@ export class CommandsService {
     public execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebhookRequestBody> {
         return this.parse(commandString)
             .then(({module, command, args}) => module.execute(requestBody, command, args))
-            .catch(error => {
+            .catch((error) => {
                 logService.error(error);
 
                 return <ISlackWebhookRequestBody>{
@@ -82,11 +83,11 @@ export class CommandsService {
                             color: '#a60200'
                         }
                     ]
-                }
+                };
             });
     }
 }
 
-let commandsModule = new CommandsService();
+const commandsModule = new CommandsService();
 
 export default commandsModule;

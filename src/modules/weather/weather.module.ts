@@ -1,31 +1,31 @@
 import {Observable} from 'rxjs/Observable';
-import {IWeatherItem, OpenWeatherService} from '../../services/open-weather.service';
-import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
 import variables from '../../configs/variables';
+import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
+import {IWeatherItem, OpenWeatherService} from '../../services/open-weather.service';
 import {SlackService} from '../../services/slack.service';
 
-const COLLECT_WEATHER_INTERVAL = 1000 * 60 * 60 * 6;
+const COLLECT_WEATHER_INTERVAL = 21600000;
 
 class WeatherModule {
 
     init(): void {
-        let openWeatherService = new OpenWeatherService();
+        const openWeatherService = new OpenWeatherService();
 
         Observable
             .interval(COLLECT_WEATHER_INTERVAL)
-            .subscribe(data => {
+            .subscribe((data) => {
                 openWeatherService
                     .grabOpenWeatherData()
-                    .then(data => openWeatherService.lastWeather = data);
+                    .then((data) => openWeatherService.lastWeather = data);
             });
 
         openWeatherService.grabOpenWeatherData()
-            .then(data => openWeatherService.lastWeather = data);
+            .then((data) => openWeatherService.lastWeather = data);
     }
 
 
     postWeatherToTheChanel(data: IWeatherItem[]): Promise<any> {
-        let attachments: ISlackWebhookRequestBodyAttachment[] = OpenWeatherService.weatherItemToSlackAttachment(data);
+        const attachments: ISlackWebhookRequestBodyAttachment[] = OpenWeatherService.weatherItemToSlackAttachment(data);
 
         return SlackService.postToChanel(variables.slack.SLACK_TEST_CHANEL_LINK, {
             text: '',
@@ -34,6 +34,6 @@ class WeatherModule {
     }
 }
 
-let weatherModule = new WeatherModule();
+const weatherModule = new WeatherModule();
 
 export default weatherModule;

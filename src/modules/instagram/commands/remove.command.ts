@@ -1,8 +1,8 @@
-import {BaseCommand} from '../../core/BaseCommand.class';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
+import {BaseCommand} from '../../core/BaseCommand.class';
+import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 import {ModuleTypes} from '../../core/Enums';
 import {RegisteredModulesService} from '../../core/Modules.service';
-import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
 
 class InstagramLinksRemoveCommand extends BaseCommand {
 
@@ -16,6 +16,6 @@ class InstagramLinksRemoveCommand extends BaseCommand {
     }
 }
 
-let instagramLinksRemoveCommand = new InstagramLinksRemoveCommand();
+const instagramLinksRemoveCommand = new InstagramLinksRemoveCommand();
 
 export default instagramLinksRemoveCommand;

@@ -53,7 +53,7 @@ export class CommandNotFoundError extends Error implements InformaticsSlackBotBa
         return {
             response_type: 'in_channel',
             text: 'Unknown command'
-        }
+        };
     }
 }
 

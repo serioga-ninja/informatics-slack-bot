@@ -1,20 +1,19 @@
+import 'rxjs/add/observable/interval';
+import RegisteredModuleModel from '../../models/registered-module.model';
 import {BaseModuleClass} from '../core/BaseModule.class';
 import {CONFIG_HAS_CHANGED} from '../core/Commands';
 import {ModuleTypes} from '../core/Enums';
+import {RegisteredModulesService} from '../core/Modules.service';
 import poltavaNewsConfigureCommand from './commands/configure.command';
+import helpCommand from './commands/help.command';
+import poltavaNewsRegistrationCommand from './commands/registration.command';
+import poltavaNewsRemoveCommand from './commands/remove.command';
+import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
 import poltavaNewsEmitter from './poltava-news.emitter';
 import {PoltavaNewsRouter} from './poltava-news.router';
 import {PoltavaNewsService} from './poltava-news.service';
-import poltavaNewsRegistrationCommand from './commands/registration.command';
-import RegisteredModuleModel from '../../models/registered-module.model';
 
-import 'rxjs/add/observable/interval';
-import {RegisteredModulesService} from '../core/Modules.service';
-import poltavaNewsRemoveCommand from './commands/remove.command';
-import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
-import helpCommand from './commands/help.command';
-
-const POST_FREQUENCY = 1000 * 60 * 10;
+const POST_FREQUENCY = 600000;
 
 const URLS = [
     'https://poltava.to/rss/news.xml'
@@ -41,14 +40,15 @@ class PoltavaNewsModule extends BaseModuleClass {
 
         poltavaNewsEmitter.on(CONFIG_HAS_CHANGED, (chanelId: string) => {
             this.logService.info(`Update configure for chanelId ${chanelId}`);
+
             return RegisteredModuleModel
                 .findOne({moduleType: ModuleTypes.poltavaNews, chanelId: chanelId})
-                .then(moduleModel => {
+                .then((moduleModel) => {
 
                     this.collectData().then(() => {
                         RegisteredModulesService
                             .startedInstances
-                            .find(inst => moduleModel._id.equals(inst.modelId))
+                            .find((inst) => moduleModel._id.equals(inst.modelId))
                             .init();
                     });
                 });
@@ -56,12 +56,12 @@ class PoltavaNewsModule extends BaseModuleClass {
     }
 
     collectData() {
-        let poltavaNewsService = new PoltavaNewsService(URLS);
+        const poltavaNewsService = new PoltavaNewsService(URLS);
 
         return poltavaNewsService
             .grabTheData()
-            .then(data => PoltavaNewsService.filterData(data))
-            .then(data => PoltavaNewsService.saveToDB(data));
+            .then((data) => PoltavaNewsService.filterData(data))
+            .then((data) => PoltavaNewsService.saveToDB(data));
     }
 
     preloadActiveModules() {
@@ -70,9 +70,9 @@ class PoltavaNewsModule extends BaseModuleClass {
                 moduleType: ModuleTypes.poltavaNews,
                 isActive: true
             })
-            .then(collection => {
+            .then((collection) => {
                 this.logService.info(`Registering ${collection.length} modules`);
-                collection.forEach(module => {
+                collection.forEach((module) => {
                     RegisteredModulesService.startModuleInstance(poltavaNewsInstanceFactory(module));
                 });
             });
@@ -80,7 +80,7 @@ class PoltavaNewsModule extends BaseModuleClass {
     }
 }
 
-let poltavaNewsModule = new PoltavaNewsModule();
+const poltavaNewsModule = new PoltavaNewsModule();
 poltavaNewsModule.init();
 
 export default poltavaNewsModule;

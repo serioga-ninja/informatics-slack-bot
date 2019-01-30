@@ -1,9 +1,9 @@
 import * as qs from 'querystring';
+import variables from '../../../configs/variables';
+import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
 import {BaseCommand} from '../../core/BaseCommand.class';
 import {ChannelNotRegistered} from '../../core/CommandDecorators';
-import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import variables from '../../../configs/variables';
 
 export class ChanelAlreadyRegisteredError extends Error {
     constructor() {
@@ -39,6 +39,6 @@ class RegistrationCommand extends BaseCommand {
 
 }
 
-let slackBotRegistrationCommand = new RegistrationCommand();
+const slackBotRegistrationCommand = new RegistrationCommand();
 
 export default slackBotRegistrationCommand;

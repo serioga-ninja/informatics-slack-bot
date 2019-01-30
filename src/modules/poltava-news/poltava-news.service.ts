@@ -13,31 +13,23 @@ interface IPoltavaNewsRssItem {
 }
 
 export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, ILinksToPostModel> {
-
-    public mapFn(item: IPoltavaNewsRssItem) {
-
-        return <ILinksToPostModel>{
-            title: item.title,
-            contentUrl: item.link,
-            postedChannels: []
-        }
-    }
+    public urls: string[];
 
     public static filterData(data: ILinksToPostModel[]): Promise<ILinksToPostModel[]> {
         return LinksToPostModel
-            .aggregate([{$match: {link: {$in: data.map(row => row.contentType)}}}])
+            .aggregate([{$match: {link: {$in: data.map((row) => row.contentType)}}}])
             .then((objects: ILinksToPostModelDocument[]) => {
                 return data
-                    .filter(row => {
+                    .filter((row) => {
                         return !objects.find((obj) => {
                             return obj.contentUrl === row.contentUrl;
                         });
-                    })
+                    });
             });
     }
 
     public static saveToDB(data: ILinksToPostModel[]): Promise<ILinksToPostModelDocument[]> {
-        return Promise.all(data.map(row => {
+        return Promise.all(data.map((row) => {
             return new LinksToPostModel().set(<ILinksToPostModel>{
                 contentUrl: row.contentUrl,
                 postedChannels: [],
@@ -45,10 +37,9 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
                 contentType: ModuleTypes.poltavaNews,
                 category: 'poltava-news'
             }).save();
-        }))
+        }));
     }
 
-    public urls: string[];
 
     constructor(urls: string[]) {
         super();
@@ -58,5 +49,14 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
 
     grabTheData(): Promise<ILinksToPostModel[]> {
         return this.getTheData(this.urls[0]);
+    }
+
+    public mapFn(item: IPoltavaNewsRssItem) {
+
+        return <ILinksToPostModel>{
+            title: item.title,
+            contentUrl: item.link,
+            postedChannels: []
+        };
     }
 }
