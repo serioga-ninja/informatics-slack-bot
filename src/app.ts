@@ -33,9 +33,13 @@ class App {
         this.express.use(expressLogger);
         this.express.use(errorHandler());
 
+        if (process.env.NODE_ENV === 'development') {
+            // only use in development
+            this.express.use(errorHandler());
+        }
+
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({extended: false}));
-        this.express.use(express.static('public'));
     }
 
     // Configure API endpoints.
