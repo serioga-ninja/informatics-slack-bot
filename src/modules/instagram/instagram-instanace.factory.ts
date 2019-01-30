@@ -25,7 +25,7 @@ function instagramInstanceFactory(moduleModel: IRegisteredModuleModelDocument<II
 
             switch (model.configuration.postStrategy) {
                 case PostStrategies.RandomSingle:
-                    return LinksToPostModel.aggregate({
+                    return LinksToPostModel.aggregate([{
                         $match: {
                             postedChannels: {
                                 $nin: [model.chanelId]
@@ -35,7 +35,7 @@ function instagramInstanceFactory(moduleModel: IRegisteredModuleModelDocument<II
                             },
                             contentType: ModuleTypes.instagramLinks
                         }
-                    }).sample(1).then((items) => {
+                    }]).sample(1).then((items) => {
                         let collection: ILinksToPostModelDocument[] = items.map(item => {
                             return new LinksToPostModel(item)
                         });

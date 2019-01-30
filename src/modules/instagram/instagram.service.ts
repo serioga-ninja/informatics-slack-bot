@@ -1,7 +1,7 @@
 import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
+import {ILinksToPostModelDocument, LinksToPostModel} from '../../models/links-to-post.model';
 import {ModuleTypes} from '../core/Enums';
 import {RssParserService} from '../core/RssParser.service';
-import {ILinksToPostModelDocument, LinksToPostModel} from '../../models/links-to-post.model';
 
 interface IRssInstagramItem {
     link: string;
@@ -12,7 +12,7 @@ interface IRssInstagramItem {
     };
 }
 
-interface IParseDataResults {
+export interface IParseDataResults {
     chanelId: string;
     results: ILinksToPostModel[];
 }
@@ -27,7 +27,7 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
             contentType: ModuleTypes.instagramLinks,
             contentUrl: item.enclosure.url,
             title: item.link
-        }
+        };
     }
 
     public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {

@@ -25,7 +25,7 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
 
     public static filterData(data: ILinksToPostModel[]): Promise<ILinksToPostModel[]> {
         return LinksToPostModel
-            .aggregate({$match: {link: {$in: data.map(row => row.contentType)}}})
+            .aggregate([{$match: {link: {$in: data.map(row => row.contentType)}}}])
             .then((objects: ILinksToPostModelDocument[]) => {
                 return data
                     .filter(row => {

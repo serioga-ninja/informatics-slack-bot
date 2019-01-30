@@ -1,0 +1,177 @@
+{
+  "rules": {
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
+    "no-unused-expression-chai": true,
+    "callable-types": true,
+    "class-name": true,
+    "comment-format": [
+      true,
+      "check-space"
+    ],
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
+    "eofline": true,
+    "forin": false,
+    "import-blacklist": [
+      true,
+      "rxjs"
+    ],
+    "import-spacing": true,
+    "indent": [
+      true,
+      "spaces"
+    ],
+    "interface-over-type-literal": true,
+    "label-position": true,
+    "max-line-length": false,
+    "member-access": false,
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "case-insensitive",
+        "grouped-imports": true
+      }
+    ],
+    "interface-name": [
+      true,
+      "always-prefix"
+    ],
+    "newline-before-return": true,
+    "no-boolean-literal-compare": true,
+    "no-redundant-jsdoc": true,
+    "object-literal-key-quotes": [
+      true,
+      "as-needed"
+    ],
+    "one-variable-per-declaration": [
+      true,
+      "ignore-for-loop"
+    ],
+    "member-ordering": [
+      true,
+      "static-before-instance",
+      "variables-before-functions"
+    ],
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-console": [
+      true,
+      "debug",
+      "info",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-empty-interface": false,
+    "no-eval": true,
+    "no-inferrable-types": [
+      false,
+      "ignore-params"
+    ],
+    "no-shadowed-variable": false,
+    "no-string-literal": false,
+    "no-string-throw": true,
+    "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": true,
+    "no-unused-expression": false,
+    "no-use-before-declare": true,
+    "no-var-keyword": true,
+    "no-internal-module": true,
+    "object-literal-sort-keys": false,
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-catch",
+      "check-else",
+      "check-whitespace"
+    ],
+    "prefer-const": true,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "radix": true,
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      }
+    ],
+    "typeof-compare": true,
+    "unified-signatures": true,
+    "variable-name": false,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ],
+    "directive-selector": [
+      true,
+      "attribute",
+      "prac",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "prac",
+      "kebab-case"
+    ],
+    "use-input-property-decorator": true,
+    "use-output-property-decorator": true,
+    "use-host-property-decorator": true,
+    "no-input-rename": true,
+    "no-output-rename": true,
+    "use-life-cycle-interface": true,
+    "use-pipe-transform-interface": true,
+    "component-class-suffix": true,
+    "directive-class-suffix": true,
+    "no-access-missing-member": true,
+    "templates-use-public": true,
+    "no-magic-numbers": true,
+    "only-arrow-functions": true,
+    "invoke-injectable": true,
+    "ban-comma-operator": true,
+    "no-conditional-assignment": true,
+    "no-duplicate-super": true,
+    "no-duplicate-switch-case": true,
+    "no-return-await": true,
+    "no-sparse-arrays": true,
+    "no-this-assignment": true,
+    "prefer-conditional-expression": true,
+    "prefer-object-spread": true,
+    "restrict-plus-operands": true,
+    "use-isnan": true,
+    "cyclomatic-complexity": true,
+    "deprecation": true,
+    "prefer-readonly": true,
+    "prefer-for-of": true,
+    "arrow-parens": true,
+    "binary-expression-operand-order": true,
+    "prefer-method-signature": true
+  }
+}

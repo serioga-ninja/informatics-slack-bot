@@ -1,21 +1,20 @@
-import {ModuleTypes} from '../core/Enums';
-import helpCommand from './commands/help.command';
-import {InstagramService} from './instagram.service';
-
-import {BaseModuleClass} from '../core/BaseModule.class';
-import instagramLinksRegistrationCommand from './commands/registration.command';
-import RegisteredModuleModel from '../../models/registered-module.model';
-
-import 'rxjs/add/observable/interval';
-import {RegisteredModulesService} from '../core/Modules.service';
-import instagramLinksRemoveCommand from './commands/remove.command';
-import {InstagramRouter} from './instagram.router';
-import instagramInstanceFactory from './instagram-instanace.factory';
-import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
-import instagramLinksConfigureCommand from './commands/configure.command';
-import instagramEmitter from './instagram.emitter';
-import {CONFIG_HAS_CHANGED} from '../core/Commands';
 import * as _ from 'lodash';
+import 'rxjs/add/observable/interval';
+import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
+
+import RegisteredModuleModel from '../../models/registered-module.model';
+import {BaseModuleClass} from '../core/BaseModule.class';
+import {CONFIG_HAS_CHANGED} from '../core/Commands';
+import {ModuleTypes} from '../core/Enums';
+import {RegisteredModulesService} from '../core/Modules.service';
+import instagramLinksConfigureCommand from './commands/configure.command';
+import helpCommand from './commands/help.command';
+import instagramLinksRegistrationCommand from './commands/registration.command';
+import instagramLinksRemoveCommand from './commands/remove.command';
+import instagramInstanceFactory from './instagram-instanace.factory';
+import instagramEmitter from './instagram.emitter';
+import {InstagramRouter} from './instagram.router';
+import {InstagramService, IParseDataResults} from './instagram.service';
 
 class InstagramModule extends BaseModuleClass {
 
@@ -36,62 +35,51 @@ class InstagramModule extends BaseModuleClass {
     init() {
         super.init();
 
-        instagramEmitter.on(CONFIG_HAS_CHANGED, (chanelId: string) => {
+        instagramEmitter.on(CONFIG_HAS_CHANGED, async (chanelId: string) => {
             this.logService.info(`Update configure for chanelId ${chanelId}`);
-            return RegisteredModuleModel
-                .findOne({moduleType: ModuleTypes.instagramLinks, chanelId: chanelId})
-                .then(moduleModel => {
 
-                    this.collectData(moduleModel.configuration.links).then(() => {
-                        try {
-                            RegisteredModulesService
-                                .startedInstances
-                                .find(inst => moduleModel._id.equals(inst.modelId))
-                                .init();
-                        } catch (e) {
-                            this.logService.error(e);
-                        }
-                    });
-                });
+            const moduleModel = await RegisteredModuleModel
+                .findOne({moduleType: ModuleTypes.instagramLinks, chanelId: chanelId});
+
+            await this.collectData(moduleModel.configuration.links);
+            try {
+                await RegisteredModulesService
+                    .startedInstances
+                    .find((inst) => moduleModel._id.equals(inst.modelId))
+                    .init();
+            } catch (e) {
+                this.logService.error(e);
+            }
         });
     }
 
-    collectData(publicList?: string[]) {
+    async collectData(publicList: string[] = []) {
         this.logService.info(`Collecting data`);
 
-        return new Promise(resolve => {
-            if (publicList && publicList.length > 0) {
-                resolve(publicList);
-            } else {
-                return RegisteredModuleModel
-                    .find(<IRegisteredModule<IInstagramConfiguration>>{
-                        moduleType: ModuleTypes.instagramLinks,
-                        isActive: true
-                    })
-                    .select('configuration.links')
-                    .then(modulesCollection => {
+        if (!(publicList instanceof Array && publicList.length > 0)) {
+            const modulesCollection = await RegisteredModuleModel
+                .find(<IRegisteredModule<IInstagramConfiguration>>{
+                    moduleType: ModuleTypes.instagramLinks,
+                    isActive: true
+                })
+                .select('configuration.links');
 
-                        let publicList = _.uniq(
-                            modulesCollection
-                                .map(module => module.configuration.links)
-                                .reduce((all: string[], current: string[]) => {
-                                    return all.concat(current);
-                                }, [])
-                        );
+            publicList = _.uniq(
+                modulesCollection
+                    .map((module) => module.configuration.links)
+                    .reduce((all: string[], current: string[]) => {
+                        return all.concat(current);
+                    }, [])
+            );
+        }
 
-                        resolve(publicList);
-                    })
-            }
-        }).then((instagramPublicIds: string[]) => {
-            this.logService.info(`Collecting data for public`, instagramPublicIds);
+        this.logService.info(`Collecting data for public`, publicList);
 
-            let instagramPhotoParser = new InstagramService(instagramPublicIds);
+        const instagramPhotoParser = new InstagramService(publicList);
 
-            return instagramPhotoParser
-                .collectData()
-                .then(data => InstagramService.filterLinks(data))
-                .then(data => InstagramService.saveToDB(data));
-        })
+        const data: IParseDataResults[] = await instagramPhotoParser.collectData();
+        const filteredData: IParseDataResults[] = await InstagramService.filterLinks(data);
+        await InstagramService.saveToDB(filteredData);
     }
 
     preloadActiveModules() {
@@ -100,9 +88,9 @@ class InstagramModule extends BaseModuleClass {
                 moduleType: ModuleTypes.instagramLinks,
                 isActive: true
             })
-            .then(collection => {
+            .then((collection) => {
                 this.logService.info(`Registering ${collection.length} modules`);
-                collection.forEach(module => {
+                collection.forEach((module) => {
                     RegisteredModulesService.startModuleInstance(instagramInstanceFactory(module));
                 });
             });
@@ -110,7 +98,7 @@ class InstagramModule extends BaseModuleClass {
     }
 }
 
-let instagramModule = new InstagramModule();
+const instagramModule = new InstagramModule();
 instagramModule.init();
 
 export default instagramModule;
