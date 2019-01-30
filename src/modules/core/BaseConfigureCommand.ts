@@ -3,7 +3,7 @@ import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
-import {LogService} from '../../services/log.service';
+import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import {BaseCommand, IBaseCommand} from './BaseCommand.class';
 import {BASE_CONFIGURE_COMMANDS} from './BaseConfigureCommands.factory';
@@ -28,7 +28,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
     abstract configList: IConfigurationList<string[], any>;
     abstract moduleType: ModuleTypes;
 
-    protected logService = new LogService('BaseConfigureCommand');
+    protected logService = new LoggerService('BaseConfigureCommand');
 
     additionalHelpCommands = [];
 

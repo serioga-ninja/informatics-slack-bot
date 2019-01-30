@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {RouterClass} from '../../api/Router.class';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import {LogService} from '../../services/log.service';
+import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';
 import {BaseCommand} from './BaseCommand.class';
@@ -19,7 +19,7 @@ export abstract class BaseModuleClass {
 
     public router: Router;
 
-    protected logService: LogService;
+    protected logService: LoggerService;
 
     abstract moduleName: string;
 
@@ -44,7 +44,7 @@ export abstract class BaseModuleClass {
     }
 
     init(): void {
-        this.logService = new LogService(this.moduleName);
+        this.logService = new LoggerService(this.moduleName);
 
         Observable
             .interval(PRELOAD_DATA_FREQUENCY)

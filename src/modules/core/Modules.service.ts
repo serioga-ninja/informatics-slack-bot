@@ -1,12 +1,12 @@
 import {ObjectId} from 'mongodb';
 import {IRegisteredModule} from '../../interfaces/i-registered-module';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
-import {LogService} from '../../services/log.service';
+import {LoggerService} from '../../services/logger.service';
 import {ModuleTypes} from './Enums';
 import {ModuleAlreadeyStoppedError} from './Errors';
 import {RegisteredModuleInstance} from './RegisteredModuleInstance';
 
-const logService = new LogService('RegisteredModulesService');
+const logService = new LoggerService('RegisteredModulesService');
 
 export class RegisteredModulesService {
 
@@ -35,9 +35,10 @@ export class RegisteredModulesService {
         RegisteredModulesService.startedInstances.push(inst);
     }
 
-    public static saveNewModule(channelId: string, chanelLink: string, moduleType: ModuleTypes): Promise<IRegisteredModuleModelDocument<any>> {
+    public static saveNewModule(channelId: string, chanelLink: string, moduleType: ModuleTypes, chanelName: string): Promise<IRegisteredModuleModelDocument<any>> {
         return new RegisteredModuleModel().set(<IRegisteredModule<any>>{
             moduleType: moduleType,
+            chanelName: chanelName,
             configuration: {
                 frequency: 10
             },

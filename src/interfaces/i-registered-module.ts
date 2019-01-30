@@ -16,6 +16,7 @@ export interface IRegisteredModule<T> extends ITimestamps {
     isActive: boolean;
     chanelId: string;
     chanelLink: string;
+    chanelName: string;
     configuration: T;
 }
 

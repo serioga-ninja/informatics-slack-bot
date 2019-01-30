@@ -1,7 +1,7 @@
 import * as parser from 'rss-parser';
-import {LogService} from '../../services/log.service';
+import {LoggerService} from '../../services/logger.service';
 
-const logService = new LogService('RssParserService');
+const logService = new LoggerService('RssParserService');
 
 export abstract class RssParserService<T, K> {
 

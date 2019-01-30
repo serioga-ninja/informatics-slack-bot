@@ -5,7 +5,7 @@ import instagramModule from '../modules/instagram/instagram.module';
 import MODULES_CONFIG from '../modules/modules.config';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
-import {LogService} from './log.service';
+import {LoggerService} from './logger.service';
 
 type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';
 
@@ -15,7 +15,7 @@ const MODULES_LIST = {
     [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule
 };
 
-const logService = new LogService('CommandsService');
+const logService = new LoggerService('CommandsService');
 
 export class CommandsService {
 
@@ -68,23 +68,25 @@ export class CommandsService {
         });
     }
 
-    public execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebhookRequestBody> {
-        return this.parse(commandString)
-            .then(({module, command, args}) => module.execute(requestBody, command, args))
-            .catch((error) => {
-                logService.error(error);
+    public async execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebhookRequestBody> {
+        try {
+            const {module, command, args} = await this.parse(commandString);
+            await module.execute(requestBody, command, args);
+        } catch (error) {
+            logService.error(error);
 
-                return <ISlackWebhookRequestBody>{
-                    text: 'error',
-                    attachments: [
-                        {
-                            title: error.name,
-                            text: error.stack,
-                            color: '#a60200'
-                        }
-                    ]
-                };
-            });
+            return <ISlackWebhookRequestBody>{
+                text: 'error',
+                attachments: [
+                    {
+                        title: error.name,
+                        text: error.stack,
+                        color: '#a60200'
+                    }
+                ]
+            };
+
+        }
     }
 }
 

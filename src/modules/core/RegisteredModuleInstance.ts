@@ -1,15 +1,12 @@
 import {ObjectId} from 'mongodb';
-import request = require('request');
-import Timer = NodeJS.Timer;
+import * as request from 'request';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ILinksToPostModelDocument} from '../../models/links-to-post.model';
-import {
-    default as RegisteredModuleModel,
-    IRegisteredModuleModelDocument
-} from '../../models/registered-module.model';
-import {LogService} from '../../services/log.service';
+import {default as RegisteredModuleModel, IRegisteredModuleModelDocument} from '../../models/registered-module.model';
+import {LoggerService} from '../../services/logger.service';
+import Timer = NodeJS.Timer;
 
-const logService = new LogService('Registered Modules');
+const logService = new LoggerService('Registered Modules');
 
 const MINUTE = 60000;
 
@@ -25,6 +22,8 @@ export class RegisteredModuleInstance {
     }
 
     private onAction() {
+        logService.info(`Time to post to channel!`, this.model.toObject());
+
         this.collectDataFn(this.model).then(({data, items}) => {
             if (data === null) {
                 return;

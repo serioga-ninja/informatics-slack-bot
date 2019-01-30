@@ -26,7 +26,7 @@ class PoltavaNewsRegistrationCommand extends BaseCommand {
                         const registeredAppModelDocument = collection[0];
 
                         return RegisteredModulesService
-                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.poltavaNews)
+                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.poltavaNews, requestBody.channel_name)
                             .then((moduleModel) => {
                                 registeredAppModelDocument.modules.push(moduleModel._id);
 
