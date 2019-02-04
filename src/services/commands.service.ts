@@ -71,7 +71,8 @@ export class CommandsService {
     public async execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebhookRequestBody> {
         try {
             const {module, command, args} = await this.parse(commandString);
-            await module.execute(requestBody, command, args);
+
+            return module.execute(requestBody, command, args);
         } catch (error) {
             logService.error(error);
 

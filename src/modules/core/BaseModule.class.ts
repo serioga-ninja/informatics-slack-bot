@@ -9,7 +9,8 @@ import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';
 import {BaseCommand} from './BaseCommand.class';
 
-const PRELOAD_DATA_FREQUENCY = 600000;
+// const PRELOAD_DATA_FREQUENCY = 600000;
+const PRELOAD_DATA_FREQUENCY = 6000;
 
 const CALL_HELP_ON_EMPTY_ARGS_COMMANDS = [
     MODULES_CONFIG.COMMANDS.CONFIGURE

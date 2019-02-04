@@ -16,6 +16,8 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
     public urls: string[];
 
     public static filterData(data: ILinksToPostModel[]): Promise<ILinksToPostModel[]> {
+        data = data.filter((row) => row.important === '1');
+
         return LinksToPostModel
             .aggregate([{$match: {link: {$in: data.map((row) => row.contentType)}}}])
             .then((objects: ILinksToPostModelDocument[]) => {
@@ -47,8 +49,12 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
         this.urls = urls;
     }
 
-    grabTheData(): Promise<ILinksToPostModel[]> {
-        return this.getTheData(this.urls[0]);
+    public grabTheData(): Promise<ILinksToPostModel[]> {
+        return this.getTheData(this.urls[0], {
+            customFields: {
+                item: ['poltava:important'],
+            }
+        });
     }
 
     public mapFn(item: IPoltavaNewsRssItem) {
@@ -56,7 +62,8 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
         return <ILinksToPostModel>{
             title: item.title,
             contentUrl: item.link,
-            postedChannels: []
+            postedChannels: [],
+            important: item['poltava:important']
         };
     }
 }

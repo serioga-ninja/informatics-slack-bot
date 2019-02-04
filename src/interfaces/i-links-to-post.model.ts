@@ -8,4 +8,5 @@ export interface ILinksToPostModel {
     title?: string;
     description?: string;
     postedChannels: string[];
+    important?: '0' | '1';
 }
