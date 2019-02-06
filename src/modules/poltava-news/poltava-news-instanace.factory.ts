@@ -9,7 +9,7 @@ import {RegisteredModuleInstance} from '../core/RegisteredModuleInstance';
 const aggregationFn = (collection: ILinksToPostModelDocument[]): ISlackWebhookRequestBody => <ISlackWebhookRequestBody>{
     text: '',
     attachments: collection.map((model) => (<ISlackWebhookRequestBodyAttachment>{
-        title_link: model.title,
+        title_link: model.contentUrl,
         image_url: model.contentUrl,
         title: model.title
     }))
