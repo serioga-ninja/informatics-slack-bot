@@ -13,7 +13,7 @@ class CurrencyRegistrationCommand extends BaseCommand {
   @SimpleCommandResponse
   async execute(requestBody: ISlackRequestBody): Promise<any> {
     const exists: boolean = await RegisteredModulesService
-      .moduleIsExists(ModuleTypes.minFin, requestBody.channel_id);
+      .moduleIsExists(ModuleTypes.Currency, requestBody.channel_id);
 
     if (exists) {
       const moduleModel: IRegisteredModuleModelDocument<any> = await RegisteredModulesService
@@ -28,7 +28,7 @@ class CurrencyRegistrationCommand extends BaseCommand {
     const registeredAppModelDocument = collection[0];
 
     const moduleModel = await RegisteredModulesService
-      .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.minFin, requestBody.channel_name);
+      .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.Currency, requestBody.channel_name);
 
     registeredAppModelDocument.modules.push(moduleModel._id);
 

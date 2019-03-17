@@ -11,7 +11,7 @@ class CurrencyRemoveCommand extends BaseCommand {
     @SimpleCommandResponse
     async execute(requestBody: ISlackRequestBody): Promise<any> {
         const model = await RegisteredModulesService
-            .deactivateModuleByChannelId(ModuleTypes.minFin, requestBody.channel_id);
+            .deactivateModuleByChannelId(ModuleTypes.Currency, requestBody.channel_id);
 
         return RegisteredModulesService.stopModuleInstance(model._id);
     }
