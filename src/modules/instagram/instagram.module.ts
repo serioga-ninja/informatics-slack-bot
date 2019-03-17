@@ -13,14 +13,11 @@ import instagramLinksRegistrationCommand from './commands/registration.command';
 import instagramLinksRemoveCommand from './commands/remove.command';
 import instagramInstanceFactory from './instagram-instanace.factory';
 import instagramEmitter from './instagram.emitter';
-import {InstagramRouter} from './instagram.router';
 import {InstagramService, IParseDataResults} from './instagram.service';
 
 class InstagramModule extends BaseModuleClass {
 
     moduleName = 'InstagramModule';
-
-    routerClass: InstagramRouter = new InstagramRouter();
 
     registerCommand = instagramLinksRegistrationCommand;
 
@@ -39,7 +36,7 @@ class InstagramModule extends BaseModuleClass {
             this.logService.info(`Update configure for chanelId ${chanelId}`);
 
             const moduleModel = await RegisteredModuleModel
-                .findOne({moduleType: ModuleTypes.instagramLinks, chanelId: chanelId});
+                .findOne({moduleType: ModuleTypes.InstagramLinks, chanelId: chanelId});
 
             await this.collectData(moduleModel.configuration.links);
             try {
@@ -59,7 +56,7 @@ class InstagramModule extends BaseModuleClass {
         if (!(publicList instanceof Array && publicList.length > 0)) {
             const modulesCollection = await RegisteredModuleModel
                 .find(<IRegisteredModule<IInstagramConfiguration>>{
-                    moduleType: ModuleTypes.instagramLinks,
+                    moduleType: ModuleTypes.InstagramLinks,
                     isActive: true
                 })
                 .select('configuration.links');
@@ -85,7 +82,7 @@ class InstagramModule extends BaseModuleClass {
     preloadActiveModules() {
         return RegisteredModuleModel
             .find({
-                moduleType: ModuleTypes.instagramLinks,
+                moduleType: ModuleTypes.InstagramLinks,
                 isActive: true
             })
             .then((collection) => {

@@ -29,7 +29,7 @@ const instagramInstanceFactory = (moduleModel: IRegisteredModuleModelDocument<II
                         category: {
                             $in: model.configuration.links
                         },
-                        contentType: ModuleTypes.instagramLinks
+                        contentType: ModuleTypes.InstagramLinks
                     }
                 }]).sample(1).then((items) => {
                     const collection: ILinksToPostModelDocument[] = items.map((item) => {
@@ -50,7 +50,7 @@ const instagramInstanceFactory = (moduleModel: IRegisteredModuleModelDocument<II
                     category: {
                         $in: model.configuration.links
                     },
-                    contentType: ModuleTypes.instagramLinks
+                    contentType: ModuleTypes.InstagramLinks
                 }).then((items) => ({
                     data: aggregationFn(items),
                     items

@@ -2,6 +2,7 @@ import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
 import {BaseModuleClass} from '../modules/core/BaseModule.class';
 import instagramModule from '../modules/instagram/instagram.module';
+import currencyModule from '../modules/currency/currency.module';
 import MODULES_CONFIG from '../modules/modules.config';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
@@ -12,7 +13,8 @@ type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';
 const MODULES_LIST = {
     app: slackAppModule,
     [MODULES_CONFIG.MODULES.POLTAVA_NEWS]: poltavaNewsModule,
-    [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule
+    [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule,
+    [MODULES_CONFIG.MODULES.CURRENCY]: currencyModule,
 };
 
 const logService = new LoggerService('CommandsService');

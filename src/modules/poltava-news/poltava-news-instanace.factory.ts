@@ -19,7 +19,7 @@ const poltavaNewsInstanceFactory = (moduleModel: IRegisteredModuleModelDocument<
     moduleModel._id,
     (model: IRegisteredModule<any>) => LinksToPostModel.find({
         postedChannels: {$nin: [model.chanelId]},
-        contentType: ModuleTypes.poltavaNews
+        contentType: ModuleTypes.PoltavaNews
     }).then((items) => ({
         data: aggregationFn(items),
         items

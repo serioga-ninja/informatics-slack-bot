@@ -7,11 +7,11 @@ import {RegisteredModulesService} from '../../core/Modules.service';
 class InstagramLinksRemoveCommand extends BaseCommand {
 
     @ChannelIsRegistered
-    @ChannelIsActivated(ModuleTypes.instagramLinks)
+    @ChannelIsActivated(ModuleTypes.InstagramLinks)
     @SimpleCommandResponse
     execute(requestBody: ISlackRequestBody): Promise<any> {
         return RegisteredModulesService
-            .deactivateModuleByChannelId(ModuleTypes.instagramLinks, requestBody.channel_id)
+            .deactivateModuleByChannelId(ModuleTypes.InstagramLinks, requestBody.channel_id)
             .then((model) => RegisteredModulesService.stopModuleInstance(model._id));
     }
 }

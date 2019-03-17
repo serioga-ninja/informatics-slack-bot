@@ -36,7 +36,7 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
                 contentUrl: row.contentUrl,
                 postedChannels: [],
                 title: row.title,
-                contentType: ModuleTypes.poltavaNews,
+                contentType: ModuleTypes.PoltavaNews,
                 category: 'poltava-news'
             }).save();
         }));

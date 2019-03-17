@@ -12,11 +12,11 @@ class InstagramLinksRegistrationCommand extends BaseCommand {
     @SimpleCommandResponse
     execute(requestBody: ISlackRequestBody): Promise<any> {
         return RegisteredModulesService
-            .moduleIsExists(ModuleTypes.instagramLinks, requestBody.channel_id)
+            .moduleIsExists(ModuleTypes.InstagramLinks, requestBody.channel_id)
             .then((exists) => {
                 if (exists) {
                     return RegisteredModulesService
-                        .activateModuleByChannelId(ModuleTypes.instagramLinks, requestBody.channel_id)
+                        .activateModuleByChannelId(ModuleTypes.InstagramLinks, requestBody.channel_id)
                         .then((moduleModel) => RegisteredModulesService.startModuleInstance(instagramInstanceFactory(moduleModel)));
                 }
 
@@ -26,7 +26,7 @@ class InstagramLinksRegistrationCommand extends BaseCommand {
                         const registeredAppModelDocument = collection[0];
 
                         return RegisteredModulesService
-                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.instagramLinks, requestBody.channel_name)
+                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.InstagramLinks, requestBody.channel_name)
                             .then((moduleModel) => {
                                 registeredAppModelDocument.modules.push(moduleModel._id);
 

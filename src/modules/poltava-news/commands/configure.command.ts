@@ -24,7 +24,7 @@ class PoltavaNewsConfigureCommand extends BaseConfigureCommand<IInstagramLinksCo
 
     configList = configActions;
 
-    moduleType = ModuleTypes.poltavaNews;
+    moduleType = ModuleTypes.PoltavaNews;
 
     @ChannelIsRegistered
     @ValidateConfigs(configActions)

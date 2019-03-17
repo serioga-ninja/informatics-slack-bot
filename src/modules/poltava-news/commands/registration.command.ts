@@ -12,11 +12,11 @@ class PoltavaNewsRegistrationCommand extends BaseCommand {
     @SimpleCommandResponse
     execute(requestBody: ISlackRequestBody): Promise<any> {
         return RegisteredModulesService
-            .moduleIsExists(ModuleTypes.poltavaNews, requestBody.channel_id)
+            .moduleIsExists(ModuleTypes.PoltavaNews, requestBody.channel_id)
             .then((exists) => {
                 if (exists) {
                     return RegisteredModulesService
-                        .activateModuleByChannelId(ModuleTypes.poltavaNews, requestBody.channel_id)
+                        .activateModuleByChannelId(ModuleTypes.PoltavaNews, requestBody.channel_id)
                         .then((moduleModel) => RegisteredModulesService.startModuleInstance(poltavaNewsInstanceFactory(moduleModel)));
                 }
 
@@ -26,7 +26,7 @@ class PoltavaNewsRegistrationCommand extends BaseCommand {
                         const registeredAppModelDocument = collection[0];
 
                         return RegisteredModulesService
-                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.poltavaNews, requestBody.channel_name)
+                            .saveNewModule(requestBody.channel_id, registeredAppModelDocument.incomingWebhook.url, ModuleTypes.PoltavaNews, requestBody.channel_name)
                             .then((moduleModel) => {
                                 registeredAppModelDocument.modules.push(moduleModel._id);
 

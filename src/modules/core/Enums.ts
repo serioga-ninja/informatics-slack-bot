@@ -3,8 +3,9 @@ export enum LinkTypes {
 }
 
 export enum ModuleTypes {
-    instagramLinks = 1,
-    poltavaNews = 2
+    InstagramLinks = 1,
+    PoltavaNews,
+    Currency
 }
 
 export enum PostStrategies {

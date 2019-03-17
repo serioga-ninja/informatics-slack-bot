@@ -65,7 +65,7 @@ class InstagramLinksConfigureCommand extends BaseConfigureCommand<IInstagramLink
 
     configList = configActions;
 
-    moduleType = ModuleTypes.instagramLinks;
+    moduleType = ModuleTypes.InstagramLinks;
 
     additionalHelpCommands = [
         {

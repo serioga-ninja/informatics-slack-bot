@@ -4,18 +4,19 @@ import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '..
 import {ModuleTypes} from '../../core/Enums';
 import {RegisteredModulesService} from '../../core/Modules.service';
 
-class PoltavaNewsRemoveCommand extends BaseCommand {
+class CurrencyRemoveCommand extends BaseCommand {
 
     @ChannelIsRegistered
     @ChannelIsActivated(ModuleTypes.PoltavaNews)
     @SimpleCommandResponse
-    execute(requestBody: ISlackRequestBody): Promise<any> {
-        return RegisteredModulesService
-            .deactivateModuleByChannelId(ModuleTypes.PoltavaNews, requestBody.channel_id)
-            .then((model) => RegisteredModulesService.stopModuleInstance(model._id));
+    async execute(requestBody: ISlackRequestBody): Promise<any> {
+        const model = await RegisteredModulesService
+            .deactivateModuleByChannelId(ModuleTypes.minFin, requestBody.channel_id);
+
+        return RegisteredModulesService.stopModuleInstance(model._id);
     }
 }
 
-const poltavaNewsRemoveCommand = new PoltavaNewsRemoveCommand();
+const currencyRemoveCommand = new CurrencyRemoveCommand();
 
-export default poltavaNewsRemoveCommand;
+export default currencyRemoveCommand;

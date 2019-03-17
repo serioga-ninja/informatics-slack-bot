@@ -52,7 +52,7 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
                     contentUrl: linkObj.contentUrl,
                     title: linkObj.title,
                     category: row.chanelId,
-                    contentType: ModuleTypes.instagramLinks
+                    contentType: ModuleTypes.InstagramLinks
                 }).save();
             }));
         }));
@@ -67,7 +67,7 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
     public mapFn(item: IRssInstagramItem) {
 
         return <ILinksToPostModel>{
-            contentType: ModuleTypes.instagramLinks,
+            contentType: ModuleTypes.InstagramLinks,
             contentUrl: item.enclosure.url,
             title: item.link
         };

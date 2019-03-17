@@ -1,12 +1,14 @@
 import {Router} from 'express';
 import 'rxjs/add/observable/interval';
 import {Observable} from 'rxjs/Observable';
+
 import {RouterClass} from '../../api/Router.class';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';
+
 import {BaseCommand} from './BaseCommand.class';
 
 const PRELOAD_DATA_FREQUENCY = 600000;
@@ -17,13 +19,9 @@ const CALL_HELP_ON_EMPTY_ARGS_COMMANDS = [
 
 export abstract class BaseModuleClass {
 
-    public router: Router;
-
     protected logService: LoggerService;
 
     abstract moduleName: string;
-
-    abstract routerClass: RouterClass;
 
     // informatics-slack-bot [:moduleName] init
     abstract registerCommand: BaseCommand = commandInProgress;
@@ -39,10 +37,6 @@ export abstract class BaseModuleClass {
 
     abstract commands: { [key: string]: BaseCommand };
 
-    constructor() {
-        this.router = Router();
-    }
-
     init(): void {
         this.logService = new LoggerService(this.moduleName);
 
@@ -56,6 +50,7 @@ export abstract class BaseModuleClass {
             .then(() => this.preloadActiveModules());
     }
 
+    // method used to collect all the necessary data
     abstract collectData(publicList?: string[]): Promise<any>;
 
     abstract preloadActiveModules(): Promise<any>;

@@ -1,7 +1,8 @@
 const MODULES_CONFIG = {
     MODULES: {
         INSTAGRAM_LINKS: 'instagram-links',
-        POLTAVA_NEWS: 'poltava-news'
+        POLTAVA_NEWS: 'poltava-news',
+        CURRENCY: 'currency'
     },
     COMMANDS: {
         INIT: 'init',
