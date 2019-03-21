@@ -1,32 +1,34 @@
 import {BaseModuleClass} from '../core/BaseModule.class';
+import {ModuleTypes} from '../core/Enums';
 import helpCommand from './commands/help.command';
 import commandInProgress from './commands/in-progress';
 import slackBotRegistrationCommand from './commands/registration.command';
 
 class SlackAppModule extends BaseModuleClass {
+  moduleType = ModuleTypes.SlackApp;
 
-    moduleName = 'SlackAppModule';
+  moduleName = 'SlackAppModule';
 
-    routerClass: any;
+  routerClass: any;
 
-    registerCommand = slackBotRegistrationCommand;
+  registerCommand = slackBotRegistrationCommand;
 
-    removeCommand = commandInProgress;
+  removeCommand = commandInProgress;
 
-    helpCommand = helpCommand;
+  helpCommand = helpCommand;
 
-    commands = {};
+  commands = {};
 
-    init() {
-    }
+  init() {
+  }
 
-    collectData() {
-        return Promise.resolve();
-    }
+  collectData() {
+    return Promise.resolve();
+  }
 
-    preloadActiveModules(): Promise<any> {
-        return Promise.resolve();
-    }
+  preloadActiveModules(): Promise<any> {
+    return Promise.resolve();
+  }
 }
 
 const slackAppModule = new SlackAppModule();

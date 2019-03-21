@@ -21,32 +21,30 @@ export class RegisteredModuleInstance {
     this.init();
   }
 
-  private onAction() {
+  private async onAction(): Promise<void> {
     logService.info(`Time to post to channel!`, this.model.toObject());
 
-    this.collectDataFn(this.model).then(({data, items}) => {
-      if (data === null) {
-        return;
-      }
+    const {data, items} = await this.collectDataFn(this.model);
+    if (data === null) {
+      return;
+    }
 
-      logService.info(`Posting data to channel ${this.model.chanelId}`, data);
+    logService.info(`Posting data to channel ${this.model.chanelId}`, data);
 
-      return new Promise((resolve) => {
-
-        request({
-          method: 'POST',
-          url: this.model.chanelLink,
-          json: true,
-          body: data
-        }, () => resolve());
-      }).then(() => {
-        return Promise.all(items.map((item) => {
-          const postedChannels = [...item.postedChannels, this.model.chanelId];
-
-          return item.update({postedChannels});
-        }));
-      });
+    await new Promise((resolve) => {
+      request({
+        method: 'POST',
+        url: this.model.chanelLink,
+        json: true,
+        body: data
+      }, () => resolve());
     });
+
+    for (const item of items) {
+      const postedChannels = [...item.postedChannels, this.model.chanelId];
+
+      await item.update({postedChannels});
+    }
   }
 
   public destroy() {

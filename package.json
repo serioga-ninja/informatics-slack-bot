@@ -19,7 +19,6 @@
   "author": "serioga",
   "license": "ISC",
   "dependencies": {
-    "@types/mongoose": "^5.3.10",
     "axios": "^0.17.0",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
@@ -42,6 +41,7 @@
     "winston": "^2.4.3"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.3.10",
     "@types/bluebird": "^3.5.12",
     "@types/body-parser": "0.0.33",
     "@types/errorhandler": "0.0.32",

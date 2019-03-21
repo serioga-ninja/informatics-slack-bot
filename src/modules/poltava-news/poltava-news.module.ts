@@ -1,7 +1,6 @@
 import 'rxjs/add/observable/interval';
 import RegisteredModuleModel from '../../models/registered-module.model';
 import {BaseModuleClass} from '../core/BaseModule.class';
-import {CONFIG_HAS_CHANGED} from '../core/Commands';
 import {ModuleTypes} from '../core/Enums';
 import {RegisteredModulesService} from '../core/Modules.service';
 import poltavaNewsConfigureCommand from './commands/configure.command';
@@ -13,13 +12,12 @@ import poltavaNewsInstanceFactory from './poltava-news-instanace.factory';
 import poltavaNewsEmitter from './poltava-news.emitter';
 import {PoltavaNewsService} from './poltava-news.service';
 
-const POST_FREQUENCY = 600000;
-
 const URLS = [
   'https://poltava.to/rss/news.xml'
 ];
 
 class PoltavaNewsModule extends BaseModuleClass {
+  moduleType = ModuleTypes.PoltavaNews;
 
   moduleName = 'PoltavaNewsModule';
 
@@ -33,32 +31,14 @@ class PoltavaNewsModule extends BaseModuleClass {
 
   commands = {};
 
+  emitter = poltavaNewsEmitter;
+
   constructor() {
     super();
 
     this.commands = {
       latest: latestCommand
     };
-  }
-
-  init() {
-    super.init();
-
-    poltavaNewsEmitter.on(CONFIG_HAS_CHANGED, (chanelId: string) => {
-      this.logService.info(`Update configure for chanelId ${chanelId}`);
-
-      return RegisteredModuleModel
-        .findOne({moduleType: ModuleTypes.PoltavaNews, chanelId: chanelId})
-        .then((moduleModel) => {
-
-          this.collectData().then(() => {
-            RegisteredModulesService
-              .startedInstances
-              .find((inst) => moduleModel._id.equals(inst.modelId))
-              .init();
-          });
-        });
-    });
   }
 
   collectData() {

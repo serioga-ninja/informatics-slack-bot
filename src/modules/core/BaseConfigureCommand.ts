@@ -6,85 +6,80 @@ import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../model
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import {BaseCommand, IBaseCommand} from './BaseCommand.class';
-import {BASE_CONFIGURE_COMMANDS} from './BaseConfigureCommands.factory';
 import {CONFIG_HAS_CHANGED} from './Commands';
+import {IBaseConfigurationStatic} from './configurations/BaseConfiguration';
 import {ModuleTypes} from './Enums';
-import {IConfigurationList} from './Interfaces';
-import {camelCaseToCebabCase, simpleSuccessAttachment} from './utils';
+import {UnknownConfigError} from './Errors';
+import {IBaseModuleConfiguration} from './Interfaces';
+import {simpleSuccessAttachment} from './utils';
 import EventEmitter = NodeJS.EventEmitter;
 
 export interface IBaseConfigureCommand<T> extends IBaseCommand {
-    moduleName: string;
-    emitter: EventEmitter;
-    configList: IConfigurationList<any, any>;
-
-    additionalHelpCommands?: { title: string; text: string; }[];
+  moduleName: string;
+  emitter: EventEmitter;
+  configList: IBaseConfigurationStatic[];
 }
 
 export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBaseConfigureCommand<T> {
 
-    abstract moduleName: string;
-    abstract emitter: EventEmitter;
-    abstract configList: IConfigurationList<string[], any>;
-    abstract moduleType: ModuleTypes;
+  abstract moduleName: string;
+  abstract emitter: EventEmitter;
+  abstract configList: IBaseConfigurationStatic[];
+  abstract moduleType: ModuleTypes;
 
-    protected logService = new LoggerService('BaseConfigureCommand');
+  protected logService = new LoggerService('BaseConfigureCommand');
 
-    additionalHelpCommands = [];
+  async execute(requestBody: ISlackRequestBody, configs: T): Promise<ISlackWebhookRequestBody> {
+    let attachments: ISlackWebhookRequestBodyAttachment[] = [];
 
-    execute(requestBody: ISlackRequestBody, configs: T): Promise<any> {
-        let attachments: ISlackWebhookRequestBodyAttachment[] = [];
+    const moduleModel: IRegisteredModuleModelDocument<any> = await RegisteredModuleModel
+      .findOne({chanelId: requestBody.channel_id, moduleType: this.moduleType});
 
-        return RegisteredModuleModel
-            .findOne({chanelId: requestBody.channel_id, moduleType: this.moduleType})
-            .then((moduleModel: IRegisteredModuleModelDocument<any>) => {
-                return Object.keys(configs).map((key) => {
-                    return () => {
-                        return this.configList[key](moduleModel, configs[key]).then((configuration) => {
-                            moduleModel.set({
-                                ...moduleModel.configuration,
-                                configuration
-                            });
+    for (const key of Object.keys(configs)) {
+      const ConfigStatic = this.configList.find((ConfigStatic: IBaseConfigurationStatic) => ConfigStatic.commandName === key);
 
-                            attachments = attachments.concat(simpleSuccessAttachment());
-                        });
-                    };
-                }).reduce((prev: Promise<any>, current: any) => prev.then(current), Promise.resolve()).then(() => {
-                    return moduleModel.save();
-                });
-            }).then(() => {
-                this.logService.info('Config is done');
-                this.emitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
+      if (!ConfigStatic) {
+        throw new UnknownConfigError(key);
+      }
 
-                return {attachments};
-            });
+      const config = new ConfigStatic(configs[key]);
+      config.parse();
+      config.validate();
+      const configuration: IBaseModuleConfiguration = await config.execute(moduleModel);
+
+      moduleModel.set({
+        ...moduleModel.configuration,
+        configuration
+      });
+
+      attachments = attachments.concat(simpleSuccessAttachment());
+      await moduleModel.save();
     }
 
-    help() {
-        return Promise.resolve(<ISlackWebhookRequestBody>{
-            response_type: 'in_channel',
-            text: '',
-            attachments: [
-                {
-                    title: 'Usage',
-                    text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} [key1=value1 key2=key2value1,key2value1 ...]`
-                },
-                {
-                    title: 'Config list',
-                    text: Object.keys(this.configList)
-                        .map((key) => camelCaseToCebabCase(key))
-                        .join('|')
-                },
-                {
-                    title: 'Example set post frequency (minutes)',
-                    text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${BASE_CONFIGURE_COMMANDS.FREQUENCY}=20`
-                },
-                {
-                    title: `Example set post strategy. Available: As soon as possible = 1, Random and single = 2`,
-                    text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${BASE_CONFIGURE_COMMANDS.POST_STRATEGY}=2`
-                }
-            ].concat(this.additionalHelpCommands)
-        });
-    }
+    this.logService.info('Config is done');
+    this.emitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
+
+    return {attachments};
+  }
+
+  help() {
+    return Promise.resolve(<ISlackWebhookRequestBody>{
+      response_type: 'in_channel',
+      text: '',
+      attachments: [
+        {
+          title: 'Usage',
+          text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} [key1=value1 key2=key2value1,key2value1 ...]`
+        },
+        {
+          title: 'Config list',
+          text: this.configList
+            .map((Config) => Config.commandName)
+            .join('|')
+        },
+        ...this.configList.map((Config) => Config.help(this.moduleName))
+      ]
+    });
+  }
 
 }

@@ -2,6 +2,6 @@ import {ISlackWebhookRequestBodyAttachment} from './i-slack-webhook-request-body
 
 export interface ISlackWebhookRequestBody {
     response_type?: 'in_channel';
-    text: string;
+    text?: string;
     attachments?: ISlackWebhookRequestBodyAttachment[];
 }

@@ -4,7 +4,6 @@ import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-reg
 
 import RegisteredModuleModel from '../../models/registered-module.model';
 import {BaseModuleClass} from '../core/BaseModule.class';
-import {CONFIG_HAS_CHANGED} from '../core/Commands';
 import {ModuleTypes} from '../core/Enums';
 import {RegisteredModulesService} from '../core/Modules.service';
 import instagramLinksConfigureCommand from './commands/configure.command';
@@ -16,83 +15,63 @@ import instagramEmitter from './instagram.emitter';
 import {InstagramService, IParseDataResults} from './instagram.service';
 
 class InstagramModule extends BaseModuleClass {
+  moduleType = ModuleTypes.InstagramLinks;
 
-    moduleName = 'InstagramModule';
+  moduleName = 'InstagramModule';
 
-    registerCommand = instagramLinksRegistrationCommand;
+  registerCommand = instagramLinksRegistrationCommand;
 
-    removeCommand = instagramLinksRemoveCommand;
+  removeCommand = instagramLinksRemoveCommand;
 
-    configureCommand = instagramLinksConfigureCommand;
+  configureCommand = instagramLinksConfigureCommand;
 
-    helpCommand = helpCommand;
+  helpCommand = helpCommand;
 
-    commands = {};
+  commands = {};
 
-    init() {
-        super.init();
+  emitter = instagramEmitter;
 
-        instagramEmitter.on(CONFIG_HAS_CHANGED, async (chanelId: string) => {
-            this.logService.info(`Update configure for chanelId ${chanelId}`);
+  async collectData() {
+    this.logService.info(`Collecting data`);
 
-            const moduleModel = await RegisteredModuleModel
-                .findOne({moduleType: ModuleTypes.InstagramLinks, chanelId: chanelId});
+    const modulesCollection = await RegisteredModuleModel
+      .find(<IRegisteredModule<IInstagramConfiguration>>{
+        moduleType: ModuleTypes.InstagramLinks,
+        isActive: true
+      })
+      .select('configuration.links');
 
-            await this.collectData(moduleModel.configuration.links);
-            try {
-                await RegisteredModulesService
-                    .startedInstances
-                    .find((inst) => moduleModel._id.equals(inst.modelId))
-                    .init();
-            } catch (e) {
-                this.logService.error(e);
-            }
+    const publicList: string[] = _.uniq(
+      modulesCollection
+        .map((module) => module.configuration.links)
+        .reduce((all: string[], current: string[]) => {
+          return all.concat(current);
+        }, [])
+    );
+
+    this.logService.info(`Collecting data for public`, publicList);
+
+    const instagramPhotoParser = new InstagramService(publicList);
+
+    const data: IParseDataResults[] = await instagramPhotoParser.collectData();
+    const filteredData: IParseDataResults[] = await InstagramService.filterLinks(data);
+    await InstagramService.saveToDB(filteredData);
+  }
+
+  preloadActiveModules() {
+    return RegisteredModuleModel
+      .find({
+        moduleType: ModuleTypes.InstagramLinks,
+        isActive: true
+      })
+      .then((collection) => {
+        this.logService.info(`Registering ${collection.length} modules`);
+        collection.forEach((module) => {
+          RegisteredModulesService.startModuleInstance(instagramInstanceFactory(module));
         });
-    }
+      });
 
-    async collectData(publicList: string[] = []) {
-        this.logService.info(`Collecting data`);
-
-        if (!(publicList instanceof Array && publicList.length > 0)) {
-            const modulesCollection = await RegisteredModuleModel
-                .find(<IRegisteredModule<IInstagramConfiguration>>{
-                    moduleType: ModuleTypes.InstagramLinks,
-                    isActive: true
-                })
-                .select('configuration.links');
-
-            publicList = _.uniq(
-                modulesCollection
-                    .map((module) => module.configuration.links)
-                    .reduce((all: string[], current: string[]) => {
-                        return all.concat(current);
-                    }, [])
-            );
-        }
-
-        this.logService.info(`Collecting data for public`, publicList);
-
-        const instagramPhotoParser = new InstagramService(publicList);
-
-        const data: IParseDataResults[] = await instagramPhotoParser.collectData();
-        const filteredData: IParseDataResults[] = await InstagramService.filterLinks(data);
-        await InstagramService.saveToDB(filteredData);
-    }
-
-    preloadActiveModules() {
-        return RegisteredModuleModel
-            .find({
-                moduleType: ModuleTypes.InstagramLinks,
-                isActive: true
-            })
-            .then((collection) => {
-                this.logService.info(`Registering ${collection.length} modules`);
-                collection.forEach((module) => {
-                    RegisteredModulesService.startModuleInstance(instagramInstanceFactory(module));
-                });
-            });
-
-    }
+  }
 }
 
 const instagramModule = new InstagramModule();

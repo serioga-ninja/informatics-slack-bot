@@ -1,9 +1,11 @@
 import {BaseCommand} from '../core/BaseCommand.class';
 import {BaseModuleClass} from '../core/BaseModule.class';
+import {ModuleTypes} from '../core/Enums';
 import commandInProgress from '../slack-apps/commands/in-progress';
 import currencyHelpCommand from './commands/help.command';
 
 class CurrencyModule extends BaseModuleClass {
+  moduleType = ModuleTypes.Currency;
 
   moduleName = 'CurrencyModule';
 

@@ -3,72 +3,72 @@ export interface InformaticsSlackBotBaseError extends Error {
 }
 
 export class ChanelAlreadyRegisteredError extends Error implements InformaticsSlackBotBaseError {
-    constructor() {
-        super('ChanelAlreadyRegisteredError');
+  constructor() {
+    super('ChanelAlreadyRegisteredError');
 
-        Object.setPrototypeOf(this, ChanelAlreadyRegisteredError.prototype);
-    }
+    Object.setPrototypeOf(this, ChanelAlreadyRegisteredError.prototype);
+  }
 }
 
 export class ChanelNotRegisteredError extends Error implements InformaticsSlackBotBaseError {
-    constructor() {
-        super('ChanelNotRegisteredError');
+  constructor() {
+    super('ChanelNotRegisteredError');
 
-        Object.setPrototypeOf(this, ChanelNotRegisteredError.prototype);
-    }
+    Object.setPrototypeOf(this, ChanelNotRegisteredError.prototype);
+  }
 }
 
 export class ModuleAlreadyRegisteredError extends Error implements InformaticsSlackBotBaseError {
-    constructor() {
-        super('ModuleAlreadyRegisteredError');
+  constructor() {
+    super('ModuleAlreadyRegisteredError');
 
-        Object.setPrototypeOf(this, ModuleAlreadyRegisteredError.prototype);
-    }
+    Object.setPrototypeOf(this, ModuleAlreadyRegisteredError.prototype);
+  }
 }
 
 export class ModuleNotExistsError extends Error implements InformaticsSlackBotBaseError {
-    constructor() {
-        super('ModuleNotExistsError');
+  constructor() {
+    super('ModuleNotExistsError');
 
-        Object.setPrototypeOf(this, ModuleNotExistsError.prototype);
-    }
+    Object.setPrototypeOf(this, ModuleNotExistsError.prototype);
+  }
 }
 
 export class ModuleAlreadeyStoppedError extends Error implements InformaticsSlackBotBaseError {
-    constructor() {
-        super('Module already stopped');
+  constructor() {
+    super('Module already stopped');
 
-        Object.setPrototypeOf(this, ModuleAlreadeyStoppedError.prototype);
-    }
+    Object.setPrototypeOf(this, ModuleAlreadeyStoppedError.prototype);
+  }
 }
 
 export class CommandNotFoundError extends Error implements InformaticsSlackBotBaseError {
-    constructor() {
-        super('Unknown command');
+  constructor() {
+    super('Unknown command');
 
-        Object.setPrototypeOf(this, CommandNotFoundError.prototype);
-    }
+    Object.setPrototypeOf(this, CommandNotFoundError.prototype);
+  }
 
-    getSlackJson() {
-        return {
-            response_type: 'in_channel',
-            text: 'Unknown command'
-        };
-    }
+  getSlackJson() {
+    return {
+      response_type: 'in_channel',
+      text: 'Unknown command'
+    };
+  }
 }
 
 export class UnknownConfigError extends Error implements InformaticsSlackBotBaseError {
-    constructor(configName: string) {
-        super(`Unknown config name "${configName}"`);
+  constructor(configName: string) {
+    super(`Unknown config name "${configName}"`);
 
-        Object.setPrototypeOf(this, UnknownConfigError.prototype);
-    }
+    Object.setPrototypeOf(this, UnknownConfigError.prototype);
+  }
 }
 
 export class InvalidConfigValueError extends Error implements InformaticsSlackBotBaseError {
-    constructor(configName: string) {
-        super(`Invalid config value for "${configName}"`);
+  constructor(configName: string) {
+    super(`Invalid config value for "${configName}"`);
 
-        Object.setPrototypeOf(this, InvalidConfigValueError.prototype);
-    }
+    Object.setPrototypeOf(this, InvalidConfigValueError.prototype);
+  }
 }
