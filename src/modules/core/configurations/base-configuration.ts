@@ -1,5 +1,5 @@
 import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
-import {IBaseModuleConfiguration} from '../Interfaces';
+import {IBaseModuleConfiguration} from '../interfaces';
 
 export interface IConfigHelpItem {
   title: string;

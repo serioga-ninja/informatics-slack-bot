@@ -1,6 +1,6 @@
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
-import {BaseCommand} from '../../core/BaseCommand.class';
-import {baseModuleCommands} from '../../core/HelpCommand.factories';
+import {BaseCommand} from '../../core/base-command.class';
+import {baseModuleCommands} from '../../core/help-command.factories';
 
 
 class HelpCommand extends BaseCommand {

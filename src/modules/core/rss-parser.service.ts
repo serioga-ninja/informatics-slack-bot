@@ -1,4 +1,5 @@
 import {ParserOptions} from 'rss-parser';
+
 import {LoggerService} from '../../services/logger.service';
 const Parser = require('rss-parser');
 

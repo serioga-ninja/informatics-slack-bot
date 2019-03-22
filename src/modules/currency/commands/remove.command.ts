@@ -1,8 +1,8 @@
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {BaseCommand} from '../../core/BaseCommand.class';
-import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
-import {ModuleTypes} from '../../core/Enums';
-import {RegisteredModulesService} from '../../core/Modules.service';
+import {BaseCommand} from '../../core/base-command.class';
+import {ChannelIsActivated, ChannelIsRegistered, SimpleCommandResponse} from '../../core/command-decorators';
+import {ModuleTypes} from '../../core/enums';
+import {RegisteredModulesService} from '../../core/modules.service';
 
 class CurrencyRemoveCommand extends BaseCommand {
 

@@ -1,7 +1,7 @@
-import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/BaseConfigureCommand';
-import {baseConfigureCommandsFactory} from '../../core/BaseConfigureCommands.factory';
-import {ChannelIsRegistered, ModuleIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
-import {ModuleTypes} from '../../core/Enums';
+import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/base-configure-command';
+import {baseConfigureCommandsFactory} from '../../core/base-configure-commands.factory';
+import {ChannelIsRegistered, ModuleIsRegistered, SimpleCommandResponse} from '../../core/command-decorators';
+import {ModuleTypes} from '../../core/enums';
 import MODULES_CONFIG from '../../modules.config';
 import poltavaNewsEmitter from '../poltava-news.emitter';
 

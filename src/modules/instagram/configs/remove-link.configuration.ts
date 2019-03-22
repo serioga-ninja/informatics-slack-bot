@@ -1,9 +1,11 @@
 import * as _ from 'lodash';
+
 import variables from '../../../configs/variables';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
 import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
-import {IBaseConfiguration, IConfigHelpItem} from '../../core/configurations/BaseConfiguration';
+import {IBaseConfiguration, IConfigHelpItem} from '../../core/configurations/base-configuration';
 import MODULES_CONFIG from '../../modules.config';
+
 import {AddLinkConfiguration} from './add-link.configuration';
 
 export class RemoveLinkConfiguration extends AddLinkConfiguration implements IBaseConfiguration<IInstagramConfiguration> {

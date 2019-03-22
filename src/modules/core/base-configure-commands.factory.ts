@@ -1,4 +1,4 @@
-import {IBaseConfigurationStatic} from './configurations/BaseConfiguration';
+import {IBaseConfigurationStatic} from './configurations/base-configuration';
 import {FrequencyConfiguration} from './configurations/frequency.configuration';
 import {PostStrategyConfiguration} from './configurations/post-strategy.configuration';
 

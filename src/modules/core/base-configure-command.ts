@@ -5,12 +5,13 @@ import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webho
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
-import {BaseCommand, IBaseCommand} from './BaseCommand.class';
-import {CONFIG_HAS_CHANGED} from './Commands';
-import {IBaseConfigurationStatic} from './configurations/BaseConfiguration';
-import {ModuleTypes} from './Enums';
-import {UnknownConfigError} from './Errors';
-import {IBaseModuleConfiguration} from './Interfaces';
+
+import {BaseCommand, IBaseCommand} from './base-command.class';
+import {CONFIG_HAS_CHANGED} from './commands';
+import {IBaseConfigurationStatic} from './configurations/base-configuration';
+import {ModuleTypes} from './enums';
+import {UnknownConfigError} from './errors';
+import {IBaseModuleConfiguration} from './interfaces';
 import {simpleSuccessAttachment} from './utils';
 import EventEmitter = NodeJS.EventEmitter;
 

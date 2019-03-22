@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from 'express';
 import * as request from 'request';
+
 import {ApiStatusCodes} from '../../configs/api-status-codes';
 import configs from '../../configs/variables';
-import {RouterClass} from '../Router.class';
+import {RouterClass} from '../router.class';
 
 const clientId = configs.slack.CLIENT_ID;
 const clientSecret = configs.slack.CLIENT_SECRET;

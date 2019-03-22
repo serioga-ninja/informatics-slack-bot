@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+
 import {IRegisteredApp} from '../interfaces/i-registered-app';
 
 export interface IRegisteredAppModelDocument extends IRegisteredApp, mongoose.Document {

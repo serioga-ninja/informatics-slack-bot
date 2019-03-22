@@ -1,10 +1,10 @@
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import RegisteredAppModel from '../../../models/registered-app.model';
 import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
-import {BaseCommand} from '../../core/BaseCommand.class';
-import {ChannelIsRegistered, SimpleCommandResponse} from '../../core/CommandDecorators';
-import {ModuleTypes} from '../../core/Enums';
-import {RegisteredModulesService} from '../../core/Modules.service';
+import {BaseCommand} from '../../core/base-command.class';
+import {ChannelIsRegistered, SimpleCommandResponse} from '../../core/command-decorators';
+import {ModuleTypes} from '../../core/enums';
+import {RegisteredModulesService} from '../../core/modules.service';
 import poltavaNewsInstanceFactory from '../../poltava-news/poltava-news-instanace.factory';
 
 class CurrencyRegistrationCommand extends BaseCommand {

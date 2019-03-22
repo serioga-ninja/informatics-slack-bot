@@ -1,10 +1,11 @@
 import {IRegisteredModuleModelDocument} from '../../models/registered-module.model';
 
-import {PostStrategies} from './Enums';
+import {PostStrategies} from './enums';
 
 export interface IBaseModuleConfiguration {
   frequency: number;
   postStrategy: PostStrategies;
+  limit: number;
 }
 
 export interface IConfigurationList<T, K> {

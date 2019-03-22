@@ -1,9 +1,9 @@
 import variables from '../../../configs/variables';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
-import {BaseCommand} from '../../core/BaseCommand.class';
-import {ChannelNotRegistered} from '../../core/CommandDecorators';
-import {baseModuleCommands} from '../../core/HelpCommand.factories';
+import {BaseCommand} from '../../core/base-command.class';
+import {ChannelNotRegistered} from '../../core/command-decorators';
+import {baseModuleCommands} from '../../core/help-command.factories';
 
 
 class HelpCommand extends BaseCommand {

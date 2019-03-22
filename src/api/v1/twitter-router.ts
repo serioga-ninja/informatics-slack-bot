@@ -1,9 +1,10 @@
 import {NextFunction, Request, Response} from 'express';
 import * as qs from 'querystring';
 import * as request from 'request';
+
 import variables from '../../configs/variables';
 import {TwitterService} from '../../services/twitter.service';
-import {RouterClass} from '../Router.class';
+import {RouterClass} from '../router.class';
 
 
 export class TwitterRouter extends RouterClass {

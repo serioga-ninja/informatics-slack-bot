@@ -1,9 +1,10 @@
 import * as qs from 'querystring';
+
 import variables from '../../../configs/variables';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
-import {BaseCommand} from '../../core/BaseCommand.class';
-import {ChannelNotRegistered} from '../../core/CommandDecorators';
+import {BaseCommand} from '../../core/base-command.class';
+import {ChannelNotRegistered} from '../../core/command-decorators';
 
 export class ChanelAlreadyRegisteredError extends Error {
     constructor() {

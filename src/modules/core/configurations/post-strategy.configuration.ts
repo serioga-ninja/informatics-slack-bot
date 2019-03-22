@@ -2,11 +2,11 @@ import {DEFAULT_RADIX} from '../../../configs/consts';
 import variables from '../../../configs/variables';
 import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
 import MODULES_CONFIG from '../../modules.config';
-import {PostStrategies} from '../Enums';
-import {InvalidConfigValueError} from '../Errors';
-import {IBaseModuleConfiguration} from '../Interfaces';
+import {PostStrategies} from '../enums';
+import {InvalidConfigValueError} from '../errors';
+import {IBaseModuleConfiguration} from '../interfaces';
 
-import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from './BaseConfiguration';
+import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from './base-configuration';
 
 export class PostStrategyConfiguration extends BaseConfiguration implements IBaseConfiguration {
   public static commandName: string = 'postStrategy';

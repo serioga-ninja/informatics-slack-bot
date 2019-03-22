@@ -8,10 +8,10 @@ import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';
 
-import {BaseCommand} from './BaseCommand.class';
-import {CONFIG_HAS_CHANGED} from './Commands';
-import {ModuleTypes} from './Enums';
-import {RegisteredModulesService} from './Modules.service';
+import {BaseCommand} from './base-command.class';
+import {CONFIG_HAS_CHANGED} from './commands';
+import {ModuleTypes} from './enums';
+import {RegisteredModulesService} from './modules.service';
 import EventEmitter = NodeJS.EventEmitter;
 
 const PRELOAD_DATA_FREQUENCY = 600000;

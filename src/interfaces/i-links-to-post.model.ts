@@ -1,4 +1,5 @@
-import {ModuleTypes} from '../modules/core/Enums';
+import {ModuleTypes} from '../modules/core/enums';
+
 import {ITimestamps} from './i-timestamps';
 
 export interface ILinksToPostModel extends ITimestamps {

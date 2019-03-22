@@ -1,5 +1,6 @@
-import {BaseModuleClass} from '../core/BaseModule.class';
-import {ModuleTypes} from '../core/Enums';
+import {BaseModuleClass} from '../core/base-module.class';
+import {ModuleTypes} from '../core/enums';
+
 import helpCommand from './commands/help.command';
 import commandInProgress from './commands/in-progress';
 import slackBotRegistrationCommand from './commands/registration.command';

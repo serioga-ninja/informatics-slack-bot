@@ -1,7 +1,8 @@
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import RegisteredAppModel from '../../models/registered-app.model';
 import RegisteredModuleModel from '../../models/registered-module.model';
-import {ModuleTypes} from './Enums';
+
+import {ModuleTypes} from './enums';
 import {
   ChanelAlreadyRegisteredError,
   ChanelNotRegisteredError,
@@ -9,8 +10,8 @@ import {
   ModuleAlreadyRegisteredError,
   ModuleNotExistsError,
   UnknownConfigError
-} from './Errors';
-import {RegisteredModulesService} from './Modules.service';
+} from './errors';
+import {RegisteredModulesService} from './modules.service';
 
 export const SimpleCommandResponse = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
   const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;

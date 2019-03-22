@@ -3,8 +3,8 @@ import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
 import LinksToPostModel, {ILinksToPostModelDocument} from '../../models/links-to-post.model';
 import {IRegisteredModuleModelDocument} from '../../models/registered-module.model';
-import {ModuleTypes} from '../core/Enums';
-import {RegisteredModuleInstance} from '../core/RegisteredModuleInstance';
+import {ModuleTypes} from '../core/enums';
+import {RegisteredModuleInstance} from '../core/registered-moduleInstance';
 
 const aggregationFn = (collection: ILinksToPostModelDocument[]): ISlackWebhookRequestBody => <ISlackWebhookRequestBody>{
     text: '',

@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable';
+
 import variables from '../../configs/variables';
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
 import {IWeatherItem, OpenWeatherService} from '../../services/open-weather.service';

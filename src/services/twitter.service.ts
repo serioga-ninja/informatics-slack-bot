@@ -1,4 +1,5 @@
 import * as crypto from 'crypto';
+
 import variables from '../configs/variables';
 
 const ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';

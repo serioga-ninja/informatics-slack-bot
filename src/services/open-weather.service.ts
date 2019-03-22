@@ -1,5 +1,6 @@
 import * as qs from 'querystring';
 import * as request from 'request';
+
 import variables from '../configs/variables';
 import {ISlackWebhookRequestBodyAttachment} from '../interfaces/i-slack-webhook-request-body-attachment';
 

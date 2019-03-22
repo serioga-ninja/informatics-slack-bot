@@ -2,8 +2,9 @@ import {DEFAULT_RADIX} from '../../../configs/consts';
 import variables from '../../../configs/variables';
 import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
 import MODULES_CONFIG from '../../modules.config';
-import {IBaseModuleConfiguration} from '../Interfaces';
-import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from './BaseConfiguration';
+import {IBaseModuleConfiguration} from '../interfaces';
+
+import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from './base-configuration';
 
 export class FrequencyConfiguration extends BaseConfiguration implements IBaseConfiguration {
   public static commandName: string = 'frequency';

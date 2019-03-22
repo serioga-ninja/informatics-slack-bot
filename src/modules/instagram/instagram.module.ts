@@ -1,11 +1,12 @@
 import * as _ from 'lodash';
 import 'rxjs/add/observable/interval';
-import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
 
+import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
 import RegisteredModuleModel from '../../models/registered-module.model';
-import {BaseModuleClass} from '../core/BaseModule.class';
-import {ModuleTypes} from '../core/Enums';
-import {RegisteredModulesService} from '../core/Modules.service';
+import {BaseModuleClass} from '../core/base-module.class';
+import {ModuleTypes} from '../core/enums';
+import {RegisteredModulesService} from '../core/modules.service';
+
 import instagramLinksConfigureCommand from './commands/configure.command';
 import helpCommand from './commands/help.command';
 import instagramLinksRegistrationCommand from './commands/registration.command';

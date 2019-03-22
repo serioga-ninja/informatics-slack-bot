@@ -1,6 +1,6 @@
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
-import {BaseCommand} from '../../core/BaseCommand.class';
+import {BaseCommand} from '../../core/base-command.class';
 
 class CommandInProgress extends BaseCommand {
 

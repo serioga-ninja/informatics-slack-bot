@@ -1,10 +1,11 @@
 import {NextFunction, Request, Response} from 'express';
 import * as qs from 'querystring';
 import * as request from 'request';
+
 import variables from '../../configs/variables';
 import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
 import {ISlackAuthSuccessBody, SlackService} from '../../services/slack.service';
-import {RouterClass} from '../Router.class';
+import {RouterClass} from '../router.class';
 
 export class SlackEventRouter extends RouterClass {
 

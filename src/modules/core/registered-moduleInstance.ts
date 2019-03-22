@@ -1,5 +1,6 @@
 import {ObjectId} from 'mongodb';
 import * as request from 'request';
+
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ILinksToPostModelDocument} from '../../models/links-to-post.model';
 import {default as RegisteredModuleModel, IRegisteredModuleModelDocument} from '../../models/registered-module.model';

@@ -1,4 +1,4 @@
-import {LinkTypes} from '../modules/core/Enums';
+import {LinkTypes} from '../modules/core/enums';
 
 export interface ILinkModel {
     _id: any;

@@ -1,13 +1,12 @@
 import * as bodyParser from 'body-parser';
 import * as errorHandler from 'errorhandler';
 import * as express from 'express';
-
 import 'rxjs/add/observable/interval';
-import SlackCommandsRouter from './api/v1/SlackCommandsRouter';
-import SlackEventRouter from './api/v1/SlackEventRouter';
 
-import SlackRouter from './api/v1/SlackRouter';
-import TwitterRouter from './api/v1/TwitterRouter';
+import SlackCommandsRouter from './api/v1/slack-commands-router';
+import SlackEventRouter from './api/v1/slack-event-router';
+import SlackRouter from './api/v1/slack-router';
+import TwitterRouter from './api/v1/twitter-router';
 import './configs/database';
 import {expressLogger} from './services/logger.service';
 

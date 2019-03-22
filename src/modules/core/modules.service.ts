@@ -1,10 +1,12 @@
 import {ObjectId} from 'mongodb';
+
 import {IRegisteredModule} from '../../interfaces/i-registered-module';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {LoggerService} from '../../services/logger.service';
-import {ModuleTypes} from './Enums';
-import {ModuleAlreadeyStoppedError} from './Errors';
-import {RegisteredModuleInstance} from './RegisteredModuleInstance';
+
+import {ModuleTypes} from './enums';
+import {ModuleAlreadeyStoppedError} from './errors';
+import {RegisteredModuleInstance} from './registered-moduleInstance';
 
 const logService = new LoggerService('RegisteredModulesService');
 

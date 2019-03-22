@@ -1,11 +1,12 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
-import {BaseModuleClass} from '../modules/core/BaseModule.class';
+import {BaseModuleClass} from '../modules/core/base-module.class';
 import currencyModule from '../modules/currency/currency.module';
 import instagramModule from '../modules/instagram/instagram.module';
 import MODULES_CONFIG from '../modules/modules.config';
 import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
+
 import {LoggerService} from './logger.service';
 
 type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';
