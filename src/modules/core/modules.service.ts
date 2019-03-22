@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../db/models/registered-module.model';
 
 import {IRegisteredModule} from '../../interfaces/i-registered-module';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {LoggerService} from '../../services/logger.service';
 
 import {ModuleTypes} from './enums';

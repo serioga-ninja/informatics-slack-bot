@@ -1,7 +1,7 @@
+import LinksToPostModel, {ILinksToPostModelDocument} from '../../../db/models/links-to-post.model';
 import {ILinksToPostModel} from '../../../interfaces/i-links-to-post.model';
 import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../../interfaces/i-slack-webhook-request-body-attachment';
-import LinksToPostModel, {ILinksToPostModelDocument} from '../../../models/links-to-post.model';
 import {BaseCommand} from '../../core/base-command.class';
 import {ModuleTypes} from '../../core/enums';
 

@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import {ILinksToPostModel} from '../interfaces/i-links-to-post.model';
+import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
 
 export interface ILinksToPostModelDocument extends ILinksToPostModel, mongoose.Document {
 }

@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import 'rxjs/add/observable/interval';
+import RegisteredModuleModel from '../../db/models/registered-module.model';
 
 import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
-import RegisteredModuleModel from '../../models/registered-module.model';
 import {BaseModuleClass} from '../core/base-module.class';
 import {ModuleTypes} from '../core/enums';
 import {RegisteredModulesService} from '../core/modules.service';

@@ -7,7 +7,7 @@ import SlackCommandsRouter from './api/v1/slack-commands-router';
 import SlackEventRouter from './api/v1/slack-event-router';
 import SlackRouter from './api/v1/slack-router';
 import TwitterRouter from './api/v1/twitter-router';
-import './configs/database';
+import './db/config';
 import {expressLogger} from './services/logger.service';
 
 // Creates and configures an ExpressJS web server.

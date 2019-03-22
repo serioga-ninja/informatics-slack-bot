@@ -1,9 +1,12 @@
 import {ObjectId} from 'mongodb';
 import * as request from 'request';
+import {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
+import {
+  default as RegisteredModuleModel,
+  IRegisteredModuleModelDocument
+} from '../../db/models/registered-module.model';
 
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import {ILinksToPostModelDocument} from '../../models/links-to-post.model';
-import {default as RegisteredModuleModel, IRegisteredModuleModelDocument} from '../../models/registered-module.model';
 import {LoggerService} from '../../services/logger.service';
 import Timer = NodeJS.Timer;
 

@@ -1,4 +1,4 @@
-import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
+import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import {IBaseModuleConfiguration} from '../interfaces';
 
 export interface IConfigHelpItem {

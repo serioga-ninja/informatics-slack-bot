@@ -1,6 +1,6 @@
 import {DEFAULT_RADIX} from '../../../configs/consts';
 import variables from '../../../configs/variables';
-import {IRegisteredModuleModelDocument} from '../../../models/registered-module.model';
+import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import MODULES_CONFIG from '../../modules.config';
 import {PostStrategies} from '../enums';
 import {InvalidConfigValueError} from '../errors';

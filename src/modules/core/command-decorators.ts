@@ -1,6 +1,6 @@
+import RegisteredAppModel from '../../db/models/registered-app.model';
+import RegisteredModuleModel from '../../db/models/registered-module.model';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import RegisteredAppModel from '../../models/registered-app.model';
-import RegisteredModuleModel from '../../models/registered-module.model';
 
 import {ModuleTypes} from './enums';
 import {

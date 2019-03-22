@@ -1,8 +1,8 @@
 import variables from '../../configs/variables';
+import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../db/models/registered-module.model';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
-import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../models/registered-module.model';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 

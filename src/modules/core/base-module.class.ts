@@ -1,9 +1,9 @@
 import 'rxjs/add/observable/interval';
 import {Observable} from 'rxjs/Observable';
+import RegisteredModuleModel from '../../db/models/registered-module.model';
 
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import RegisteredModuleModel from '../../models/registered-module.model';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';

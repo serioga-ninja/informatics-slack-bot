@@ -3,8 +3,8 @@ import * as qs from 'querystring';
 import * as request from 'request';
 
 import variables from '../configs/variables';
+import RegisteredAppModel from '../db/models/registered-app.model';
 import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
-import RegisteredAppModel from '../models/registered-app.model';
 
 export interface ISlackAuthSuccessBody {
     ok: boolean;

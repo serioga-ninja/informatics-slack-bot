@@ -1,8 +1,8 @@
+import LinksToPostModel, {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
+import {IRegisteredModuleModelDocument} from '../../db/models/registered-module.model';
 import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
 import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
 import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
-import LinksToPostModel, {ILinksToPostModelDocument} from '../../models/links-to-post.model';
-import {IRegisteredModuleModelDocument} from '../../models/registered-module.model';
 import {ModuleTypes, PostStrategies} from '../core/enums';
 import {RegisteredModuleInstance} from '../core/registered-moduleInstance';
 
