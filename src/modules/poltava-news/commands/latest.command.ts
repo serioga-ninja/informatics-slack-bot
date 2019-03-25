@@ -1,13 +1,13 @@
 import LinksToPostModel, {ILinksToPostModelDocument} from '../../../db/models/links-to-post.model';
 import {ILinksToPostModel} from '../../../interfaces/i-links-to-post.model';
-import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
-import {ISlackWebhookRequestBodyAttachment} from '../../../interfaces/i-slack-webhook-request-body-attachment';
+import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
+import {ISlackWebHookRequestBodyAttachment} from '../../../interfaces/i-slack-web-hook-request-body-attachment';
 import {BaseCommand} from '../../core/base-command.class';
 import {ModuleTypes} from '../../core/enums';
 
 class LatestCommand extends BaseCommand {
 
-  async execute(): Promise<ISlackWebhookRequestBody> {
+  async execute(): Promise<ISlackWebHookRequestBody> {
     const model: ILinksToPostModelDocument = await LinksToPostModel.findOne({
       contentType: ModuleTypes.PoltavaNews
     }, null, {sort: {createdAt: -1}});
@@ -17,7 +17,7 @@ class LatestCommand extends BaseCommand {
       response_type: 'in_channel',
       text: '',
       attachments: [
-        <ISlackWebhookRequestBodyAttachment>{
+        <ISlackWebHookRequestBodyAttachment>{
           title_link: modelJson.contentUrl,
           image_url: modelJson.contentUrl,
           title: modelJson.title

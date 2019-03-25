@@ -1,6 +1,7 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
-import {ISlackWebhookRequestBody} from '../interfaces/i-slack-webhook-request-body';
+import {ISlackWebHookRequestBody} from '../interfaces/i-slack-web-hook-request-body';
 import {BaseModuleClass} from '../modules/core/base-module.class';
+import {ModuleNotExistsError} from '../modules/core/errors';
 import currencyModule from '../modules/currency/currency.module';
 import instagramModule from '../modules/instagram/instagram.module';
 import MODULES_CONFIG from '../modules/modules.config';
@@ -24,6 +25,10 @@ export class CommandsService {
 
   static getModule(commandStringArr: string[]): BaseModuleClass {
     const [moduleName] = commandStringArr;
+
+    if (!MODULES_LIST[moduleName]) {
+      throw new ModuleNotExistsError(moduleName);
+    }
 
     return MODULES_LIST[moduleName];
   }
@@ -67,7 +72,7 @@ export class CommandsService {
     });
   }
 
-  public async execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebhookRequestBody> {
+  public async execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebHookRequestBody> {
     try {
       const {module, command, args} = await this.parse(commandString);
 
@@ -75,7 +80,7 @@ export class CommandsService {
     } catch (error) {
       logService.error(error);
 
-      return <ISlackWebhookRequestBody>{
+      return <ISlackWebHookRequestBody>{
         text: 'error',
         attachments: [
           {

@@ -1,11 +1,11 @@
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
+import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import {BaseCommand} from '../../core/base-command.class';
 
 class CommandInProgress extends BaseCommand {
 
     execute(requestBody: ISlackRequestBody, args: string[]) {
-        return Promise.resolve(<ISlackWebhookRequestBody>{
+      return Promise.resolve(<ISlackWebHookRequestBody>{
             response_type: 'in_channel',
             text: 'This command is in progress.',
             attachments: []

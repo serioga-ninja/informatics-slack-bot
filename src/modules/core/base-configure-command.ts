@@ -1,8 +1,8 @@
 import variables from '../../configs/variables';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../db/models/registered-module.model';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
-import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
-import {ISlackWebhookRequestBodyAttachment} from '../../interfaces/i-slack-webhook-request-body-attachment';
+import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
+import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 
@@ -30,8 +30,8 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
 
   protected logService = new LoggerService('BaseConfigureCommand');
 
-  async execute(requestBody: ISlackRequestBody, configs: T): Promise<ISlackWebhookRequestBody> {
-    let attachments: ISlackWebhookRequestBodyAttachment[] = [];
+  async execute(requestBody: ISlackRequestBody, configs: T): Promise<ISlackWebHookRequestBody> {
+    let attachments: ISlackWebHookRequestBodyAttachment[] = [];
 
     const moduleModel: IRegisteredModuleModelDocument<any> = await RegisteredModuleModel
       .findOne({chanelId: requestBody.channel_id, moduleType: this.moduleType});
@@ -60,11 +60,11 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
     this.logService.info('Config is done');
     this.emitter.emit(CONFIG_HAS_CHANGED, requestBody.channel_id);
 
-    return {attachments};
+    return <ISlackWebHookRequestBody>{attachments};
   }
 
   help() {
-    return Promise.resolve(<ISlackWebhookRequestBody>{
+    return Promise.resolve(<ISlackWebHookRequestBody>{
       response_type: 'in_channel',
       text: '',
       attachments: [

@@ -27,8 +27,8 @@ export class ModuleAlreadyRegisteredError extends Error implements InformaticsSl
 }
 
 export class ModuleNotExistsError extends Error implements InformaticsSlackBotBaseError {
-  constructor() {
-    super('ModuleNotExistsError');
+  constructor(moduleName: string) {
+    super(`Module ${moduleName} doesn't exists.`);
 
     Object.setPrototypeOf(this, ModuleNotExistsError.prototype);
   }

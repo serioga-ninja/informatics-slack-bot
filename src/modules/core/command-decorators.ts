@@ -1,6 +1,6 @@
 import RegisteredAppModel from '../../db/models/registered-app.model';
 import RegisteredModuleModel from '../../db/models/registered-module.model';
-import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
+import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
 
 import {ModuleTypes} from './enums';
 import {
@@ -14,12 +14,12 @@ import {
 import {RegisteredModulesService} from './modules.service';
 
 export const SimpleCommandResponse = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-  const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+  const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
   descriptor.value = (...args: any[]) => method
     .apply(target, args)
-    .then((data: ISlackWebhookRequestBody = <ISlackWebhookRequestBody>{}) => {
-      return <ISlackWebhookRequestBody>{
+    .then((data: ISlackWebHookRequestBody = <ISlackWebHookRequestBody>{}) => {
+      return <ISlackWebHookRequestBody>{
         response_type: 'in_channel',
         text: data.text || 'Success!',
         attachments: data.attachments || []
@@ -28,7 +28,7 @@ export const SimpleCommandResponse = (target: any, propertyKey: string, descript
 };
 
 export const ChannelIsRegistered = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-  const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+  const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
   descriptor.value = (...args: any[]) => {
     const [requestBody] = args;
@@ -42,7 +42,7 @@ export const ChannelIsRegistered = (target: any, propertyKey: string, descriptor
       })
       .then(() => method.apply(target, args))
       .catch((error: InformaticsSlackBotBaseError) => {
-        return <ISlackWebhookRequestBody>{
+        return <ISlackWebHookRequestBody>{
           response_type: 'in_channel',
           text: error.message
         };
@@ -51,7 +51,7 @@ export const ChannelIsRegistered = (target: any, propertyKey: string, descriptor
 };
 
 export const ChannelNotRegistered = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-  const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+  const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
   descriptor.value = (...args: any[]) => {
     const [requestBody] = args;
@@ -65,7 +65,7 @@ export const ChannelNotRegistered = (target: any, propertyKey: string, descripto
       })
       .then(() => method.apply(target, args))
       .catch((error: InformaticsSlackBotBaseError) => {
-        return <ISlackWebhookRequestBody>{
+        return <ISlackWebHookRequestBody>{
           response_type: 'in_channel',
           text: error.message
         };
@@ -75,7 +75,7 @@ export const ChannelNotRegistered = (target: any, propertyKey: string, descripto
 
 export const ChannelIsActivated = (moduleType: ModuleTypes) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+    const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
     descriptor.value = (...args: any[]) => {
       const [requestBody] = args;
@@ -84,12 +84,12 @@ export const ChannelIsActivated = (moduleType: ModuleTypes) => {
         .moduleIsExists(moduleType, requestBody.channel_id)
         .then((exists) => {
           if (!exists) {
-            throw new ModuleNotExistsError();
+            throw new ModuleNotExistsError(requestBody.channel_id);
           }
         })
         .then(() => method.apply(target, args))
         .catch((error: InformaticsSlackBotBaseError) => {
-          return <ISlackWebhookRequestBody>{
+          return <ISlackWebHookRequestBody>{
             response_type: 'in_channel',
             text: error.message
           };
@@ -101,7 +101,7 @@ export const ChannelIsActivated = (moduleType: ModuleTypes) => {
 export const ModuleIsNotRegistered = (moduleType: ModuleTypes) => {
 
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+    const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
     descriptor.value = (...args: any[]) => {
       const [requestBody] = args;
@@ -116,7 +116,7 @@ export const ModuleIsNotRegistered = (moduleType: ModuleTypes) => {
         })
         .then(() => method.apply(target, args))
         .catch((error: InformaticsSlackBotBaseError) => {
-          return <ISlackWebhookRequestBody>{
+          return <ISlackWebHookRequestBody>{
             response_type: 'in_channel',
             text: error.message
           };
@@ -128,7 +128,7 @@ export const ModuleIsNotRegistered = (moduleType: ModuleTypes) => {
 export const ModuleIsRegistered = (moduleType: ModuleTypes) => {
 
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+    const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
     descriptor.value = (...args: any[]) => {
       const [requestBody] = args;
@@ -138,12 +138,12 @@ export const ModuleIsRegistered = (moduleType: ModuleTypes) => {
         .count()
         .then((count: number) => {
           if (count === 0) {
-            throw new ModuleNotExistsError();
+            throw new ModuleNotExistsError(requestBody.channel_id);
           }
         })
         .then(() => method.apply(target, args))
         .catch((error: InformaticsSlackBotBaseError) => {
-          return <ISlackWebhookRequestBody>{
+          return <ISlackWebHookRequestBody>{
             response_type: 'in_channel',
             text: error.message
           };
@@ -155,7 +155,7 @@ export const ModuleIsRegistered = (moduleType: ModuleTypes) => {
 export const ValidateConfigs = (availableCommands: { [key: string]: (requestBody: any, configs: any) => Promise<any> }) => {
 
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    const method: () => Promise<ISlackWebhookRequestBody> = descriptor.value;
+    const method: () => Promise<ISlackWebHookRequestBody> = descriptor.value;
 
     descriptor.value = (...args: any[]) => {
       const [requestBody, configs] = args;

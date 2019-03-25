@@ -2,40 +2,41 @@ import * as qs from 'querystring';
 
 import variables from '../../../configs/variables';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ISlackWebhookRequestBody} from '../../../interfaces/i-slack-webhook-request-body';
+import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import {BaseCommand} from '../../core/base-command.class';
 import {ChannelNotRegistered} from '../../core/command-decorators';
 
 export class ChanelAlreadyRegisteredError extends Error {
-    constructor() {
-        super('ChanelAlreadyRegisteredError');
+  constructor() {
+    super('ChanelAlreadyRegisteredError');
 
-        Object.setPrototypeOf(this, ChanelAlreadyRegisteredError.prototype);
-    }
+    Object.setPrototypeOf(this, ChanelAlreadyRegisteredError.prototype);
+  }
 }
 
 
 class RegistrationCommand extends BaseCommand {
 
-    @ChannelNotRegistered
-    execute(requestBody: ISlackRequestBody, args: string[]) {
-        return Promise.resolve(<ISlackWebhookRequestBody>{
-            response_type: 'in_channel',
-            text: '',
-            attachments: [
-                {
-                    title_link: `https://slack.com/oauth/authorize?${qs.stringify({
-                        scope: 'incoming-webhook,commands',
-                        client_id: variables.slack.CLIENT_ID,
-                        redirect_uri: `http://${variables.domainUrl}/api/v1/events/oauth-callback`,
-                        team: requestBody.team_id
-                    })}`,
-                    title: 'Click to init',
-                    image_url: 'https://platform.slack-edge.com/img/add_to_slack.png'
-                }
-            ]
-        });
-    }
+  @ChannelNotRegistered
+  execute(requestBody: ISlackRequestBody, args: string[]) {
+    return Promise.resolve(<ISlackWebHookRequestBody>{
+      response_type: 'in_channel',
+      text: '',
+      attachments: [
+        {
+          title_link: `https://slack.com/oauth/authorize?${qs.stringify({
+            scope: 'incoming-webhook,commands,chat:write:bot',
+            client_id: variables.slack.CLIENT_ID,
+            redirect_uri: `http://${variables.domainUrl}/api/v1/events/oauth-callback`,
+            team: requestBody.team_id,
+            channel_id: requestBody.channel_id
+          })}`,
+          title: 'Click to init',
+          image_url: 'https://platform.slack-edge.com/img/add_to_slack.png'
+        }
+      ]
+    });
+  }
 
 
 }

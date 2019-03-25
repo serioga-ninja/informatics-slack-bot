@@ -19,6 +19,7 @@
   "author": "serioga",
   "license": "ISC",
   "dependencies": {
+    "@slack/client": "^4.12.0",
     "body-parser": "^1.17.2",
     "dotenv": "^2.0.0",
     "ejs": "^2.5.7",

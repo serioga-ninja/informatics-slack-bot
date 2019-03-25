@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Observable';
 import RegisteredModuleModel from '../../db/models/registered-module.model';
 
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
-import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
+import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';
@@ -91,7 +91,7 @@ export abstract class BaseModuleClass implements IBaseModuleClass {
 
   abstract preloadActiveModules(): Promise<any>;
 
-  execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebhookRequestBody> {
+  execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebHookRequestBody> {
     let executableCommand: BaseCommand;
 
     switch (command) {

@@ -1,12 +1,12 @@
 import {ObjectId} from 'mongodb';
-import * as request from 'request';
+
+import web, {IChatPostMessageResult} from '../../configs/slack';
 import {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
 import {
   default as RegisteredModuleModel,
   IRegisteredModuleModelDocument
 } from '../../db/models/registered-module.model';
-
-import {ISlackWebhookRequestBody} from '../../interfaces/i-slack-webhook-request-body';
+import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
 import {LoggerService} from '../../services/logger.service';
 import Timer = NodeJS.Timer;
 
@@ -20,7 +20,7 @@ export class RegisteredModuleInstance {
   private model: IRegisteredModuleModelDocument<any>;
 
   constructor(public modelId: ObjectId,
-              protected collectDataFn: (model: IRegisteredModuleModelDocument<any>) => Promise<{ data: ISlackWebhookRequestBody | null; items: ILinksToPostModelDocument[] }>) {
+              protected collectDataFn: (model: IRegisteredModuleModelDocument<any>) => Promise<{ data: ISlackWebHookRequestBody | null; items: ILinksToPostModelDocument[] }>) {
 
     this.init();
   }
@@ -29,20 +29,17 @@ export class RegisteredModuleInstance {
     logService.info(`Time to post to channel!`, this.model.toObject());
 
     const {data, items} = await this.collectDataFn(this.model);
-    if (data === null) {
+    if (data === null || data.attachments.length === 0) {
+      logService.info(`Nothing to post right now!`, this.model.toObject());
+
       return;
     }
 
     logService.info(`Posting data to channel ${this.model.chanelId}`, data);
 
-    await new Promise((resolve) => {
-      request({
-        method: 'POST',
-        url: this.model.chanelLink,
-        json: true,
-        body: data
-      }, () => resolve());
-    });
+    const res = await web.chat.postMessage({...data, channel: this.model.chanelId}) as IChatPostMessageResult;
+
+    logService.info(`A message was posed to conversation ${res.channel} with id ${res.ts} which contains the message ${res.message}`);
 
     for (const item of items) {
       const postedChannels = [...item.postedChannels, this.model.chanelId];
