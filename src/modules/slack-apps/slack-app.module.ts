@@ -10,8 +10,6 @@ class SlackAppModule extends BaseModuleClass {
 
   moduleName = 'SlackAppModule';
 
-  routerClass: any;
-
   registerCommand = slackBotRegistrationCommand;
 
   removeCommand = commandInProgress;

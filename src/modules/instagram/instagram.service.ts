@@ -1,5 +1,6 @@
 import {ILinksToPostModelDocument, LinksToPostModel} from '../../db/models/links-to-post.model';
 import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
+import {LoggerService} from '../../services/logger.service';
 import {ModuleTypes} from '../core/enums';
 import {RssParserService} from '../core/rss-parser.service';
 
@@ -19,21 +20,19 @@ export interface IParseDataResults {
 
 const DOMAIN_URL = 'https://queryfeed.net/instagram?q';
 
+const instagramServiceLogger = new LoggerService('InstagramService');
+
 export class InstagramService extends RssParserService<IRssInstagramItem, ILinksToPostModel> {
 
   public urls: string[];
 
   public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
     const allLinks: ILinksToPostModel[] = parseDataResults
-      .map((row) => {
-        return row.results;
-      })
-      .reduce((all: ILinksToPostModel[], current: ILinksToPostModel[]) => {
-        return all.concat(current);
-      }, []);
+      .map((row) => row.results)
+      .reduce((all: ILinksToPostModel[], current: ILinksToPostModel[]) => all.concat(current), []);
 
     return LinksToPostModel
-      .find({contentUrl: {$in: allLinks.map((linkObj) => linkObj.contentUrl)}})
+      .find({title: {$in: allLinks.map((linkObj) => linkObj.title)}})
       .then((objects: ILinksToPostModelDocument[]) => {
         const existingLinks = objects.map((model) => model.contentUrl);
 
@@ -45,17 +44,22 @@ export class InstagramService extends RssParserService<IRssInstagramItem, ILinks
       });
   }
 
-  public static saveToDB(parseDataResults: IParseDataResults[]) {
-    return Promise.all(parseDataResults.map((row) => {
-      return Promise.all(row.results.map((linkObj) => {
-        return new LinksToPostModel().set(<ILinksToPostModel>{
-          contentUrl: linkObj.contentUrl,
-          title: linkObj.title,
-          category: row.chanelId,
-          contentType: ModuleTypes.InstagramLinks
-        }).save();
-      }));
-    }));
+  public static async saveToDB(parseDataResults: IParseDataResults[]) {
+    for (const row of parseDataResults) {
+
+      for (const linkObj of row.results) {
+        try {
+          await new LinksToPostModel().set(<ILinksToPostModel>{
+            contentUrl: linkObj.contentUrl,
+            title: linkObj.title,
+            category: row.chanelId,
+            contentType: ModuleTypes.InstagramLinks
+          }).save();
+        } catch (error) {
+          instagramServiceLogger.error(error);
+        }
+      }
+    }
   }
 
   constructor(instagramPublicIds: string[]) {

@@ -29,6 +29,7 @@
     "jsdom": "^11.3.0",
     "lodash": "^4.17.4",
     "mongoose": "^5.4.7",
+    "mongoose-unique-validator": "^2.0.2",
     "ngrok": "^2.2.24",
     "pm2": "^2.7.1",
     "prop-types": "^15.6.0",
