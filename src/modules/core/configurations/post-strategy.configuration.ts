@@ -1,7 +1,6 @@
 import {DEFAULT_RADIX} from '../../../configs/consts';
 import variables from '../../../configs/variables';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
-import MODULES_CONFIG from '../../modules.config';
 import {PostStrategies} from '../enums';
 import {InvalidConfigValueError} from '../errors';
 import {IBaseModuleConfiguration} from '../interfaces';
@@ -13,10 +12,10 @@ export class PostStrategyConfiguration extends BaseConfiguration implements IBas
 
   private postStrategy: number;
 
-  public static help(moduleName: string): IConfigHelpItem {
+  public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: `Example set post strategy. Available: As soon as possible = 1, Random and single = 2`,
-      text: `/${variables.slack.COMMAND} ${moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${PostStrategyConfiguration.commandName}=2`
+      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${PostStrategyConfiguration.commandName}=2`
     };
   }
 

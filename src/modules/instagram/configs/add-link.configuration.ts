@@ -4,17 +4,16 @@ import variables from '../../../configs/variables';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
 import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from '../../core/configurations/base-configuration';
-import MODULES_CONFIG from '../../modules.config';
 
 export class AddLinkConfiguration extends BaseConfiguration<IInstagramConfiguration> implements IBaseConfiguration<IInstagramConfiguration> {
   public static commandName: string = 'add-links';
 
   protected instagramChannels: string[];
 
-  public static help(moduleName: string): IConfigHelpItem {
+  public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: 'Example add instagram public',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${AddLinkConfiguration.commandName}=inst_cat_public1,inst_cat_public2`
+      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${AddLinkConfiguration.commandName}=inst_cat_public1,inst_cat_public2`
     };
   }
 

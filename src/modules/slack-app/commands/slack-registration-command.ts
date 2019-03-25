@@ -1,7 +1,9 @@
+import variables from '../../../configs/variables';
+import {IInfo} from '../../../interfaces/i-info';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import {SlackHelper} from '../../../slack/slack.helper';
-import {ChannelNotRegistered} from '../../core/command-decorators';
+import {Validation} from '../../../slack/validation';
 import {BaseCommand} from '../../core/commands/base-command.class';
 
 export class ChanelAlreadyRegisteredError extends Error {
@@ -13,9 +15,20 @@ export class ChanelAlreadyRegisteredError extends Error {
 }
 
 
-class RegistrationCommand extends BaseCommand {
+export class SlackRegistrationCommand extends BaseCommand {
+  public static readonly commandName: string = 'init';
 
-  @ChannelNotRegistered
+  public static info(): IInfo {
+    return {
+      title: 'Init app in the chanel',
+      text: `/${variables.slack.COMMAND} ${SlackRegistrationCommand.commandName}`
+    };
+  }
+
+  async validate(requestBody: ISlackRequestBody): Promise<void> {
+    await Validation.channelNotRegistered(requestBody.channel_id);
+  }
+
   execute(requestBody: ISlackRequestBody, args: string[]) {
     return Promise.resolve(<ISlackWebHookRequestBody>{
       response_type: 'in_channel',
@@ -31,6 +44,3 @@ class RegistrationCommand extends BaseCommand {
   }
 }
 
-const slackBotRegistrationCommand = new RegistrationCommand();
-
-export default slackBotRegistrationCommand;

@@ -2,14 +2,14 @@ import {Router} from 'express';
 
 export abstract class RouterClass {
 
-    router: Router;
+  router: Router;
 
-    constructor() {
-        this.router = Router();
-        this.init();
-    }
+  constructor() {
+    this.router = Router();
+    this.init();
+  }
 
-    init(): void {
-        // init your routers down here
-    }
+  init(): void {
+    // init your routers down here
+  }
 }

@@ -26,6 +26,12 @@ export class InstagramLogic extends RssParserService<IRssInstagramItem, ILinksTo
 
   public urls: string[];
 
+  constructor(instagramPublicIds: string[]) {
+    super();
+
+    this.urls = instagramPublicIds.map((id) => `${DOMAIN_URL}=${id}`);
+  }
+
   public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
     const allLinks: ILinksToPostModel[] = parseDataResults
       .map((row) => row.results)
@@ -60,12 +66,6 @@ export class InstagramLogic extends RssParserService<IRssInstagramItem, ILinksTo
         }
       }
     }
-  }
-
-  constructor(instagramPublicIds: string[]) {
-    super();
-
-    this.urls = instagramPublicIds.map((id) => `${DOMAIN_URL}=${id}`);
   }
 
   public mapFn(item: IRssInstagramItem) {

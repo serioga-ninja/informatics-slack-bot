@@ -11,7 +11,7 @@ export interface IBaseConfigurationStatic {
 
   new(configValue: string[]): IBaseConfiguration;
 
-  help(moduleName: string): IConfigHelpItem;
+  help(moduleName: string, configCommand: string): IConfigHelpItem;
 }
 
 export interface IBaseConfiguration<T = IBaseModuleConfiguration> {

@@ -1,40 +1,51 @@
 import variables from '../../configs/variables';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../db/models/registered-module.model';
+import {IInfo} from '../../interfaces/i-info';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
 import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
 import {LoggerService} from '../../services/logger.service';
-import MODULES_CONFIG from '../modules.config';
-import {CONFIG_HAS_CHANGED} from './commands';
+import {Validation} from '../../slack/validation';
 
+import {CONFIG_HAS_CHANGED} from './commands';
 import {BaseCommand, IBaseCommand} from './commands/base-command.class';
 import {IBaseConfigurationStatic} from './configurations/base-configuration';
-import {ModuleTypes} from './enums';
 import {UnknownConfigError} from './errors';
 import {IBaseModuleConfiguration} from './interfaces';
 import {simpleSuccessAttachment} from './utils';
 import EventEmitter = NodeJS.EventEmitter;
 
 export interface IBaseConfigureCommand<T> extends IBaseCommand {
-  moduleName: string;
   emitter: EventEmitter;
   configList: IBaseConfigurationStatic[];
 }
 
 export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBaseConfigureCommand<T> {
+  public static readonly requireArgs: boolean = true;
+  public static readonly commandName: string = 'config';
 
-  abstract moduleName: string;
   abstract emitter: EventEmitter;
   abstract configList: IBaseConfigurationStatic[];
-  abstract moduleType: ModuleTypes;
 
   protected logService = new LoggerService('BaseConfigureCommand');
+
+  public static info(moduleName: string): IInfo {
+    return {
+      title: 'Configure module',
+      text: `/${variables.slack.COMMAND} ${moduleName} ${BaseConfigureCommand.commandName} [key1=value1,value2,value3 key2=value2...]`
+    };
+  }
+
+  async validate(requestBody: ISlackRequestBody): Promise<void> {
+    await Validation.channelRegistered(requestBody.channel_id);
+    await Validation.moduleRegistered(requestBody.channel_id, this.module.moduleType);
+  }
 
   async execute(requestBody: ISlackRequestBody, configs: T): Promise<ISlackWebHookRequestBody> {
     let attachments: ISlackWebHookRequestBodyAttachment[] = [];
 
     const moduleModel: IRegisteredModuleModelDocument<any> = await RegisteredModuleModel
-      .findOne({chanelId: requestBody.channel_id, moduleType: this.moduleType});
+      .findOne({chanelId: requestBody.channel_id, moduleType: this.module.moduleType});
 
     for (const key of Object.keys(configs)) {
       const ConfigStatic = this.configList.find((ConfigStatic: IBaseConfigurationStatic) => ConfigStatic.commandName === key);
@@ -70,7 +81,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
       attachments: [
         {
           title: 'Usage',
-          text: `/${variables.slack.COMMAND} ${this.moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} [key1=value1 key2=key2value1,key2value1 ...]`
+          text: `/${variables.slack.COMMAND} ${this.module.moduleName} ${BaseConfigureCommand.commandName} [key1=value1 key2=key2value1,key2value1 ...]`
         },
         {
           title: 'Config list',
@@ -78,7 +89,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
             .map((Config) => Config.commandName)
             .join('|')
         },
-        ...this.configList.map((Config) => Config.help(this.moduleName))
+        ...this.configList.map((Config) => Config.help(this.module.moduleName, BaseConfigureCommand.commandName))
       ]
     });
   }

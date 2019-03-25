@@ -1,7 +1,6 @@
 import {DEFAULT_RADIX} from '../../../configs/consts';
 import variables from '../../../configs/variables';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
-import MODULES_CONFIG from '../../modules.config';
 import {IBaseModuleConfiguration} from '../interfaces';
 
 import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from './base-configuration';
@@ -9,10 +8,10 @@ import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from './base-con
 export class LimitConfiguration extends BaseConfiguration implements IBaseConfiguration {
   public static commandName: string = 'limit';
 
-  public static help(moduleName: string): IConfigHelpItem {
+  public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: 'Example set post limit (number)',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${MODULES_CONFIG.COMMANDS.CONFIGURE} ${LimitConfiguration.commandName}=1`
+      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${LimitConfiguration.commandName}=1`
     };
   }
 

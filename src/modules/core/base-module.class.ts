@@ -5,55 +5,29 @@ import RegisteredModuleModel from '../../db/models/registered-module.model';
 import {ISlackRequestBody} from '../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
 import {LoggerService} from '../../services/logger.service';
-import MODULES_CONFIG from '../modules.config';
-import commandInProgress from '../slack-apps/commands/in-progress';
 import {CONFIG_HAS_CHANGED} from './commands';
 
-import {BaseCommand} from './commands/base-command.class';
+import {IBaseCommandStatic} from './commands/base-command.class';
 import {ModuleTypes} from './enums';
 import {RegisteredModulesService} from './modules.service';
 import EventEmitter = NodeJS.EventEmitter;
 
 const PRELOAD_DATA_FREQUENCY = 600000;
 
-const CALL_HELP_ON_EMPTY_ARGS_COMMANDS = [
-  MODULES_CONFIG.COMMANDS.CONFIGURE
-];
-
 export interface IBaseModuleClass {
   moduleType: ModuleTypes;
   moduleName: string;
-  registerCommand: BaseCommand;
-  removeCommand: BaseCommand;
-  helpCommand: BaseCommand;
-  configureCommand: BaseCommand;
-  commands: { [key: string]: BaseCommand };
+  commands: IBaseCommandStatic[];
   emitter?: EventEmitter;
   execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebHookRequestBody>;
 }
 
 export abstract class BaseModuleClass implements IBaseModuleClass {
   abstract moduleType: ModuleTypes;
-
-  protected logService: LoggerService;
-
   abstract moduleName: string;
-
-  // informatics-slack-bot [:moduleName] init
-  abstract registerCommand: BaseCommand = commandInProgress;
-
-  // informatics-slack-bot [:moduleName] remove
-  abstract removeCommand: BaseCommand = commandInProgress;
-
-  // informatics-slack-bot [:moduleName] [:help]
-  abstract helpCommand: BaseCommand = commandInProgress;
-
-  // informatics-slack-bot [:moduleName] config
-  public configureCommand: BaseCommand = commandInProgress;
-
-  abstract commands: { [key: string]: BaseCommand };
-
+  abstract commands: IBaseCommandStatic[];
   emitter?: EventEmitter;
+  protected logService: LoggerService;
 
   init(): void {
     this.logService = new LoggerService(this.moduleName);
@@ -92,33 +66,24 @@ export abstract class BaseModuleClass implements IBaseModuleClass {
 
   abstract preloadActiveModules(): Promise<any>;
 
-  execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebHookRequestBody> {
-    let executableCommand: BaseCommand;
+  async execute(requestBody: ISlackRequestBody, commandName: string, args?: object): Promise<ISlackWebHookRequestBody> {
+    const Command: IBaseCommandStatic = this.commands.find((command) => command.commandName === commandName);
 
-    switch (command) {
-      case MODULES_CONFIG.COMMANDS.INIT:
-        executableCommand = this.registerCommand;
-        break;
-      case MODULES_CONFIG.COMMANDS.REMOVE:
-        executableCommand = this.removeCommand;
-        break;
-      case MODULES_CONFIG.COMMANDS.CONFIGURE:
-        executableCommand = this.configureCommand;
-        break;
-      case MODULES_CONFIG.COMMANDS.HELP:
-        executableCommand = this.helpCommand;
-        break;
-      default:
-        executableCommand = this.commands[command];
+    if (Command.requireArgs && Object.keys(args).length === 0) {
+      return new Command(this).help();
     }
 
-    if (CALL_HELP_ON_EMPTY_ARGS_COMMANDS.indexOf(command) !== -1 && Object.keys(args).length === 0) {
-      return executableCommand
-        .help();
-    }
+    const command = new Command(this);
 
-    return executableCommand
-      .execute(requestBody, args);
+    await command.validate(requestBody);
+
+    const result: ISlackWebHookRequestBody = await command.execute(requestBody, args);
+
+    return <ISlackWebHookRequestBody>{
+      response_type: 'in_channel',
+      text: result.text || 'Success!',
+      attachments: result.attachments || []
+    };
   }
 
 }

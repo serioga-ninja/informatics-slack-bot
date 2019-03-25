@@ -6,19 +6,19 @@ export interface IRegisteredAppModelDocument extends IRegisteredApp, mongoose.Do
 }
 
 export const RegisteredAppModelSchema: mongoose.Schema = new mongoose.Schema({
-    id: {
-        type: String,
-        require: true
-    },
-    incomingWebhook: {
-        url: String,
-        channel: String,
-        channel_id: String,
-        configuration_url: String
-    },
-    modules: [String]
+  id: {
+    type: String,
+    require: true
+  },
+  incomingWebhook: {
+    url: String,
+    channel: String,
+    channel_id: String,
+    configuration_url: String
+  },
+  modules: [String]
 }, {
-    timestamps: true
+  timestamps: true
 });
 
 export const RegisteredAppModel = mongoose.model<IRegisteredAppModelDocument>('registeredApps', RegisteredAppModelSchema);

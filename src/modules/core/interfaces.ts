@@ -10,6 +10,6 @@ export interface IBaseModuleConfiguration {
 
 export interface IConfigurationList<T, K> {
 
-    [key: string]: (moduleModel: IRegisteredModuleModelDocument<any>, data?: T) => Promise<K>;
+  [key: string]: (moduleModel: IRegisteredModuleModelDocument<any>, data?: T) => Promise<K>;
 
 }

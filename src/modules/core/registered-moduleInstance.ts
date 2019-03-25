@@ -25,29 +25,6 @@ export class RegisteredModuleInstance {
     this.init();
   }
 
-  private async onAction(): Promise<void> {
-    logService.info(`Time to post to channel!`, this.model.toObject());
-
-    const {data, items} = await this.collectDataFn(this.model);
-    if (data === null || data.attachments.length === 0) {
-      logService.info(`Nothing to post right now!`, this.model.toObject());
-
-      return;
-    }
-
-    logService.info(`Posting data to channel ${this.model.chanelId}`, data);
-
-    const res = await web.chat.postMessage({...data, channel: this.model.chanelId}) as IChatPostMessageResult;
-
-    logService.info(`A message was posed to conversation ${res.channel} with id ${res.ts} which contains the message ${res.message}`);
-
-    for (const item of items) {
-      const postedChannels = [...item.postedChannels, this.model.chanelId];
-
-      await item.update({postedChannels});
-    }
-  }
-
   public destroy() {
     logService.info(`Stopping instance for moduleId ${this.model._id} for channel ${this.model.chanelId}`);
     clearInterval(this._interval);
@@ -69,5 +46,28 @@ export class RegisteredModuleInstance {
 
         this.onAction();
       });
+  }
+
+  private async onAction(): Promise<void> {
+    logService.info(`Time to post to channel!`, this.model.toObject());
+
+    const {data, items} = await this.collectDataFn(this.model);
+    if (data === null || data.attachments.length === 0) {
+      logService.info(`Nothing to post right now!`, this.model.toObject());
+
+      return;
+    }
+
+    logService.info(`Posting data to channel ${this.model.chanelId}`, data);
+
+    const res = await web.chat.postMessage({...data, channel: this.model.chanelId}) as IChatPostMessageResult;
+
+    logService.info(`A message was posed to conversation ${res.channel} with id ${res.ts} which contains the message ${res.message}`);
+
+    for (const item of items) {
+      const postedChannels = [...item.postedChannels, this.model.chanelId];
+
+      await item.update({postedChannels});
+    }
   }
 }
