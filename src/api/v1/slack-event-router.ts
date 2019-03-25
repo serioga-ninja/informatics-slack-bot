@@ -4,7 +4,7 @@ import * as request from 'request';
 
 import variables from '../../configs/variables';
 import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
-import {ISlackAuthSuccessBody, SlackService} from '../../services/slack.service';
+import {ISlackAuthSuccessBody, SlackService} from '../../slack/slack.service';
 import {RouterClass} from '../router.class';
 
 export class SlackEventRouter extends RouterClass {

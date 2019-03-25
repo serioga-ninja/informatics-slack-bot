@@ -20,9 +20,9 @@ export interface IParseDataResults {
 
 const DOMAIN_URL = 'https://queryfeed.net/instagram?q';
 
-const instagramServiceLogger = new LoggerService('InstagramService');
+const instagramServiceLogger = new LoggerService('InstagramLogic');
 
-export class InstagramService extends RssParserService<IRssInstagramItem, ILinksToPostModel> {
+export class InstagramLogic extends RssParserService<IRssInstagramItem, ILinksToPostModel> {
 
   public urls: string[];
 

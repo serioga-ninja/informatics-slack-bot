@@ -13,7 +13,7 @@ import instagramLinksRegistrationCommand from './commands/registration.command';
 import instagramLinksRemoveCommand from './commands/remove.command';
 import instagramInstanceFactory from './instagram-instanace.factory';
 import instagramEmitter from './instagram.emitter';
-import {InstagramService, IParseDataResults} from './instagram.service';
+import {InstagramLogic, IParseDataResults} from './instagram.logic';
 
 class InstagramModule extends BaseModuleClass {
   moduleType = ModuleTypes.InstagramLinks;
@@ -52,11 +52,11 @@ class InstagramModule extends BaseModuleClass {
 
     this.logService.info(`Collecting data for public`, publicList);
 
-    const instagramPhotoParser = new InstagramService(publicList);
+    const instagramPhotoParser = new InstagramLogic(publicList);
 
     const data: IParseDataResults[] = await instagramPhotoParser.collectData();
-    const filteredData: IParseDataResults[] = await InstagramService.filterLinks(data);
-    await InstagramService.saveToDB(filteredData);
+    const filteredData: IParseDataResults[] = await InstagramLogic.filterLinks(data);
+    await InstagramLogic.saveToDB(filteredData);
   }
 
   preloadActiveModules() {

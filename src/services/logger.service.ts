@@ -16,7 +16,8 @@ const logger = new winston.Logger({
         return options.timestamp() + ': \n\t' +
           winston.config.colorize(options.level, options.level.toUpperCase()) + ' ' +
           (options.message ? options.message : '') +
-          (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '');
+          (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '') +
+          '\n\t';
       }
     }),
     new winston.transports.File({

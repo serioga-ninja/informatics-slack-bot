@@ -1,8 +1,6 @@
-import * as qs from 'querystring';
-
-import variables from '../../../configs/variables';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
+import {SlackHelper} from '../../../slack/slack.helper';
 import {BaseCommand} from '../../core/base-command.class';
 import {ChannelNotRegistered} from '../../core/command-decorators';
 
@@ -24,21 +22,13 @@ class RegistrationCommand extends BaseCommand {
       text: '',
       attachments: [
         {
-          title_link: `https://slack.com/oauth/authorize?${qs.stringify({
-            scope: 'incoming-webhook,commands,chat:write:bot',
-            client_id: variables.slack.CLIENT_ID,
-            redirect_uri: `http://${variables.domainUrl}/api/v1/events/oauth-callback`,
-            team: requestBody.team_id,
-            channel_id: requestBody.channel_id
-          })}`,
+          title_link: SlackHelper.authorizeUrl(requestBody),
           title: 'Click to init',
           image_url: 'https://platform.slack-edge.com/img/add_to_slack.png'
         }
       ]
     });
   }
-
-
 }
 
 const slackBotRegistrationCommand = new RegistrationCommand();
