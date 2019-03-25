@@ -1,5 +1,5 @@
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
-import {BaseCommand} from '../../core/base-command.class';
+import {BaseCommand} from '../../core/commands/base-command.class';
 import {baseModuleCommands} from '../../core/help-command.factories';
 
 

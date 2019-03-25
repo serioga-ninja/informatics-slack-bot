@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import slackAppModule from '../../services/commands.service';
+import slackAppModule from '../../slack/commands.logic';
 import {RouterClass} from '../router.class';
 
 export class SlackCommandsRouter extends RouterClass {

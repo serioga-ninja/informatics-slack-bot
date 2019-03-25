@@ -2,7 +2,7 @@ import LinksToPostModel, {ILinksToPostModelDocument} from '../../../db/models/li
 import {ILinksToPostModel} from '../../../interfaces/i-links-to-post.model';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import {ISlackWebHookRequestBodyAttachment} from '../../../interfaces/i-slack-web-hook-request-body-attachment';
-import {BaseCommand} from '../../core/base-command.class';
+import {BaseCommand} from '../../core/commands/base-command.class';
 import {ModuleTypes} from '../../core/enums';
 
 class LatestCommand extends BaseCommand {

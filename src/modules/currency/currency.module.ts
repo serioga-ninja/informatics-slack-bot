@@ -1,5 +1,5 @@
-import {BaseCommand} from '../core/base-command.class';
 import {BaseModuleClass} from '../core/base-module.class';
+import {BaseCommand} from '../core/commands/base-command.class';
 import {ModuleTypes} from '../core/enums';
 import commandInProgress from '../slack-apps/commands/in-progress';
 
@@ -8,7 +8,7 @@ import currencyHelpCommand from './commands/help.command';
 class CurrencyModule extends BaseModuleClass {
   moduleType = ModuleTypes.Currency;
 
-  moduleName = 'CurrencyModule';
+  moduleName = 'currency';
 
   // informatics-slack-bot [:moduleName] [:help]
   helpCommand: BaseCommand = currencyHelpCommand;

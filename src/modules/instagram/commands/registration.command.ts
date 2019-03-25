@@ -1,7 +1,7 @@
 import RegisteredAppModel from '../../../db/models/registered-app.model';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {BaseCommand} from '../../core/base-command.class';
 import {ChannelIsRegistered, SimpleCommandResponse} from '../../core/command-decorators';
+import {BaseCommand} from '../../core/commands/base-command.class';
 import {ModuleTypes} from '../../core/enums';
 import {RegisteredModulesService} from '../../core/modules.service';
 import instagramInstanceFactory from '../instagram-instanace.factory';

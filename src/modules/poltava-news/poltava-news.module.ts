@@ -21,7 +21,7 @@ const URLS = [
 class PoltavaNewsModule extends BaseModuleClass {
   moduleType = ModuleTypes.PoltavaNews;
 
-  moduleName = 'PoltavaNewsModule';
+  moduleName = 'poltava-news';
 
   registerCommand = poltavaNewsRegistrationCommand;
 

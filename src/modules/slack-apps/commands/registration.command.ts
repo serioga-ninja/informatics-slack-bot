@@ -1,8 +1,8 @@
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import {SlackHelper} from '../../../slack/slack.helper';
-import {BaseCommand} from '../../core/base-command.class';
 import {ChannelNotRegistered} from '../../core/command-decorators';
+import {BaseCommand} from '../../core/commands/base-command.class';
 
 export class ChanelAlreadyRegisteredError extends Error {
   constructor() {

@@ -7,9 +7,9 @@ import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-reques
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
 import commandInProgress from '../slack-apps/commands/in-progress';
-
-import {BaseCommand} from './base-command.class';
 import {CONFIG_HAS_CHANGED} from './commands';
+
+import {BaseCommand} from './commands/base-command.class';
 import {ModuleTypes} from './enums';
 import {RegisteredModulesService} from './modules.service';
 import EventEmitter = NodeJS.EventEmitter;
@@ -29,6 +29,7 @@ export interface IBaseModuleClass {
   configureCommand: BaseCommand;
   commands: { [key: string]: BaseCommand };
   emitter?: EventEmitter;
+  execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebHookRequestBody>;
 }
 
 export abstract class BaseModuleClass implements IBaseModuleClass {

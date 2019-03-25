@@ -5,9 +5,9 @@ import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-reques
 import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
 import {LoggerService} from '../../services/logger.service';
 import MODULES_CONFIG from '../modules.config';
-
-import {BaseCommand, IBaseCommand} from './base-command.class';
 import {CONFIG_HAS_CHANGED} from './commands';
+
+import {BaseCommand, IBaseCommand} from './commands/base-command.class';
 import {IBaseConfigurationStatic} from './configurations/base-configuration';
 import {ModuleTypes} from './enums';
 import {UnknownConfigError} from './errors';

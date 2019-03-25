@@ -1,36 +1,22 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../interfaces/i-slack-web-hook-request-body';
-import {BaseModuleClass} from '../modules/core/base-module.class';
-import {ModuleNotExistsError} from '../modules/core/errors';
-import currencyModule from '../modules/currency/currency.module';
-import instagramModule from '../modules/instagram/instagram.module';
+import {IBaseModuleClass} from '../modules/core/base-module.class';
 import MODULES_CONFIG from '../modules/modules.config';
-import poltavaNewsModule from '../modules/poltava-news/poltava-news.module';
 import slackAppModule from '../modules/slack-apps/slack-app.module';
-
-import {LoggerService} from './logger.service';
+import {LoggerService} from '../services/logger.service';
+import MODULES_LIST from './available-modules.list';
 
 type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';
 
-const MODULES_LIST = {
-  app: slackAppModule,
-  [MODULES_CONFIG.MODULES.POLTAVA_NEWS]: poltavaNewsModule,
-  [MODULES_CONFIG.MODULES.INSTAGRAM_LINKS]: instagramModule,
-  [MODULES_CONFIG.MODULES.CURRENCY]: currencyModule,
-};
 
-const logService = new LoggerService('CommandsService');
+const logService = new LoggerService('CommandsLogic');
 
-export class CommandsService {
+export class CommandsLogic {
 
-  static getModule(commandStringArr: string[]): BaseModuleClass {
+  static getModule(commandStringArr: string[]): IBaseModuleClass {
     const [moduleName] = commandStringArr;
 
-    if (!MODULES_LIST[moduleName]) {
-      throw new ModuleNotExistsError(moduleName);
-    }
-
-    return MODULES_LIST[moduleName];
+    return MODULES_LIST.filter((module) => module.moduleName === moduleName)[0] || slackAppModule;
   }
 
   static getCommand(commandStringArr: string[]): InstagramCommand {
@@ -55,18 +41,19 @@ export class CommandsService {
     }, {});
   }
 
-  private parse(commandString: string): Promise<{ module: BaseModuleClass, command: string; args: object }> {
+  private parse(commandString: string): Promise<{ module: IBaseModuleClass, command: string; args: object }> {
     return new Promise((resolve, reject) => {
       let commandStringArr = commandString.split(' ');
 
+      const module: IBaseModuleClass = CommandsLogic.getModule(commandStringArr);
+
       // if module has not been set we set it to the default one
-      if (MODULES_LIST[commandStringArr[0]] === undefined) {
+      if (module.moduleName === slackAppModule.moduleName) {
         commandStringArr = ['app'].concat(commandStringArr);
       }
 
-      const module = CommandsService.getModule(commandStringArr);
-      const command = CommandsService.getCommand(commandStringArr);
-      const args = CommandsService.collectArguments(commandStringArr);
+      const command: string = CommandsLogic.getCommand(commandStringArr);
+      const args = CommandsLogic.collectArguments(commandStringArr);
 
       resolve({module, command, args});
     });
@@ -95,6 +82,6 @@ export class CommandsService {
   }
 }
 
-const commandsModule = new CommandsService();
+const commandsModule = new CommandsLogic();
 
 export default commandsModule;

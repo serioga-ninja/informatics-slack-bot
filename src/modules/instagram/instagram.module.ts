@@ -18,7 +18,7 @@ import {InstagramLogic, IParseDataResults} from './instagram.logic';
 class InstagramModule extends BaseModuleClass {
   moduleType = ModuleTypes.InstagramLinks;
 
-  moduleName = 'InstagramModule';
+  moduleName = 'instagram';
 
   registerCommand = instagramLinksRegistrationCommand;
 

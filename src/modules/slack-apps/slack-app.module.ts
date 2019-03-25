@@ -8,7 +8,7 @@ import slackBotRegistrationCommand from './commands/registration.command';
 class SlackAppModule extends BaseModuleClass {
   moduleType = ModuleTypes.SlackApp;
 
-  moduleName = 'SlackAppModule';
+  moduleName = 'app';
 
   registerCommand = slackBotRegistrationCommand;
 
