@@ -32,24 +32,6 @@ export class InstagramLogic extends RssParserService<IRssInstagramItem, ILinksTo
     this.urls = instagramPublicIds.map((id) => `${DOMAIN_URL}=${id}`);
   }
 
-  public static filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
-    const allLinks: ILinksToPostModel[] = parseDataResults
-      .map((row) => row.results)
-      .reduce((all: ILinksToPostModel[], current: ILinksToPostModel[]) => all.concat(current), []);
-
-    return LinksToPostModel
-      .find({title: {$in: allLinks.map((linkObj) => linkObj.title)}})
-      .then((objects: ILinksToPostModelDocument[]) => {
-        const existingLinks = objects.map((model) => model.contentUrl);
-
-        parseDataResults.forEach((parseRowResult) => {
-          parseRowResult.results = parseRowResult.results.filter((link) => existingLinks.indexOf(link.contentUrl) === -1);
-        });
-
-        return parseDataResults;
-      });
-  }
-
   public static async saveToDB(parseDataResults: IParseDataResults[]) {
     for (const row of parseDataResults) {
 
@@ -66,6 +48,22 @@ export class InstagramLogic extends RssParserService<IRssInstagramItem, ILinksTo
         }
       }
     }
+  }
+
+  public static async filterLinks(parseDataResults: IParseDataResults[]): Promise<IParseDataResults[]> {
+    const allLinks: ILinksToPostModel[] = parseDataResults
+      .map((row) => row.results)
+      .reduce((all: ILinksToPostModel[], current: ILinksToPostModel[]) => all.concat(current), []);
+
+    const objects: ILinksToPostModelDocument[] = await LinksToPostModel
+      .find({title: {$in: allLinks.map((linkObj) => linkObj.title)}});
+    const existingLinks = objects.map((model) => model.title);
+
+    parseDataResults.forEach((parseRowResult) => {
+      parseRowResult.results = parseRowResult.results.filter((link) => existingLinks.indexOf(link.title) === -1);
+    });
+
+    return parseDataResults;
   }
 
   public mapFn(item: IRssInstagramItem) {

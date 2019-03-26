@@ -2,6 +2,7 @@ import {BaseModuleClass} from '../core/base-module.class';
 import {IBaseCommandStatic} from '../core/commands/base-command.class';
 import {HelpCommand} from '../core/commands/help.command';
 import {ModuleTypes} from '../core/enums';
+import {UsdCommand} from './commands/usd.command';
 
 class CurrencyModule extends BaseModuleClass {
   moduleType = ModuleTypes.Currency;
@@ -15,6 +16,7 @@ class CurrencyModule extends BaseModuleClass {
 
     this.commands = [
       HelpCommand,
+      UsdCommand
     ];
   }
 
