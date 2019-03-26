@@ -1,6 +1,7 @@
 import {ISlackRequestBody} from '../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../interfaces/i-slack-web-hook-request-body';
 import {IBaseModuleClass} from '../modules/core/base-module.class';
+import {CommandNotFoundError} from '../modules/core/errors';
 import slackAppModule from '../modules/slack-app/slack-app.module';
 import {LoggerService} from '../services/logger.service';
 import MODULES_LIST from './available-modules.list';
@@ -43,12 +44,12 @@ export class CommandsLogic {
       logService.error(error);
 
       return <ISlackWebHookRequestBody>{
-        response_type: 'in_channel',
-        text: error.message,
+        response_type: 'ephemeral',
+        text: error.type,
         attachments: [
           {
             title: error.name,
-            text: error.stack,
+            text: error.message,
             color: '#a60200'
           }
         ]
@@ -69,6 +70,11 @@ export class CommandsLogic {
       }
 
       const command: string = CommandsLogic.getCommand(commandStringArr);
+
+      if (!module.hasCommand(command)) {
+        throw new CommandNotFoundError(command, module.moduleName);
+      }
+
       const args = CommandsLogic.collectArguments(commandStringArr);
 
       resolve({module, command, args});

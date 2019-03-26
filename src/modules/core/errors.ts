@@ -43,8 +43,8 @@ export class ModuleAlreadeyStoppedError extends Error implements InformaticsSlac
 }
 
 export class CommandNotFoundError extends Error implements InformaticsSlackBotBaseError {
-  constructor() {
-    super('Unknown command');
+  constructor(commandName: string, moduleName: string) {
+    super(`Command "${commandName}" for module "${moduleName}" doesn't exists.`);
 
     Object.setPrototypeOf(this, CommandNotFoundError.prototype);
   }

@@ -18,7 +18,6 @@ class CurrencyModule extends BaseModuleClass {
     ];
   }
 
-
   async collectData(): Promise<any> {
   }
 

@@ -20,6 +20,10 @@ export interface IBaseModuleClass {
   commands: IBaseCommandStatic[];
   emitter?: EventEmitter;
   execute(requestBody: ISlackRequestBody, command: string, args?: object): Promise<ISlackWebHookRequestBody>;
+  hasCommand(commandName: string): boolean;
+  collectData(): Promise<any>;
+  init(): void;
+  preloadActiveModules(): Promise<any>;
 }
 
 export abstract class BaseModuleClass implements IBaseModuleClass {
@@ -59,6 +63,10 @@ export abstract class BaseModuleClass implements IBaseModuleClass {
 
     this.collectData()
       .then(() => this.preloadActiveModules());
+  }
+
+  hasCommand(commandName: string): boolean {
+    return this.commands.filter((command) => command.commandName === commandName).length > 0;
   }
 
   // method used to collect all the necessary data
