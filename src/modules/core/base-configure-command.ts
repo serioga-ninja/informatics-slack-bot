@@ -29,11 +29,11 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
 
   protected logService = new LoggerService('BaseConfigureCommand');
 
-  public static info(moduleName: string): IInfo {
-    return {
+  public static info(moduleName: string): IInfo[] {
+    return [{
       title: 'Configure module',
       text: `/${variables.slack.COMMAND} ${moduleName} ${BaseConfigureCommand.commandName} [key1=value1,value2,value3 key2=value2...]`
-    };
+    }];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {

@@ -12,11 +12,17 @@ interface IAvailableConfigs {
 export class GetLastWeatherCommand extends BaseCommand {
   public static readonly commandName: string = 'last';
 
-  public static info(moduleName: string): IInfo {
-    return {
-      title: 'Returns last weather',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName}`
-    };
+  public static info(moduleName: string): IInfo[] {
+    return [
+      {
+        title: 'Returns last weather',
+        text: `/${variables.slack.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName}`
+      },
+      {
+        title: 'Setting: `count`',
+        text: `/${variables.slack.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName} count=1`
+      }
+    ];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {

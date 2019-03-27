@@ -8,11 +8,11 @@ import {BaseCommand} from '../../core/commands/base-command.class';
 export class ModulesListCommand extends BaseCommand {
   public static readonly commandName: string = 'list';
 
-  public static info(): IInfo {
-    return {
+  public static info(): IInfo[] {
+    return [{
       title: 'List the available modules',
       text: `/${variables.slack.COMMAND} ${ModulesListCommand.commandName}`
-    };
+    }];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {

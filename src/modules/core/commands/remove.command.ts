@@ -8,11 +8,11 @@ import {BaseCommand} from './base-command.class';
 export class RemoveCommand extends BaseCommand {
   public static readonly commandName: string = 'remove';
 
-  public static info(moduleName: string): IInfo {
-    return {
+  public static info(moduleName: string): IInfo[] {
+    return [{
       title: 'Remove module',
       text: `/${variables.slack.COMMAND} ${moduleName} ${RemoveCommand.commandName}`
-    };
+    }];
   }
 
   async execute(requestBody: ISlackRequestBody): Promise<any> {

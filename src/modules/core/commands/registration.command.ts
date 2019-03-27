@@ -12,11 +12,11 @@ import {BaseCommand} from './base-command.class';
 export class RegistrationCommand extends BaseCommand {
   public static readonly commandName: string = 'init';
 
-  public static info(moduleName: string): IInfo {
-    return {
+  public static info(moduleName: string): IInfo[] {
+    return [{
       title: 'Init module in the chanel',
       text: `/${variables.slack.COMMAND} ${moduleName} ${RegistrationCommand.commandName}`
-    };
+    }];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {

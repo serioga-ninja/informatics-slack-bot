@@ -8,11 +8,13 @@ import {BaseCommand} from './base-command.class';
 export class HelpCommand extends BaseCommand {
   public static readonly commandName: string = 'help';
 
-  public static info(moduleName: string): IInfo {
-    return {
-      title: 'Usage',
-      text: `/${variables.slack.COMMAND} ${moduleName === 'app' ? '' : moduleName} ${HelpCommand.commandName}`
-    };
+  public static info(moduleName: string): IInfo[] {
+    return [
+      {
+        title: 'Usage',
+        text: `/${variables.slack.COMMAND} ${moduleName === 'app' ? '' : moduleName} ${HelpCommand.commandName}`
+      }
+    ];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {
@@ -29,7 +31,7 @@ export class HelpCommand extends BaseCommand {
           title: 'Usage',
           text: `/${variables.slack.COMMAND} ${this.module.moduleName === 'app' ? '[:module-name]' : this.module.moduleName} [:command] [:args]`
         },
-        ...this.module.commands.map((command) => command.info(this.module.moduleName))
+        ...this.module.commands.reduce((all, command) => all.concat(command.info(this.module.moduleName)), [])
       ]
     });
   }

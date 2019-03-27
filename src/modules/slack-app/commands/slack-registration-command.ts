@@ -14,15 +14,14 @@ export class ChanelAlreadyRegisteredError extends Error {
   }
 }
 
-
 export class SlackRegistrationCommand extends BaseCommand {
   public static readonly commandName: string = 'init';
 
-  public static info(): IInfo {
-    return {
+  public static info(): IInfo[] {
+    return [{
       title: 'Init app in the chanel',
       text: `/${variables.slack.COMMAND} ${SlackRegistrationCommand.commandName}`
-    };
+    }];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {

@@ -10,11 +10,11 @@ import {ModuleTypes} from '../../core/enums';
 export class LatestCommand extends BaseCommand {
   public static readonly commandName: string = 'latest';
 
-  public static info(moduleName: string): IInfo {
-    return {
+  public static info(moduleName: string): IInfo[] {
+    return [{
       title: 'Usage',
       text: `/${variables.slack.COMMAND} ${moduleName} ${LatestCommand.commandName}`
-    };
+    }];
   }
 
   async execute(): Promise<ISlackWebHookRequestBody> {

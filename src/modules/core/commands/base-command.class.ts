@@ -10,7 +10,7 @@ export interface IBaseCommandStatic {
   readonly commandName: string;
   readonly requireArgs: boolean;
 
-  info(moduleName: string): IInfo;
+  info(moduleName: string): IInfo[];
 
   new(module: IBaseModuleClass | IBaseModuleSubscribe): IBaseCommand;
 }

@@ -10,11 +10,13 @@ import {ImageParser} from '../image-parser';
 export class UsdCommand extends BaseCommand {
   public static readonly commandName: string = 'usd';
 
-  public static info(moduleName: string): IInfo {
-    return {
-      title: 'Returns USD',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${UsdCommand.commandName}`
-    };
+  public static info(moduleName: string): IInfo[] {
+    return [
+      {
+        title: 'Returns USD',
+        text: `/${variables.slack.COMMAND} ${moduleName} ${UsdCommand.commandName}`
+      }
+    ];
   }
 
   async validate(requestBody: ISlackRequestBody): Promise<void> {
