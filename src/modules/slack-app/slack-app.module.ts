@@ -21,17 +21,6 @@ class SlackAppModule extends BaseModuleClass {
       ModulesListCommand
     ];
   }
-
-  init() {
-  }
-
-  collectData() {
-    return Promise.resolve();
-  }
-
-  preloadActiveModules(): Promise<any> {
-    return Promise.resolve();
-  }
 }
 
 const slackAppModule = new SlackAppModule();

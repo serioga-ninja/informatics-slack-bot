@@ -6,9 +6,6 @@ import slackAppModule from '../modules/slack-app/slack-app.module';
 import {LoggerService} from '../services/logger.service';
 import MODULES_LIST from './available-modules.list';
 
-type InstagramCommand = 'register' | 'help' | 'configure' | 'remove';
-
-
 const logService = new LoggerService('CommandsLogic');
 
 export class CommandsLogic {

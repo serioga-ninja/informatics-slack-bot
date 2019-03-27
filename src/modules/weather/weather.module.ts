@@ -1,34 +1,45 @@
 import {Observable} from 'rxjs/Observable';
-import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
-import {IWeatherItem, OpenWeatherService} from './open-weather.service';
+import {BaseModuleClass} from '../core/base-module.class';
+import {IBaseCommandStatic} from '../core/commands/base-command.class';
+import {HelpCommand} from '../core/commands/help.command';
+import {ModuleTypes} from '../core/enums';
+import {GetLastWeatherCommand} from './commands/get-last-weather-command';
+import weatherService from './open-weather.service';
 
 const COLLECT_WEATHER_INTERVAL = 21600000;
 
-class WeatherModule {
+class WeatherModule extends BaseModuleClass {
+  moduleType = ModuleTypes.Weather;
 
-  init(): void {
-    const openWeatherService = new OpenWeatherService();
+  moduleName = 'weather';
 
-    Observable
-      .interval(COLLECT_WEATHER_INTERVAL)
-      .subscribe((data) => {
-        openWeatherService
-          .grabOpenWeatherData()
-          .then((data) => openWeatherService.lastWeather = data);
-      });
+  commands: IBaseCommandStatic[];
 
-    openWeatherService.grabOpenWeatherData()
-      .then((data) => openWeatherService.lastWeather = data);
+  constructor() {
+    super();
+
+    this.commands = [
+      HelpCommand,
+      GetLastWeatherCommand
+    ];
   }
 
+  init(): void {
+    Observable
+      .interval(COLLECT_WEATHER_INTERVAL)
+      .subscribe(() => {
+        weatherService
+          .grabOpenWeatherData()
+          .then((data) => weatherService.lastWeather = data);
+      });
 
-  postWeatherToTheChanel(data: IWeatherItem[]): Promise<any> {
-    const attachments: ISlackWebHookRequestBodyAttachment[] = OpenWeatherService.weatherItemToSlackAttachment(data);
-
-    return Promise.resolve();
+    weatherService
+      .grabOpenWeatherData()
+      .then((data) => weatherService.lastWeather = data);
   }
 }
 
 const weatherModule = new WeatherModule();
+weatherModule.init();
 
 export default weatherModule;

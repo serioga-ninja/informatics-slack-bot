@@ -6,7 +6,8 @@ export enum ModuleTypes {
   InstagramLinks = 1,
   PoltavaNews,
   Currency,
-  SlackApp
+  SlackApp,
+  Weather
 }
 
 export enum PostStrategies {

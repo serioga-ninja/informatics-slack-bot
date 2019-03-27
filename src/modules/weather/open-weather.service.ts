@@ -1,5 +1,5 @@
 import * as qs from 'querystring';
-import * as request from 'request';
+import * as rp from 'request-promise';
 
 import variables from '../../configs/variables';
 import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
@@ -70,26 +70,22 @@ export class OpenWeatherService {
       });
   }
 
-  getAvailableData(): Promise<ISuccessResponse> {
-    return new Promise((resolve) => {
-      if (this.lastWeather) {
-        return resolve(this.lastWeather);
-      }
+  async getAvailableData(): Promise<ISuccessResponse> {
+    if (this.lastWeather) {
+      return this.lastWeather;
+    }
 
-      return this.grabOpenWeatherData().then((data) => {
-        this.lastWeather = data;
-        resolve(data);
-      });
-    });
+    const data: ISuccessResponse = await this.grabOpenWeatherData();
+    this.lastWeather = data;
+
+    return data;
   }
 
-  grabOpenWeatherData(): Promise<ISuccessResponse> {
-    return new Promise((resolve) => {
-      request
-        .get(OpenWeatherService.PoltavaRequestUrl, (err, result: any) => {
-          resolve(JSON.parse(result.body));
-        });
-    });
+  async grabOpenWeatherData(): Promise<ISuccessResponse> {
+    return await rp({
+      json: true,
+      uri: OpenWeatherService.PoltavaRequestUrl
+    }) as ISuccessResponse;
   }
 
 }

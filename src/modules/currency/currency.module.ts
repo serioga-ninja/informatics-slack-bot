@@ -19,12 +19,6 @@ class CurrencyModule extends BaseModuleClass {
       UsdCommand
     ];
   }
-
-  async collectData(): Promise<any> {
-  }
-
-  async preloadActiveModules(): Promise<any> {
-  }
 }
 
 const currencyModule = new CurrencyModule();
