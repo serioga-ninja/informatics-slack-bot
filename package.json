@@ -3,10 +3,10 @@
   "repository": "https://github.com/serioga-ninja/informatics-slack-bot",
   "version": "1.0.0",
   "description": "Informatics slack bot",
-  "main": "build/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node build/index.js",
+    "start": "node index.js",
     "start:prod": "./node_modules/.bin/pm2 start process.json",
     "start:db": "mongod --dbpath ./data/db/",
     "prestart": "rm -r ./build && ./node_modules/.bin/tsc",
