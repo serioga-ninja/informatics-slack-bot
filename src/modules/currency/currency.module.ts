@@ -1,7 +1,7 @@
-import {BaseModuleClass} from '../core/base-module.class';
-import {IBaseCommandStatic} from '../core/commands/base-command.class';
-import {HelpCommand} from '../core/commands/help.command';
-import {ModuleTypes} from '../core/enums';
+import {ModuleTypes} from '../../core/enums';
+import {BaseModuleClass} from '../../core/modules/base-module.class';
+import {IBaseCommandStatic} from '../../core/modules/commands/base-command.class';
+import {HelpCommand} from '../../core/modules/commands/help.command';
 import {UsdCommand} from './commands/usd.command';
 
 class CurrencyModule extends BaseModuleClass {

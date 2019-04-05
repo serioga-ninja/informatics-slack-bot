@@ -3,8 +3,8 @@ import * as qs from 'querystring';
 import * as request from 'request';
 
 import variables from '../../configs/variables';
+import {RouterClass} from '../../core/router.class';
 import {TwitterService} from '../../services/twitter.service';
-import {RouterClass} from '../router.class';
 
 
 export class TwitterRouter extends RouterClass {

@@ -1,5 +1,5 @@
-import {ModuleTypes} from '../modules/core/enums';
-import {IBaseModuleConfiguration} from '../modules/core/interfaces';
+import {ModuleTypes} from '../core/enums';
+import {IBaseModuleConfiguration} from '../core/interfaces';
 
 import {ITimestamps} from './i-timestamps';
 

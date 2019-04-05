@@ -1,5 +1,5 @@
-import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/base-configure-command';
-import {baseConfigureCommandsFactory} from '../../core/base-configure-commands.factory';
+import {BaseConfigureCommand, IBaseConfigureCommand} from '../../../core/modules/base-configure-command';
+import {baseConfigureCommandsFactory} from '../../../core/modules/base-configure-commands.factory';
 import poltavaNewsEmitter from '../poltava-news.emitter';
 
 interface IInstagramLinksConfig {

@@ -1,8 +1,8 @@
 import {Observable} from 'rxjs/Observable';
-import {BaseModuleClass} from '../core/base-module.class';
-import {IBaseCommandStatic} from '../core/commands/base-command.class';
-import {HelpCommand} from '../core/commands/help.command';
-import {ModuleTypes} from '../core/enums';
+import {ModuleTypes} from '../../core/enums';
+import {BaseModuleClass} from '../../core/modules/base-module.class';
+import {IBaseCommandStatic} from '../../core/modules/commands/base-command.class';
+import {HelpCommand} from '../../core/modules/commands/help.command';
 import {GetLastWeatherCommand} from './commands/get-last-weather-command';
 import weatherService from './open-weather.service';
 

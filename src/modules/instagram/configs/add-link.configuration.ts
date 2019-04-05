@@ -1,9 +1,13 @@
 import * as _ from 'lodash';
 
 import variables from '../../../configs/variables';
+import {
+  BaseConfiguration,
+  IBaseConfiguration,
+  IConfigHelpItem
+} from '../../../core/modules/configurations/base-configuration';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
-import {BaseConfiguration, IBaseConfiguration, IConfigHelpItem} from '../../core/configurations/base-configuration';
 
 export class AddLinkConfiguration extends BaseConfiguration<IInstagramConfiguration> implements IBaseConfiguration<IInstagramConfiguration> {
   public static commandName: string = 'add-links';

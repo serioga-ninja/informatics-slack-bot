@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import web from '../../../configs/slack';
 import variables from '../../../configs/variables';
+import {BaseCommand} from '../../../core/modules/commands/base-command.class';
 import {IInfo} from '../../../interfaces/i-info';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
-import {BaseCommand} from '../../core/commands/base-command.class';
 import {ImageParser} from '../image-parser';
 
 export class UsdCommand extends BaseCommand {

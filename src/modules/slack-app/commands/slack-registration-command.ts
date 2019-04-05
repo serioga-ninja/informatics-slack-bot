@@ -1,10 +1,10 @@
 import variables from '../../../configs/variables';
+import {BaseCommand} from '../../../core/modules/commands/base-command.class';
 import {IInfo} from '../../../interfaces/i-info';
 import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
-import {SlackHelper} from '../../../slack/slack.helper';
-import {Validation} from '../../../slack/validation';
-import {BaseCommand} from '../../core/commands/base-command.class';
+import {SlackHelper} from '../../../messengers/slack/slack.helper';
+import {Validation} from '../../../messengers/slack/validation';
 
 export class ChanelAlreadyRegisteredError extends Error {
   constructor() {

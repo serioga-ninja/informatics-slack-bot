@@ -1,11 +1,11 @@
 import variables from '../../../configs/variables';
+import {ModuleTypes} from '../../../core/enums';
+import {BaseCommand} from '../../../core/modules/commands/base-command.class';
 import LinksToPostModel, {ILinksToPostModelDocument} from '../../../db/models/links-to-post.model';
 import {IInfo} from '../../../interfaces/i-info';
 import {ILinksToPostModel} from '../../../interfaces/i-links-to-post.model';
 import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import {ISlackWebHookRequestBodyAttachment} from '../../../interfaces/i-slack-web-hook-request-body-attachment';
-import {BaseCommand} from '../../core/commands/base-command.class';
-import {ModuleTypes} from '../../core/enums';
 
 export class LatestCommand extends BaseCommand {
   public static readonly commandName: string = 'latest';

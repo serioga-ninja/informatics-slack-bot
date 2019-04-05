@@ -1,36 +1,23 @@
 import 'rxjs/add/observable/interval';
-import LinksToPostModel, {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
+import {ModuleTypes} from '../../core/enums';
+import {BaseModuleSubscribe, IBaseModuleSubscribe} from '../../core/modules/base-module-subscribe';
+import {IBaseCommandStatic} from '../../core/modules/commands/base-command.class';
+import {HelpCommand} from '../../core/modules/commands/help.command';
+import {RemoveCommand} from '../../core/modules/commands/remove.command';
+import {RecurringModulesService} from '../../core/modules/modules.service';
 
-import RegisteredModuleModel, {IRegisteredModuleModelDocument} from '../../db/models/registered-module.model';
-import {IRegisteredModule} from '../../interfaces/i-registered-module';
-import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
-import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
-import {BaseModuleSubscribe, IBaseModuleSubscribe} from '../core/base-module-subscribe';
-import {IBaseCommandStatic} from '../core/commands/base-command.class';
-import {HelpCommand} from '../core/commands/help.command';
-import {RegistrationCommand} from '../core/commands/registration.command';
-import {RemoveCommand} from '../core/commands/remove.command';
-import {ModuleTypes} from '../core/enums';
-import {RegisteredModulesService} from '../core/modules.service';
-import {RegisteredModuleInstance} from '../core/registered-moduleInstance';
+import RegisteredModuleModel from '../../db/models/registered-module.model';
 
 import {PoltavaNewsConfigureCommand} from './commands/configure.command';
 import {LatestCommand} from './commands/latest.command';
+import {PoltavaNewsRegistrationCommand} from './commands/poltava-news-registration-command';
 import poltavaNewsEmitter from './poltava-news.emitter';
 import {PoltavaNewsService} from './poltava-news.service';
+import {PoltavaNewsSlackRecurringModule} from './recurring-modules/slack.recurring-module';
 
 const URLS = [
   'https://poltava.to/rss/news.xml'
 ];
-
-const aggregationFn = (collection: ILinksToPostModelDocument[]): ISlackWebHookRequestBody => <ISlackWebHookRequestBody>{
-  text: '',
-  attachments: collection.map((model) => (<ISlackWebHookRequestBodyAttachment>{
-    title_link: model.contentUrl,
-    image_url: model.contentUrl,
-    title: model.title
-  }))
-};
 
 class PoltavaNewsModule extends BaseModuleSubscribe implements IBaseModuleSubscribe {
   moduleType = ModuleTypes.PoltavaNews;
@@ -47,23 +34,10 @@ class PoltavaNewsModule extends BaseModuleSubscribe implements IBaseModuleSubscr
     this.commands = [
       LatestCommand,
       HelpCommand,
-      RegistrationCommand,
+      PoltavaNewsRegistrationCommand,
       RemoveCommand,
       PoltavaNewsConfigureCommand
     ];
-  }
-
-  toAttachmentFactory(module: IRegisteredModuleModelDocument<any>): RegisteredModuleInstance {
-    return new RegisteredModuleInstance(
-      module._id,
-      (model: IRegisteredModule<any>) => LinksToPostModel.find({
-        postedChannels: {$nin: [model.chanelId]},
-        contentType: ModuleTypes.PoltavaNews
-      }).limit(module.configuration.limit).then((items) => ({
-        data: aggregationFn(items),
-        items
-      }))
-    );
   }
 
   collectData() {
@@ -84,7 +58,8 @@ class PoltavaNewsModule extends BaseModuleSubscribe implements IBaseModuleSubscr
       .then((collection) => {
         this.logService.info(`Registering ${collection.length} modules`);
         collection.forEach((module) => {
-          RegisteredModulesService.startModuleInstance(this.toAttachmentFactory(module));
+          // TODO: change this by switching between different recurring modules
+          RecurringModulesService.startModuleInstance(new PoltavaNewsSlackRecurringModule(module.id));
         });
       });
 

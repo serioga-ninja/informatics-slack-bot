@@ -1,6 +1,6 @@
-import {BaseConfigureCommand, IBaseConfigureCommand} from '../../core/base-configure-command';
-import {baseConfigureCommandsFactory} from '../../core/base-configure-commands.factory';
-import {IBaseConfigurationStatic} from '../../core/configurations/base-configuration';
+import {BaseConfigureCommand, IBaseConfigureCommand} from '../../../core/modules/base-configure-command';
+import {baseConfigureCommandsFactory} from '../../../core/modules/base-configure-commands.factory';
+import {IBaseConfigurationStatic} from '../../../core/modules/configurations/base-configuration';
 import {AddLinkConfiguration} from '../configs/add-link.configuration';
 import {RemoveLinkConfiguration} from '../configs/remove-link.configuration';
 import instagramEmitter from '../instagram.emitter';

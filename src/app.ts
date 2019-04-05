@@ -4,11 +4,8 @@ import * as express from 'express';
 import * as path from 'path';
 import 'rxjs/add/observable/interval';
 
-import SlackCommandsRouter from './api/v1/slack-commands-router';
-import SlackEventRouter from './api/v1/slack-event-router';
-import SlackRouter from './api/v1/slack-router';
-import TwitterRouter from './api/v1/twitter-router';
 import './db/config';
+import slackRouter from './messengers/slack/api/slack.router';
 import {expressLogger} from './services/logger.service';
 
 // Creates and configures an ExpressJS web server.
@@ -51,10 +48,8 @@ class App {
   private routes(): void {
 
     // placeholder route handler
-    this.express.use('/api/v1/slack', SlackRouter);
-    this.express.use('/api/v1/events', SlackEventRouter);
-    this.express.use('/api/v1/commands', SlackCommandsRouter);
-    this.express.use('/api/v1/social/twitter', TwitterRouter);
+    this.express.use('/api/v1/slack', slackRouter.router);
+    // this.express.use('/api/v1/social/twitter', TwitterRouter);
   }
 }
 

@@ -1,4 +1,4 @@
-import {ModuleTypes} from '../modules/core/enums';
+import {ModuleTypes} from '../core/enums';
 
 import {ITimestamps} from './i-timestamps';
 

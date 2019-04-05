@@ -1,8 +1,8 @@
+import {ModuleTypes} from '../../core/enums';
+import {RssParserService} from '../../core/rss-parser.service';
 import {ILinksToPostModelDocument, LinksToPostModel} from '../../db/models/links-to-post.model';
 import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
 import {LoggerService} from '../../services/logger.service';
-import {ModuleTypes} from '../core/enums';
-import {RssParserService} from '../core/rss-parser.service';
 
 interface IRssInstagramItem {
   link: string;

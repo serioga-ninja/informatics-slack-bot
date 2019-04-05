@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 
 import variables from '../../../configs/variables';
+import {IBaseConfiguration, IConfigHelpItem} from '../../../core/modules/configurations/base-configuration';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import {IInstagramConfiguration} from '../../../interfaces/i-registered-module';
-import {IBaseConfiguration, IConfigHelpItem} from '../../core/configurations/base-configuration';
 
 import {AddLinkConfiguration} from './add-link.configuration';
 

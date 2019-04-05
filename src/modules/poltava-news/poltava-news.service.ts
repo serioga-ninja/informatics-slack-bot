@@ -1,7 +1,7 @@
+import {ModuleTypes} from '../../core/enums';
+import {RssParserService} from '../../core/rss-parser.service';
 import LinksToPostModel, {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
 import {ILinksToPostModel} from '../../interfaces/i-links-to-post.model';
-import {ModuleTypes} from '../core/enums';
-import {RssParserService} from '../core/rss-parser.service';
 
 interface IPoltavaNewsRssItem {
   content: string;
@@ -14,12 +14,6 @@ interface IPoltavaNewsRssItem {
 
 export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, ILinksToPostModel> {
   public urls: string[];
-
-  constructor(urls: string[]) {
-    super();
-
-    this.urls = urls;
-  }
 
   public static filterData(data: ILinksToPostModel[]): Promise<ILinksToPostModel[]> {
     data = data.filter((row) => row.important === '1');
@@ -46,6 +40,12 @@ export class PoltavaNewsService extends RssParserService<IPoltavaNewsRssItem, IL
         category: 'poltava-news'
       }).save();
     }));
+  }
+
+  constructor(urls: string[]) {
+    super();
+
+    this.urls = urls;
   }
 
   public grabTheData(): Promise<ILinksToPostModel[]> {

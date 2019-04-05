@@ -1,33 +1,19 @@
 import * as _ from 'lodash';
 import 'rxjs/add/observable/interval';
-
-import LinksToPostModel, {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
-import RegisteredModuleModel, {IRegisteredModuleModelDocument} from '../../db/models/registered-module.model';
+import {ModuleTypes} from '../../core/enums';
+import {BaseModuleSubscribe, IBaseModuleSubscribe} from '../../core/modules/base-module-subscribe';
+import {IBaseCommandStatic} from '../../core/modules/commands/base-command.class';
+import {HelpCommand} from '../../core/modules/commands/help.command';
+import {RemoveCommand} from '../../core/modules/commands/remove.command';
+import {RecurringModulesService} from '../../core/modules/modules.service';
+import RegisteredModuleModel from '../../db/models/registered-module.model';
 import {IInstagramConfiguration, IRegisteredModule} from '../../interfaces/i-registered-module';
-import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
-import {ISlackWebHookRequestBodyAttachment} from '../../interfaces/i-slack-web-hook-request-body-attachment';
-import {BaseModuleSubscribe, IBaseModuleSubscribe} from '../core/base-module-subscribe';
-import {IBaseCommandStatic} from '../core/commands/base-command.class';
-import {HelpCommand} from '../core/commands/help.command';
-import {RegistrationCommand} from '../core/commands/registration.command';
-import {RemoveCommand} from '../core/commands/remove.command';
-import {ModuleTypes, PostStrategies} from '../core/enums';
-import {RegisteredModulesService} from '../core/modules.service';
-import {RegisteredModuleInstance} from '../core/registered-moduleInstance';
 
 import {InstagramLinksConfigureCommand} from './commands/configure.command';
+import {InstagramRegistrationCommand} from './commands/instagram-registration-command';
 import instagramEmitter from './instagram.emitter';
 import {InstagramLogic, IParseDataResults} from './instagram.logic';
-
-
-const aggregationFn = (collection: ILinksToPostModelDocument[]): ISlackWebHookRequestBody => <ISlackWebHookRequestBody>{
-  text: '',
-  attachments: collection.map((model) => (<ISlackWebHookRequestBodyAttachment>{
-    title_link: model.title,
-    image_url: model.contentUrl,
-    title: model.title
-  }))
-};
+import {InstagramSlackRecurringModule} from './recurring-modules/slack.recurring-module';
 
 class InstagramModule extends BaseModuleSubscribe implements IBaseModuleSubscribe {
   moduleType = ModuleTypes.InstagramLinks;
@@ -44,55 +30,9 @@ class InstagramModule extends BaseModuleSubscribe implements IBaseModuleSubscrib
     this.commands = [
       HelpCommand,
       RemoveCommand,
-      RegistrationCommand,
+      InstagramRegistrationCommand,
       InstagramLinksConfigureCommand
     ];
-  }
-
-  public toAttachmentFactory(module: IRegisteredModuleModelDocument<any>): RegisteredModuleInstance {
-    return new RegisteredModuleInstance(
-      module._id,
-      (model: IRegisteredModule<IInstagramConfiguration>) => {
-
-        switch (model.configuration.postStrategy) {
-          case PostStrategies.RandomSingle:
-            return LinksToPostModel.aggregate([{
-              $match: {
-                postedChannels: {
-                  $nin: [model.chanelId]
-                },
-                category: {
-                  $in: model.configuration.links
-                },
-                contentType: ModuleTypes.InstagramLinks
-              }
-            }]).sample(model.configuration.limit || 1).then((items) => {
-              const collection: ILinksToPostModelDocument[] = items.map((item) => {
-                return new LinksToPostModel(item);
-              });
-
-              return {
-                data: aggregationFn(collection),
-                items: collection
-              };
-            });
-          case PostStrategies.AsSoonAsPossible:
-          default:
-            return LinksToPostModel.find({
-              postedChannels: {
-                $nin: [model.chanelId]
-              },
-              category: {
-                $in: model.configuration.links
-              },
-              contentType: ModuleTypes.InstagramLinks
-            }).limit(model.configuration.limit || 1).then((items) => ({
-              data: aggregationFn(items),
-              items
-            }));
-        }
-      }
-    );
   }
 
   async collectData() {
@@ -131,7 +71,8 @@ class InstagramModule extends BaseModuleSubscribe implements IBaseModuleSubscrib
       .then((collection) => {
         this.logService.info(`Registering ${collection.length} modules`);
         collection.forEach((module) => {
-          RegisteredModulesService.startModuleInstance(this.toAttachmentFactory(module));
+          // TODO: change this by switching between different recurring modules
+          RecurringModulesService.startModuleInstance(new InstagramSlackRecurringModule(module._id));
         });
       });
 
