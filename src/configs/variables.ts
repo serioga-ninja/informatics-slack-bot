@@ -1,4 +1,52 @@
-export const variables = {
+export type Environment = 'development' | 'production';
+
+export interface IVariables {
+  slack: {
+    COMMAND: string;
+    CLIENT_ID: string;
+    CLIENT_SECRET: string;
+    SLACK_NEWS_CHANEL_LINK: string;
+    SLACK_TEST_CHANEL_LINK: string;
+    AUTH_TOKEN: string;
+    authorization_code: string;
+  };
+  VERSION: string;
+  database: {
+    user: string;
+    password: string;
+    host: string;
+    name: string;
+  };
+
+  social: {
+    instagram: {
+      CLIENT_ID: string;
+      CLIENT_SECRET: string;
+      accessToken: string;
+    };
+
+    twitter: {
+      API_KEY: string;
+      API_SECRET: string;
+      ACCESS_TOKEN: string;
+      TOKEN_SECRET: string;
+      accessToken: string;
+    };
+  };
+
+  weather: {
+    openWeatherApiKey: string;
+    poltavaCityId: number;
+  };
+
+  ENVIRONMENT: Environment;
+  domainUrl: string;
+}
+
+
+export const variables: IVariables = {
+  ENVIRONMENT: process.env.NODE_ENV as Environment,
+
   slack: {
     COMMAND: process.env.SLACK_COMMAND,
     CLIENT_ID: process.env.SLACK_CLIENT_ID,
