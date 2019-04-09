@@ -1,8 +1,8 @@
 import variables from '../../../configs/variables';
 import {BaseCommand} from '../../../core/modules/commands/base-command.class';
 import {IInfo} from '../../../interfaces/i-info';
-import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
+import {ISlackRequestBody} from '../../../messengers/slack/interfaces/i-slack-request-body';
+import {ISlackWebHookRequestBody} from '../../../messengers/slack/interfaces/i-slack-web-hook-request-body';
 import {SlackHelper} from '../../../messengers/slack/slack.helper';
 import {Validation} from '../../../messengers/slack/validation';
 

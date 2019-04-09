@@ -2,7 +2,7 @@ import variables from '../../../configs/variables';
 import RegisteredAppModel from '../../../db/models/registered-app.model';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import {IInfo} from '../../../interfaces/i-info';
-import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
+import {ISlackRequestBody} from '../../../messengers/slack/interfaces/i-slack-request-body';
 import {Validation} from '../../../messengers/slack/validation';
 import {ModuleQueries} from '../module-queries';
 import {RecurringModulesService} from '../modules.service';

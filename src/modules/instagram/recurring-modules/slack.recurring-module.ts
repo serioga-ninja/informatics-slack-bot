@@ -1,7 +1,7 @@
 import {PostStrategies} from '../../../core/enums';
 import {ILinksToPostModelDocument} from '../../../db/models/links-to-post.model';
-import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
-import {ISlackWebHookRequestBodyAttachment} from '../../../interfaces/i-slack-web-hook-request-body-attachment';
+import {ISlackWebHookRequestBody} from '../../../messengers/slack/interfaces/i-slack-web-hook-request-body';
+import {ISlackWebHookRequestBodyAttachment} from '../../../messengers/slack/interfaces/i-slack-web-hook-request-body-attachment';
 import {SlackRecurringModule} from '../../../messengers/slack/slack.recurring-module';
 import {InstagramQueries} from '../instagram.queries';
 

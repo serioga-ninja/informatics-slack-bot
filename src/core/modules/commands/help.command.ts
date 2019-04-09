@@ -1,6 +1,6 @@
 import variables from '../../../configs/variables';
 import {IInfo} from '../../../interfaces/i-info';
-import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
+import {ISlackRequestBody} from '../../../messengers/slack/interfaces/i-slack-request-body';
 
 import {BaseCommand} from './base-command.class';
 import {ICommandResult} from './models';

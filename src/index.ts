@@ -1,8 +1,11 @@
 import * as debug from 'debug';
+import * as dotenv from 'dotenv';
 import * as http from 'http';
-
 import App from './app';
 import {DEFAULT_PORT, DEFAULT_RADIX} from './configs/consts';
+
+dotenv.config();
+
 
 debug('ts-express:server');
 

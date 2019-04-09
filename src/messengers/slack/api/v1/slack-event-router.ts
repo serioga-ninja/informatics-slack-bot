@@ -4,7 +4,7 @@ import * as request from 'request';
 
 import variables from '../../../../configs/variables';
 import {RouterClass} from '../../../../core/router.class';
-import {ISlackEventRequestBody} from '../../../../interfaces/i-slack-event-request-body';
+import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
 import {ISlackAuthSuccessBody, SlackService} from '../../slack.service';
 
 export class SlackEventRouter extends RouterClass {
@@ -65,7 +65,7 @@ export class SlackEventRouter extends RouterClass {
    * endpoints.
    */
   init() {
-    this.router.post('/oauth', this.handleEventRequest);
+    // this.router.post('/', this.handleEventRequest);
     this.router.get('/oauth-callback', this.handleAuthoriseRequest);
   }
 

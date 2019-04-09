@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 export type Environment = 'development' | 'production';
 
 export interface IVariables {

@@ -1,7 +1,7 @@
 import web, {IChatPostMessageResult} from '../../configs/slack';
 import {RecurringModuleInstance} from '../../core/modules/recurring-moduleInstance';
 import {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
-import {ISlackWebHookRequestBody} from '../../interfaces/i-slack-web-hook-request-body';
+import {ISlackWebHookRequestBody} from './interfaces/i-slack-web-hook-request-body';
 
 export abstract class SlackRecurringModule extends RecurringModuleInstance<ISlackWebHookRequestBody> {
 

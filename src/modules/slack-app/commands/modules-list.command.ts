@@ -1,9 +1,9 @@
 import variables from '../../../configs/variables';
 import {BaseCommand} from '../../../core/modules/commands/base-command.class';
 import {IInfo} from '../../../interfaces/i-info';
-import {ISlackRequestBody} from '../../../interfaces/i-slack-request-body';
-import {ISlackWebHookRequestBody} from '../../../interfaces/i-slack-web-hook-request-body';
 import MODULES_LIST from '../../../messengers/slack/available-modules.list';
+import {ISlackRequestBody} from '../../../messengers/slack/interfaces/i-slack-request-body';
+import {ISlackWebHookRequestBody} from '../../../messengers/slack/interfaces/i-slack-web-hook-request-body';
 
 export class ModulesListCommand extends BaseCommand {
   public static readonly commandName: string = 'list';

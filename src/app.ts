@@ -3,10 +3,11 @@ import * as errorHandler from 'errorhandler';
 import * as express from 'express';
 import * as path from 'path';
 import 'rxjs/add/observable/interval';
-
 import './db/config';
 import slackRouter from './messengers/slack/api/slack.router';
+import slackEvents from './messengers/slack/event-server/event-adapter';
 import {expressLogger} from './services/logger.service';
+
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -27,6 +28,7 @@ class App {
 
   // Configure Express middleware.
   private middleware(): void {
+    this.express.use('/api/v1/', slackEvents.requestListener());
     this.express.set('view engine', 'ejs');
     this.express.use(expressLogger);
     this.express.use(errorHandler());
