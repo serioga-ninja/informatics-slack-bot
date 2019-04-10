@@ -1,6 +1,6 @@
 import 'rxjs/add/observable/interval';
 
-import {ISlackRequestBody} from '../../messengers/slack/interfaces/i-slack-request-body';
+import {ISlackRequestBody} from '../../messengers/slack/models/i-slack-request-body';
 import {LoggerService} from '../../services/logger.service';
 import {ModuleTypes} from '../enums';
 import {IBaseCommandStatic} from './commands/base-command.class';

@@ -1,19 +1,28 @@
-import {NextFunction, Request, Response} from 'express';
+import {Request, Response} from 'express';
 import * as qs from 'querystring';
 import * as request from 'request';
+import {ApiStatusCodes} from '../../../../configs/api-status-codes';
 
 import variables from '../../../../configs/variables';
 import {RouterClass} from '../../../../core/router.class';
-import {ISlackEventRequestBody} from '../../interfaces/i-slack-event-request-body';
+import eventAdapter from '../../event-server/event-adapter';
+import {IEventChalangeBody, ISlackEventRequestBody} from '../../models/slack-event.model';
 import {ISlackAuthSuccessBody, SlackService} from '../../slack.service';
 
 export class SlackEventRouter extends RouterClass {
 
-  public handleEventRequest(req: Request, res: Response, next: NextFunction) {
-    const body: ISlackEventRequestBody = req.body;
-    res.setHeader('Content-type', 'text/plain');
-    res.end(req.body.challenge);
-    console.log(req.body);
+  public handleEventRequest(req: Request, res: Response) {
+    const body: ISlackEventRequestBody | IEventChalangeBody = req.body;
+    if (body.hasOwnProperty('challenge')) {
+      res.setHeader('Content-type', 'text/plain');
+      res.end((body as IEventChalangeBody).challenge);
+
+      return;
+    }
+
+    eventAdapter.receive(body as ISlackEventRequestBody);
+
+    res.sendStatus(ApiStatusCodes.NoContent);
   }
 
   public handleAuthoriseRequest(req: Request, res: Response) {
@@ -65,7 +74,7 @@ export class SlackEventRouter extends RouterClass {
    * endpoints.
    */
   init() {
-    // this.router.post('/', this.handleEventRequest);
+    this.router.post('/', this.handleEventRequest);
     this.router.get('/oauth-callback', this.handleAuthoriseRequest);
   }
 

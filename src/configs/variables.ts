@@ -9,6 +9,7 @@ export interface IVariables {
     COMMAND: string;
     CLIENT_ID: string;
     CLIENT_SECRET: string;
+    VERIFICATION_TOKEN: string;
     SLACK_NEWS_CHANEL_LINK: string;
     SLACK_TEST_CHANEL_LINK: string;
     AUTH_TOKEN: string;
@@ -58,6 +59,7 @@ export const variables: IVariables = {
     SLACK_NEWS_CHANEL_LINK: process.env.SLACK_NEWS_CHANEL_LINK,
     SLACK_TEST_CHANEL_LINK: process.env.SLACK_TEST_CHANEL_LINK,
     AUTH_TOKEN: process.env.SLACK_AUTH_TOKEN,
+    VERIFICATION_TOKEN: process.env.SLACK_VERIFICATION_TOKEN,
     authorization_code: ''
   },
   VERSION: '1',

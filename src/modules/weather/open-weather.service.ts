@@ -2,7 +2,7 @@ import * as qs from 'querystring';
 import * as rp from 'request-promise';
 
 import variables from '../../configs/variables';
-import {ISlackWebHookRequestBodyAttachment} from '../../messengers/slack/interfaces/i-slack-web-hook-request-body-attachment';
+import {ISlackWebHookRequestBodyAttachment} from '../../messengers/slack/models/i-slack-web-hook-request-body-attachment';
 
 
 export interface IWeatherItem {

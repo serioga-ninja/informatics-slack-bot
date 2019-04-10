@@ -1,6 +1,6 @@
 import * as qs from 'querystring';
 import variables from '../../configs/variables';
-import {ISlackRequestBody} from './interfaces/i-slack-request-body';
+import {ISlackRequestBody} from './models/i-slack-request-body';
 
 export class SlackHelper {
   public static authorizeUrl(requestBody: ISlackRequestBody): string {

@@ -1,7 +1,7 @@
 import variables from '../../configs/variables';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../db/models/registered-module.model';
 import {IInfo} from '../../interfaces/i-info';
-import {ISlackRequestBody} from '../../messengers/slack/interfaces/i-slack-request-body';
+import {ISlackRequestBody} from '../../messengers/slack/models/i-slack-request-body';
 import {Validation} from '../../messengers/slack/validation';
 import {LoggerService} from '../../services/logger.service';
 import {UnknownConfigError} from '../errors';

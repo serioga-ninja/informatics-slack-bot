@@ -5,7 +5,6 @@ import * as path from 'path';
 import 'rxjs/add/observable/interval';
 import './db/config';
 import slackRouter from './messengers/slack/api/slack.router';
-import slackEvents from './messengers/slack/event-server/event-adapter';
 import {expressLogger} from './services/logger.service';
 
 
@@ -28,7 +27,6 @@ class App {
 
   // Configure Express middleware.
   private middleware(): void {
-    this.express.use('/api/v1/', slackEvents.requestListener());
     this.express.set('view engine', 'ejs');
     this.express.use(expressLogger);
     this.express.use(errorHandler());
@@ -51,7 +49,6 @@ class App {
 
     // placeholder route handler
     this.express.use('/api/v1/slack', slackRouter.router);
-    // this.express.use('/api/v1/social/twitter', TwitterRouter);
   }
 }
 

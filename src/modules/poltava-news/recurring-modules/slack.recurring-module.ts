@@ -1,6 +1,6 @@
 import {ILinksToPostModelDocument} from '../../../db/models/links-to-post.model';
-import {ISlackWebHookRequestBody} from '../../../messengers/slack/interfaces/i-slack-web-hook-request-body';
-import {ISlackWebHookRequestBodyAttachment} from '../../../messengers/slack/interfaces/i-slack-web-hook-request-body-attachment';
+import {ISlackWebHookRequestBody} from '../../../messengers/slack/models/i-slack-web-hook-request-body';
+import {ISlackWebHookRequestBodyAttachment} from '../../../messengers/slack/models/i-slack-web-hook-request-body-attachment';
 import {SlackRecurringModule} from '../../../messengers/slack/slack.recurring-module';
 import {PoltavaNewsQueries} from '../poltava-news.queries';
 

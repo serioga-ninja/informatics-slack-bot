@@ -5,8 +5,8 @@ import slackAppModule from '../../modules/slack-app/slack-app.module';
 import {LoggerService} from '../../services/logger.service';
 
 import MODULES_LIST from './available-modules.list';
-import {ISlackRequestBody} from './interfaces/i-slack-request-body';
-import {ISlackWebHookRequestBody} from './interfaces/i-slack-web-hook-request-body';
+import {ISlackRequestBody} from './models/i-slack-request-body';
+import {ISlackWebHookRequestBody} from './models/i-slack-web-hook-request-body';
 
 const logService = new LoggerService('CommandsLogic');
 
