@@ -11,7 +11,7 @@ export class FrequencyConfiguration extends BaseConfiguration implements IBaseCo
   public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: 'Example set post frequency (minutes)',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${FrequencyConfiguration.commandName}=20`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${configName} ${FrequencyConfiguration.commandName}=20`
     };
   }
 

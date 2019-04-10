@@ -2,7 +2,7 @@ import {WebAPICallResult, WebClient} from '@slack/client';
 import {LoggerService} from '../services/logger.service';
 import variables from './variables';
 
-export const web = new WebClient(variables.slack.AUTH_TOKEN, {
+export const web = new WebClient(variables.SLACK.AUTH_TOKEN, {
   logger: new LoggerService('slack')
 });
 

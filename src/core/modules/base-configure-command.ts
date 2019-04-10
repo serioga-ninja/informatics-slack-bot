@@ -31,7 +31,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
   public static info(moduleName: string): IInfo[] {
     return [{
       title: 'Configure module',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${BaseConfigureCommand.commandName} [key1=value1,value2,value3 key2=value2...]`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${BaseConfigureCommand.commandName} [key1=value1,value2,value3 key2=value2...]`
     }];
   }
 
@@ -80,7 +80,7 @@ export abstract class BaseConfigureCommand<T> extends BaseCommand implements IBa
       attachments: [
         {
           title: 'Usage',
-          text: `/${variables.slack.COMMAND} ${this.module.moduleName} ${BaseConfigureCommand.commandName} [key1=value1 key2=key2value1,key2value1 ...]`
+          text: `/${variables.SLACK.COMMAND} ${this.module.moduleName} ${BaseConfigureCommand.commandName} [key1=value1 key2=key2value1,key2value1 ...]`
         },
         {
           title: 'Config list',

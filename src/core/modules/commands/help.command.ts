@@ -13,7 +13,7 @@ export class HelpCommand extends BaseCommand {
     return [
       {
         title: 'Usage',
-        text: `/${variables.slack.COMMAND} ${moduleName === 'app' ? '' : moduleName} ${HelpCommand.commandName}`
+        text: `/${variables.SLACK.COMMAND} ${moduleName === 'app' ? '' : moduleName} ${HelpCommand.commandName}`
       }
     ];
   }
@@ -30,7 +30,7 @@ export class HelpCommand extends BaseCommand {
       attachments: [
         {
           title: 'Usage',
-          text: `/${variables.slack.COMMAND} ${this.module.moduleName === 'app' ? '[:module-name]' : this.module.moduleName} [:command] [:args]`
+          text: `/${variables.SLACK.COMMAND} ${this.module.moduleName === 'app' ? '[:module-name]' : this.module.moduleName} [:command] [:args]`
         },
         ...this.module.commands.reduce((all, command) => all.concat(command.info(this.module.moduleName)), [])
       ]

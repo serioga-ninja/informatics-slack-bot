@@ -12,7 +12,7 @@ export class RemoveCommand extends BaseCommand {
   public static info(moduleName: string): IInfo[] {
     return [{
       title: 'Remove module',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${RemoveCommand.commandName}`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${RemoveCommand.commandName}`
     }];
   }
 

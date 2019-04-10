@@ -16,7 +16,7 @@ export abstract class RegistrationCommand extends BaseCommand {
   public static info(moduleName: string): IInfo[] {
     return [{
       title: 'Init module in the chanel',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${RegistrationCommand.commandName}`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${RegistrationCommand.commandName}`
     }];
   }
 

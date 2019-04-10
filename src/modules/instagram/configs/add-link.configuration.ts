@@ -17,7 +17,7 @@ export class AddLinkConfiguration extends BaseConfiguration<IInstagramConfigurat
   public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: 'Example add instagram public',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${AddLinkConfiguration.commandName}=inst_cat_public1,inst_cat_public2`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${configName} ${AddLinkConfiguration.commandName}=inst_cat_public1,inst_cat_public2`
     };
   }
 

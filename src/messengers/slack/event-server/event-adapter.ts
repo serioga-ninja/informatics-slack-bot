@@ -6,18 +6,6 @@ import {LoggerService} from '../../../services/logger.service';
 import {ISlackEventRequestBody, ISlackEventRequestModel, SlackEventRequestModel} from '../models/slack-event.model';
 import {contains, isMessage, travelChannel, vladicsMessages} from './filters';
 
-/**
- * Legend
- *
- * Users:
- * U5F3EEK9A - serioga
- * U5FTLB6F8 - vladic
- *
- * Channels:
- * C6HJ95HMM - travel
- *
- */
-
 export class EventAdapter {
 
   public loggerService: LoggerService;

@@ -27,7 +27,7 @@ export class TwitterRouter extends RouterClass {
       })
     }, (error, result: any) => {
       const resultBody: { token_type: string; access_token: string; } = JSON.parse(result.body);
-      variables.social.twitter.accessToken = resultBody.access_token;
+      variables.SOCIAL.twitter.accessToken = resultBody.access_token;
 
       res.json(resultBody);
     });
@@ -43,13 +43,13 @@ export class TwitterRouter extends RouterClass {
         'Content-type': 'application/x-www-form-urlencoded'
       },
       body: qs.stringify({
-        access_token: variables.social.twitter.accessToken
+        access_token: variables.SOCIAL.twitter.accessToken
       })
     }, (error, result: any) => {
       const resultBody: { token_type: string; access_token: string; } = JSON.parse(result.body);
 
       if (resultBody.access_token) {
-        variables.social.twitter.accessToken = resultBody.access_token;
+        variables.SOCIAL.twitter.accessToken = resultBody.access_token;
       }
 
       res.json(resultBody);
@@ -65,7 +65,7 @@ export class TwitterRouter extends RouterClass {
         q: searchQ
       })}`,
       headers: {
-        Authorization: `Bearer ${variables.social.twitter.accessToken}`
+        Authorization: `Bearer ${variables.SOCIAL.twitter.accessToken}`
       }
     }, (error, result: any) => {
 

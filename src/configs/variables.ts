@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv';
+import {DEFAULT_RADIX} from './consts';
 
 dotenv.config();
 
 export type Environment = 'development' | 'production';
 
 export interface IVariables {
-  slack: {
+  SLACK: {
     COMMAND: string;
     CLIENT_ID: string;
     CLIENT_SECRET: string;
@@ -15,15 +16,15 @@ export interface IVariables {
     AUTH_TOKEN: string;
     authorization_code: string;
   };
-  VERSION: string;
-  database: {
+
+  DB: {
     user: string;
     password: string;
     host: string;
     name: string;
   };
 
-  social: {
+  SOCIAL: {
     instagram: {
       CLIENT_ID: string;
       CLIENT_SECRET: string;
@@ -39,20 +40,22 @@ export interface IVariables {
     };
   };
 
-  weather: {
+  WEATHER: {
     openWeatherApiKey: string;
     poltavaCityId: number;
   };
 
-  ENVIRONMENT: Environment;
-  domainUrl: string;
+  APP: {
+    VERSION: string;
+    DOMAIN_URL: string;
+    ENVIRONMENT: Environment,
+    SERVER_PORT: number;
+  };
 }
 
 
 export const variables: IVariables = {
-  ENVIRONMENT: process.env.NODE_ENV as Environment,
-
-  slack: {
+  SLACK: {
     COMMAND: process.env.SLACK_COMMAND,
     CLIENT_ID: process.env.SLACK_CLIENT_ID,
     CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
@@ -62,16 +65,15 @@ export const variables: IVariables = {
     VERIFICATION_TOKEN: process.env.SLACK_VERIFICATION_TOKEN,
     authorization_code: ''
   },
-  VERSION: '1',
 
-  database: {
+  DB: {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     name: process.env.DB_NAME
   },
 
-  social: {
+  SOCIAL: {
     instagram: {
       CLIENT_ID: process.env.INSTAGRAM_CLIENT_ID,
       CLIENT_SECRET: process.env.INSTAGRAM_CLIENT_SECRET,
@@ -87,13 +89,17 @@ export const variables: IVariables = {
     }
   },
 
-  weather: {
+  WEATHER: {
     openWeatherApiKey: process.env.OPEN_WEATHER_API_KEY,
     poltavaCityId: 696643
   },
 
-
-  domainUrl: process.env.DOMAIN_URL
+  APP: {
+    VERSION: '1',
+    DOMAIN_URL: process.env.DOMAIN_URL,
+    ENVIRONMENT: process.env.NODE_ENV as Environment,
+    SERVER_PORT: parseInt(process.env.SERVER_PORT, DEFAULT_RADIX)
+  }
 };
 
 export default variables;

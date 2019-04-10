@@ -78,6 +78,6 @@ export class SlackEventRequestModel implements ISlackEventRequestModel {
   }
 
   get valid(): boolean {
-    return this.token === variables.slack.VERIFICATION_TOKEN;
+    return this.token === variables.SLACK.VERIFICATION_TOKEN;
   }
 }

@@ -13,7 +13,7 @@ export class LatestCommand extends BaseCommand {
   public static info(moduleName: string): IInfo[] {
     return [{
       title: 'Usage',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${LatestCommand.commandName}`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${LatestCommand.commandName}`
     }];
   }
 

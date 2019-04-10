@@ -1,8 +1,14 @@
 import * as path from 'path';
 import * as phantom from 'phantom';
+import variables from '../../configs/variables';
+
+export interface IImageParseResult {
+  fullPath: string;
+  url: string;
+}
 
 export class ImageParser {
-  public static async getCurrenciesTable(): Promise<string> {
+  public static async getCurrenciesTable(): Promise<IImageParseResult> {
 
     const instance = await phantom.create();
     const page = await instance.createPage();
@@ -12,14 +18,18 @@ export class ImageParser {
     await page.property('clipRect', {top: 460, left: 958, width: 653, height: 210});
     await page.open('https://minfin.com.ua/ua/currency/mb/');
 
-    const imagePath: string = path.join('public', 'images', `${new Date().getTime()}.png`);
+    const imageName: string = `${new Date().getTime()}.png`;
+    const imagePath: string = path.join('public', 'images', imageName);
     await page.render(imagePath);
     await instance.exit();
 
-    return path.join(process.cwd(), imagePath);
+    return {
+      fullPath: path.join(process.cwd(), imagePath),
+      url: `http://${variables.APP.DOMAIN_URL}/${['public', 'images', imageName].join('/')}`
+    };
   }
 
-  public static async getCurrenciesChart(): Promise<string> {
+  public static async getCurrenciesChart(): Promise<IImageParseResult> {
 
     const instance = await phantom.create();
     const page = await instance.createPage();
@@ -28,10 +38,15 @@ export class ImageParser {
     await page.property('viewportSize', {width: 500, height: 768});
     await page.property('clipRect', {top: 740, left: 952, width: 323, height: 263});
     await page.open('https://minfin.com.ua/ua/currency/mb/');
-    const imagePath: string = path.join('public', 'images', `${new Date().getTime()}.png`);
+
+    const imageName: string = `${new Date().getTime()}.png`;
+    const imagePath: string = path.join('public', 'images', imageName);
     await page.render(imagePath);
     await instance.exit();
 
-    return path.join(process.cwd(), imagePath);
+    return {
+      fullPath: path.join(process.cwd(), imagePath),
+      url: `http://${variables.APP.DOMAIN_URL}/${['public', 'images', imageName].join('/')}`
+    };
   }
 }

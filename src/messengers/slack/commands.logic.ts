@@ -1,12 +1,13 @@
+import web from '../../configs/slack';
 import {CommandNotFoundError} from '../../core/errors';
 import {IBaseModuleClass} from '../../core/modules/base-module.class';
 import {ICommandResult} from '../../core/modules/commands/models';
-import slackAppModule from '../../modules/slack-app/slack-app.module';
-import {LoggerService} from '../../services/logger.service';
 
-import MODULES_LIST from './available-modules.list';
+import MODULES_LIST from '../../modules/modules.list';
+import {LoggerService} from '../../services/logger.service';
 import {ISlackRequestBody} from './models/i-slack-request-body';
 import {ISlackWebHookRequestBody} from './models/i-slack-web-hook-request-body';
+import slackAppModule from './module/slack-app.module';
 
 const logService = new LoggerService('CommandsLogic');
 
@@ -35,17 +36,35 @@ export class CommandsLogic {
   }
 
   public async execute(commandString: string, requestBody: ISlackRequestBody): Promise<ISlackWebHookRequestBody> {
-    try {
+    return new Promise<ISlackWebHookRequestBody>(async (resolve) => {
       const {module, command, args} = await this.parse(commandString);
+      let resolved: boolean = false;
+
+      // used if command takes a long time to resolve, sending the dummy message first
+      setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+
+          resolve({
+            response_type: 'ephemeral',
+            text: 'Working...'
+          });
+        }
+      }, 2000);
 
       const result: ICommandResult = await module.execute(requestBody, command, args);
 
-      return {
-        response_type: 'ephemeral',
-        text: result.text || '',
-        ...result
-      };
-    } catch (error) {
+      if (!resolved) {
+        resolve({
+          response_type: 'ephemeral',
+          text: result.text || '',
+          ...result
+        });
+      } else {
+        await web.chat.postMessage({...result as any, channel: requestBody.channel_id});
+      }
+
+    }).catch((error) => {
       logService.error(error);
 
       return <ISlackWebHookRequestBody>{
@@ -59,8 +78,7 @@ export class CommandsLogic {
           }
         ]
       };
-
-    }
+    });
   }
 
   private parse(commandString: string): Promise<{ module: IBaseModuleClass, command: string; args: object }> {

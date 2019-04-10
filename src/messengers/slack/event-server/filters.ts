@@ -1,4 +1,5 @@
 import {filter} from 'rxjs/operators';
+import variables from '../../../configs/variables';
 import {ISlackEventRequestModel} from '../models/slack-event.model';
 
 export const SERIOGA_ID = 'U5F3EEK9A';
@@ -21,3 +22,4 @@ export const contains = (phrases: string[]) => filter((request: ISlackEventReque
 
   return false;
 });
+export const prodEnvironment = filter(() => variables.APP.ENVIRONMENT === 'production');

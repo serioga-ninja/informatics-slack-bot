@@ -5,8 +5,8 @@ import {ApiStatusCodes} from '../../../../configs/api-status-codes';
 import configs from '../../../../configs/variables';
 import {RouterClass} from '../../../../core/router.class';
 
-const clientId = configs.slack.CLIENT_ID;
-const clientSecret = configs.slack.CLIENT_SECRET;
+const clientId = configs.SLACK.CLIENT_ID;
+const clientSecret = configs.SLACK.CLIENT_SECRET;
 
 export class SlackRouter extends RouterClass {
 

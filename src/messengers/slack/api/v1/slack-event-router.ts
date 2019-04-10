@@ -28,7 +28,7 @@ export class SlackEventRouter extends RouterClass {
   public handleAuthoriseRequest(req: Request, res: Response) {
     const {code} = req.query;
 
-    variables.slack.authorization_code = code;
+    variables.SLACK.authorization_code = code;
 
     request({
       method: 'POST',
@@ -37,10 +37,10 @@ export class SlackEventRouter extends RouterClass {
         'Content-type': 'application/x-www-form-urlencoded'
       },
       body: qs.stringify({
-        client_id: variables.slack.CLIENT_ID,
-        client_secret: variables.slack.CLIENT_SECRET,
+        client_id: variables.SLACK.CLIENT_ID,
+        client_secret: variables.SLACK.CLIENT_SECRET,
         code: code,
-        redirect_uri: `http://${variables.domainUrl}/api/v1/events/oauth-callback`,
+        redirect_uri: `http://${variables.APP.DOMAIN_URL}/api/v1/events/oauth-callback`,
         single_channel: true
       })
     }, (err, result: any) => {

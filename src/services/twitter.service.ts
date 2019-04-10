@@ -32,7 +32,7 @@ export class TwitterService {
   }
 
   static get bearer(): string {
-    return new Buffer(`${variables.social.twitter.API_KEY}:${variables.social.twitter.API_SECRET}`).toString('base64');
+    return new Buffer(`${variables.SOCIAL.twitter.API_KEY}:${variables.SOCIAL.twitter.API_SECRET}`).toString('base64');
   }
 
   static toPercentEncoding(str: string): string {
@@ -61,11 +61,11 @@ export class TwitterService {
     console.log(new Date().getTime(), time);
 
     const authData: IOAuthData = {
-      oauth_consumer_key: variables.social.twitter.API_KEY,
+      oauth_consumer_key: variables.SOCIAL.twitter.API_KEY,
       oauth_nonce: new Buffer(Math.random().toString()).toString('hex'),
       oauth_signature_method: 'HMAC-SHA1',
       oauth_timestamp: time,
-      oauth_token: variables.social.twitter.ACCESS_TOKEN,
+      oauth_token: variables.SOCIAL.twitter.ACCESS_TOKEN,
       oauth_version: '1.0'
     };
     const data = {
@@ -76,7 +76,7 @@ export class TwitterService {
     const signatureBaseSting = TwitterService.generateSignatureBaseString(method, url, data);
 
     // generate a sign key
-    const signKey = `${variables.social.twitter.API_SECRET}&${variables.social.twitter.TOKEN_SECRET}`;
+    const signKey = `${variables.SOCIAL.twitter.API_SECRET}&${variables.SOCIAL.twitter.TOKEN_SECRET}`;
     authData.oauth_signature = crypto
       .createHmac('SHA1', signKey)
       .update(signatureBaseSting)

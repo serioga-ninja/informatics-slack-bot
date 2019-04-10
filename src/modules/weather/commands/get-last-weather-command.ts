@@ -16,11 +16,11 @@ export class GetLastWeatherCommand extends BaseCommand {
     return [
       {
         title: 'Returns last weather',
-        text: `/${variables.slack.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName}`
+        text: `/${variables.SLACK.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName}`
       },
       {
         title: 'Setting: `count`',
-        text: `/${variables.slack.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName} count=1`
+        text: `/${variables.SLACK.COMMAND} ${moduleName} ${GetLastWeatherCommand.commandName} count=1`
       }
     ];
   }

@@ -11,7 +11,7 @@ export class LimitConfiguration extends BaseConfiguration implements IBaseConfig
   public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: 'Example set post limit (number)',
-      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${LimitConfiguration.commandName}=1`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${configName} ${LimitConfiguration.commandName}=1`
     };
   }
 

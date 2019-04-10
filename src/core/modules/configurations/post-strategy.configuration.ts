@@ -15,7 +15,7 @@ export class PostStrategyConfiguration extends BaseConfiguration implements IBas
   public static help(moduleName: string, configName: string): IConfigHelpItem {
     return {
       title: `Example set post strategy. Available: As soon as possible = 1, Random and single = 2`,
-      text: `/${variables.slack.COMMAND} ${moduleName} ${configName} ${PostStrategyConfiguration.commandName}=2`
+      text: `/${variables.SLACK.COMMAND} ${moduleName} ${configName} ${PostStrategyConfiguration.commandName}=2`
     };
   }
 

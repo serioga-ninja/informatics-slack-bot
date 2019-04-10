@@ -40,15 +40,15 @@ export class OpenWeatherService {
 
   static get PoltavaRequestUrl(): string {
     return `http://api.openweathermap.org/data/2.5/forecast?${qs.stringify({
-      id: variables.weather.poltavaCityId,
+      id: variables.WEATHER.poltavaCityId,
       lang: 'ua',
-      appid: variables.weather.openWeatherApiKey,
+      appid: variables.WEATHER.openWeatherApiKey,
       units: 'metric'
     })}`;
   }
 
   static get PoltavaHtmlViewLink(): string {
-    return `http://openweathermap.org/city/${variables.weather.poltavaCityId}?utm_source=openweathermap&utm_medium=widget&utm_campaign=html_old`;
+    return `http://openweathermap.org/city/${variables.WEATHER.poltavaCityId}?utm_source=openweathermap&utm_medium=widget&utm_campaign=html_old`;
   }
 
   static getWeatherIcon(ico: string): string {
