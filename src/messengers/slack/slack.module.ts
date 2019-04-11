@@ -1,7 +1,5 @@
 import {IInitializable} from '../../core/interfaces';
 import globalLogger from '../../services/logger.service';
-
-import {BojanProtection} from './event-subscriptions/event-subscribers/bojan-protection';
 import {SuduDomaEvent} from './event-subscriptions/event-subscribers/sudu-doma';
 
 
@@ -11,8 +9,7 @@ export class SlackModule implements IInitializable {
 
   constructor() {
     this.eventSubscriptions = [
-      new SuduDomaEvent(),
-      new BojanProtection()
+      new SuduDomaEvent()
     ];
 
   }
