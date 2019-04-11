@@ -5,7 +5,7 @@ import {ApiStatusCodes} from '../../../../configs/api-status-codes';
 
 import variables from '../../../../configs/variables';
 import {RouterClass} from '../../../../core/router.class';
-import eventAdapter from '../../event-server/event-adapter';
+import eventAdapter from '../../event-subscriptions/event-adapter';
 import {IEventChalangeBody, ISlackEventRequestBody} from '../../models/slack-event.model';
 import {ISlackAuthSuccessBody, SlackService} from '../../slack.service';
 

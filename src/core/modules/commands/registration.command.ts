@@ -3,7 +3,7 @@ import RegisteredAppModel from '../../../db/models/registered-app.model';
 import {IRegisteredModuleModelDocument} from '../../../db/models/registered-module.model';
 import {IInfo} from '../../../interfaces/i-info';
 import {ISlackRequestBody} from '../../../messengers/slack/models/i-slack-request-body';
-import {Validation} from '../../../messengers/slack/validation';
+import {Validation} from '../../validation';
 import {ModuleQueries} from '../module-queries';
 import {RecurringModulesService} from '../modules.service';
 import {RecurringModuleInstance} from '../recurring-moduleInstance';

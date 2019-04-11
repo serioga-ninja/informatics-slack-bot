@@ -1,7 +1,7 @@
-import web, {IChatPostMessageResult} from '../../configs/slack';
 import {RecurringModuleInstance} from '../../core/modules/recurring-moduleInstance';
 import {ILinksToPostModelDocument} from '../../db/models/links-to-post.model';
 import {ISlackWebHookRequestBody} from './models/i-slack-web-hook-request-body';
+import slackWebClient, {IChatPostMessageResult} from './slack-web-client';
 
 export abstract class SlackRecurringModule extends RecurringModuleInstance<ISlackWebHookRequestBody> {
 
@@ -16,7 +16,10 @@ export abstract class SlackRecurringModule extends RecurringModuleInstance<ISlac
   protected async postData(data: ISlackWebHookRequestBody): Promise<void> {
     this.logService.info(`Posting data to channel ${this.model.chanelId}`, data);
 
-    const res = await web.chat.postMessage({...data, channel: this.model.chanelId}) as IChatPostMessageResult;
+    const res = await slackWebClient.chat.postMessage({
+      ...data,
+      channel: this.model.chanelId
+    }) as IChatPostMessageResult;
 
     this.logService.info(`A message was posed to conversation ${res.channel} with id ${res.ts} which contains the message ${res.message}`);
   }

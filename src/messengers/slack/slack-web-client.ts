@@ -1,14 +1,14 @@
 import {WebAPICallResult, WebClient} from '@slack/client';
-import {LoggerService} from '../services/logger.service';
-import variables from './variables';
+import variables from '../../configs/variables';
+import {LoggerService} from '../../services/logger.service';
 
-export const web = new WebClient(variables.SLACK.AUTH_TOKEN, {
+export const slackWebClient = new WebClient(variables.SLACK.AUTH_TOKEN, {
   logger: new LoggerService('slack')
 });
 
 (async () => {
   try {
-    await web.auth.test();
+    await slackWebClient.auth.test();
   } catch (e) {
     console.error(e);
     process.exit(1);
@@ -23,4 +23,4 @@ export interface IChatPostMessageResult extends WebAPICallResult {
   };
 }
 
-export default web;
+export default slackWebClient;

@@ -1,7 +1,7 @@
-import {ModuleTypes} from '../../core/enums';
-import {ChanelAlreadyRegisteredError, ChanelNotRegisteredError, ModuleNotExistsError} from '../../core/errors';
-import RegisteredAppModel from '../../db/models/registered-app.model';
-import RegisteredModuleModel from '../../db/models/registered-module.model';
+import RegisteredAppModel from '../db/models/registered-app.model';
+import RegisteredModuleModel from '../db/models/registered-module.model';
+import {ModuleTypes} from './enums';
+import {ChanelAlreadyRegisteredError, ChanelNotRegisteredError, ModuleNotExistsError} from './errors';
 
 export class Validation {
   public static async channelRegistered(channelId: string): Promise<void> {

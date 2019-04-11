@@ -2,11 +2,11 @@ import variables from '../../configs/variables';
 import {IRegisteredModuleModelDocument, RegisteredModuleModel} from '../../db/models/registered-module.model';
 import {IInfo} from '../../interfaces/i-info';
 import {ISlackRequestBody} from '../../messengers/slack/models/i-slack-request-body';
-import {Validation} from '../../messengers/slack/validation';
 import {LoggerService} from '../../services/logger.service';
 import {UnknownConfigError} from '../errors';
 import {IBaseModuleConfiguration} from '../interfaces';
 import {simpleSuccessAttachment} from '../utils';
+import {Validation} from '../validation';
 
 import {CONFIG_HAS_CHANGED} from './commands';
 import {BaseCommand, IBaseCommand} from './commands/base-command.class';

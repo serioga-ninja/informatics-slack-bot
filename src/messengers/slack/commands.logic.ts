@@ -1,4 +1,3 @@
-import web from '../../configs/slack';
 import {CommandNotFoundError} from '../../core/errors';
 import {IBaseModuleClass} from '../../core/modules/base-module.class';
 import {ICommandResult} from '../../core/modules/commands/models';
@@ -8,6 +7,7 @@ import {LoggerService} from '../../services/logger.service';
 import {ISlackRequestBody} from './models/i-slack-request-body';
 import {ISlackWebHookRequestBody} from './models/i-slack-web-hook-request-body';
 import slackAppModule from './module/slack-app.module';
+import slackWebClient from './slack-web-client';
 
 const logService = new LoggerService('CommandsLogic');
 
@@ -61,7 +61,7 @@ export class CommandsLogic {
           ...result
         });
       } else {
-        await web.chat.postMessage({...result as any, channel: requestBody.channel_id});
+        await slackWebClient.chat.postMessage({...result as any, channel: requestBody.channel_id});
       }
 
     }).catch((error) => {

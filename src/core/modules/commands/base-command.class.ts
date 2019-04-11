@@ -1,7 +1,7 @@
 import {IInfo} from '../../../interfaces/i-info';
 import {ISlackRequestBody} from '../../../messengers/slack/models/i-slack-request-body';
-import {Validation} from '../../../messengers/slack/validation';
 import {LoggerService} from '../../../services/logger.service';
+import {Validation} from '../../validation';
 import {IBaseModuleSubscribe} from '../base-module-subscribe';
 import {IBaseModuleClass} from '../base-module.class';
 
