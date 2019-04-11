@@ -103,4 +103,6 @@ export class LoggerService {
   }
 }
 
-export default logger;
+const globalLogger = new LoggerService('App');
+
+export default globalLogger;

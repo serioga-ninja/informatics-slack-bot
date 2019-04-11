@@ -6,7 +6,7 @@ import * as path from 'path';
 import 'rxjs/add/observable/interval';
 import variables from './configs/variables';
 import './db/config';
-import {Messangers} from './messengers/messangers';
+import {Messengers} from './messengers/messengers';
 import slackRouter from './messengers/slack/api/slack.router';
 import {expressLogger} from './services/logger.service';
 
@@ -14,7 +14,7 @@ import {expressLogger} from './services/logger.service';
 // Creates and configures an ExpressJS web server.
 class App {
 
-  private messengers: Messangers;
+  private messengers: Messengers;
 
   // ref to Express instance
   public express: express.Application;
@@ -22,7 +22,7 @@ class App {
   // Run configuration methods on the Express instance.
   constructor() {
     this.express = express();
-    this.messengers = new Messangers();
+    this.messengers = new Messengers();
   }
 
   public init() {
