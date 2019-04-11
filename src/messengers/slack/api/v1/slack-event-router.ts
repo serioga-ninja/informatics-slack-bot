@@ -5,9 +5,12 @@ import {ApiStatusCodes} from '../../../../configs/api-status-codes';
 
 import variables from '../../../../configs/variables';
 import {RouterClass} from '../../../../core/router.class';
+import {LoggerService} from '../../../../services/logger.service';
 import eventAdapter from '../../event-subscriptions/event-adapter';
 import {IEventChalangeBody, ISlackEventRequestBody} from '../../models/slack-event.model';
 import {ISlackAuthSuccessBody, SlackService} from '../../slack.service';
+
+const logger = new LoggerService('SlackEventRouter');
 
 export class SlackEventRouter extends RouterClass {
 
@@ -20,6 +23,7 @@ export class SlackEventRouter extends RouterClass {
       return;
     }
 
+    logger.info(body);
     eventAdapter.receive(body as ISlackEventRequestBody);
 
     res.sendStatus(ApiStatusCodes.NoContent);
