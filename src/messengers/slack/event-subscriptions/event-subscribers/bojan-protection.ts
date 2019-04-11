@@ -22,11 +22,14 @@ export class BojanProtection implements IInitializable {
           timestamp: message.event.item.ts
         });
 
-        await slackWebClient.reactions.add({
-          channel: message.event.item.channel,
-          name: 'trollface',
-          timestamp: message.event.item.ts
-        });
+        try {
+          await slackWebClient.reactions.add({
+            channel: message.event.item.channel,
+            name: 'trollface',
+            timestamp: message.event.item.ts
+          });
+        } catch (e) {
+        }
       });
   }
 }
