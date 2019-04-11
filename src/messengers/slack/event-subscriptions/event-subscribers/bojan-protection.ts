@@ -16,7 +16,11 @@ export class BojanProtection implements IInitializable {
         ])
       )
       .subscribe(async (message: ISlackEventRequestModel) => {
-        eventAdapter.loggerService.info(`Bojan or slowpoke detected!`, message);
+        eventAdapter.loggerService.info(`Bojan or slowpoke detected!`, message, `Removing with :`, {
+          channel: message.event.item.channel,
+          name: message.event.reaction,
+          timestamp: message.event.item.ts
+        });
 
         await slackWebClient.reactions.remove({
           channel: message.event.item.channel,

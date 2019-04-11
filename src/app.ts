@@ -6,6 +6,7 @@ import * as path from 'path';
 import 'rxjs/add/observable/interval';
 import variables from './configs/variables';
 import './db/config';
+
 import {Messengers} from './messengers/messengers';
 import slackRouter from './messengers/slack/api/slack.router';
 import {expressLogger} from './services/logger.service';
